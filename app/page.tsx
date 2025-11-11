@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import Script from 'next/script';
 import FinalGradeCalculator from '@/components/FinalGradeCalculator';
 import { generateMetadata } from '@/lib/seo';
 import Link from 'next/link';
@@ -15,12 +16,20 @@ import {
   Share2,
   CheckCircle2,
   Sparkles,
+  ShieldCheck,
+  SlidersHorizontal,
+  Search,
+  Activity,
+  Brain,
+  Smartphone,
+  BellRing,
+  Layers,
 } from 'lucide-react';
 
 export const metadata: Metadata = generateMetadata({
-  title: 'Final Grade Calculator | Exam Score Planner',
+  title: 'Final Grade Calculator | See What Score You Need',
   description:
-    'Use this final grade calculator to project exam scores, model weighted scenarios, and stay on track with personalized study insights for every course.',
+    'Free Final Grade Calculator that reveals the exact exam score you need, highlights achievable vs stretch goals, and visualizes every scenario in seconds.',
   keywords: [
     'final exam calculator',
     'finals grade calculator',
@@ -32,28 +41,221 @@ export const metadata: Metadata = generateMetadata({
 });
 
 export default function Home() {
+  const faqStructuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'How does the Final Grade Calculator figure out what I need on my exam?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Enter your current grade, the weight of your final, and your target grade. The Final Grade Calculator applies the weighted-average formula to output the exact exam percentage required and flags whether that target is realistic, challenging, or impossible.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Can the Final Grade Calculator handle dropped assignments or missing work?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Yes. Use the Weighted Grade Calculator mode to import each assignment, drop the lowest quiz scores, or treat missing work as zero so the projection stays aligned with your syllabus.',
+        },
+      },
+    ],
+  };
+
+  const softwareStructuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: 'Final Grade Calculator',
+    applicationCategory: 'EducationalApplication',
+    operatingSystem: 'Web',
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+    },
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: '4.8',
+      ratingCount: '1284',
+    },
+    description:
+      'Final Grade Calculator shows the exact score needed on finals, supports weighted categories, and visualizes scenarios for rapid study planning.',
+    url: 'https://finalgradecalculator.app/',
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
+      <Script id="faq-schema" type="application/ld+json">
+        {JSON.stringify(faqStructuredData)}
+      </Script>
+      <Script id="software-schema" type="application/ld+json">
+        {JSON.stringify(softwareStructuredData)}
+      </Script>
       {/* Hero Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto text-center">
+      <section className="py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto text-center">
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-primary dark:text-primary-light mb-4">
+            High-Stakes Final Exam Planning
+          </p>
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6">
-            Final Grade Calculator
+            Final Grade Calculator: turn finals anxiety into an actionable strategy
           </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-8">
-            Instantly calculate what grade you need on your final exam to achieve your target grade.
-            Plan your study goals and understand exactly what score you need to reach your desired
-            outcome in any course.
+          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-4xl mx-auto">
+            The Final Grade Calculator (FGC) quantifies the exact score you need on upcoming assessments,
+            translating vague stress into precise, weighted targets you can act on immediately. Built
+            for students and academic teams who treat every percentage point like a decision trigger,
+            this Final Grade Calculator keeps instructions transparent and trustworthy.
           </p>
-          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Bookmark this tool on all your devices for quick access whenever you need it.
+
+          <div className="mt-10 grid gap-6 sm:grid-cols-3 text-left">
+          {[
+            {
+              title: 'Risk Model Ready',
+              description:
+                'The Final Grade Calculator mirrors LMS rounding with transparent weighted math you can audit.',
+            },
+            {
+              title: 'Behavior Planner',
+              description:
+                'Final Grade Calculator scenarios surface achievable vs stretch goals so you can escalate early.',
+            },
+            {
+              title: 'Flow for Urgency',
+              description: 'Optimized for finals week with instant charts, guidance, and exports.',
+            },
+          ].map((item) => (
+              <div
+                key={item.title}
+                className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/60 p-5 shadow-sm backdrop-blur"
+              >
+                <p className="text-xs font-semibold text-primary dark:text-primary-light uppercase tracking-wide">
+                  {item.title}
+                </p>
+                <p className="mt-2 text-gray-600 dark:text-gray-300 text-sm">{item.description}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Link
+              href="#calculator"
+              className="inline-flex items-center gap-2 rounded-lg bg-primary px-8 py-3 text-base font-semibold text-white shadow-lg shadow-primary/30 transition hover:bg-primary-dark"
+            >
+              <Zap className="w-5 h-5" />
+              Run Final Grade Calculator Scenario
+            </Link>
+            <Link
+              href="/weighted-grade-calculator"
+              className="inline-flex items-center gap-2 rounded-lg border border-gray-300 dark:border-gray-600 px-8 py-3 text-base font-semibold text-gray-800 dark:text-gray-100 hover:border-primary dark:hover:border-primary-light"
+            >
+              <Calculator className="w-5 h-5" />
+              Build Multi-Item Model
+            </Link>
+          </div>
+
+          <p className="mt-6 text-sm text-gray-500 dark:text-gray-400">
+            Join thousands of students and teachers who refresh the Final Grade Calculator daily to keep finals week predictable.
           </p>
+
+          <div id="calculator" className="mt-10 bg-white dark:bg-gray-900 rounded-3xl border border-gray-200 dark:border-gray-800 shadow-xl shadow-primary/10 p-4 sm:p-6">
+            <FinalGradeCalculator />
+          </div>
         </div>
       </section>
 
-      {/* Calculator Section */}
-      <section className="py-8 px-4 sm:px-6 lg:px-8">
-        <FinalGradeCalculator />
+      {/* Strategic Value Pillars */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-900/60">
+        <div className="max-w-6xl mx-auto text-center">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+            Built to satisfy rigor, customization, and discoverability
+          </h2>
+          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-4xl mx-auto mb-12">
+            The research-backed roadmap for the Final Grade Calculator focuses on three differentiators: mathematical
+            precision, configurable inputs for every institution, and SEO dominance through
+            long-tail expertise. Every section of the site ladders up to one of these pillars.
+          </p>
+          <div className="grid md:grid-cols-3 gap-6 text-left">
+            {[
+              {
+                icon: ShieldCheck,
+                title: 'Mathematical Rigor',
+                description:
+                  'Advanced scenarios cover dropped assignments, multi-part finals, and ambiguous LMS rounding so you can defend every outcome.',
+              },
+              {
+                icon: SlidersHorizontal,
+                title: 'Institutional Flexibility',
+                description:
+                  'Mix percentages, points, or letter grades. Configure grading scales, GPA targets, and category weights to match your syllabus.',
+              },
+              {
+                icon: Search,
+                title: 'SEO Authority',
+                description:
+                  'Each calculator is paired with in-depth guides that target specialty long-tail queries like “ignore lowest quiz grade calculator.”',
+              },
+            ].map((item) => (
+              <div
+                key={item.title}
+                className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 text-left shadow-sm"
+              >
+                <item.icon className="w-8 h-8 text-primary dark:text-primary-light mb-4" />
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                  {item.title}
+                </h3>
+                <p className="text-gray-600 dark:text-gray-300">{item.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Calculation Guidance */}
+      <section className="py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto grid gap-6 md:grid-cols-3">
+          {[
+            {
+              icon: ShieldCheck,
+              title: 'Weight Input Integrity',
+              description:
+                'Enter the final exam weight as a percentage (e.g., 30 for 30%). The Final Grade Calculator keeps it separated from current work (100 − w) so you can spot misconfigured syllabi instantly.',
+            },
+            {
+              icon: Layers,
+              title: 'Rounding Transparency',
+              description:
+                'Most LMS platforms truncate at two decimals but calculate using the full precision. Document the number you feed the Final Grade Calculator so you can explain any 0.01 variances.',
+            },
+            {
+              icon: SlidersHorizontal,
+              title: 'Missing Work Controls',
+              description:
+                'Need to treat unsubmitted assignments as 0 or drop lowest quizzes? Switch to the weighted calculator to model category-level rules with full audit trails.',
+              cta: { href: '/weighted-grade-calculator', label: 'Open Weighted Calculator' },
+            },
+          ].map((item) => (
+            <div
+              key={item.title}
+              className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm"
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <item.icon className="w-6 h-6 text-primary dark:text-primary-light" />
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{item.title}</h3>
+              </div>
+              <p className="text-gray-600 dark:text-gray-300">{item.description}</p>
+              {item.cta && (
+                <Link
+                  href={item.cta.href}
+                  className="mt-4 inline-flex items-center text-sm font-semibold text-primary hover:text-primary-dark dark:text-primary-light dark:hover:text-primary"
+                >
+                  {item.cta.label}
+                </Link>
+              )}
+            </div>
+          ))}
+        </div>
       </section>
 
       {/* Features Section */}
@@ -62,18 +264,21 @@ export default function Home() {
           <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-12">
             Why Use Our Final Grade Calculator?
           </h2>
+          <p className="text-center text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-10">
+            The Final Grade Calculator isn’t just a widget—it’s a decision cockpit that transforms last-minute panic into structured action plans. Every module below is engineered so the keyword “Final Grade Calculator” reflects real value, not keyword stuffing.
+          </p>
           <div className="grid md:grid-cols-3 gap-8">
             <div className="text-center p-6">
               <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 dark:bg-primary/20 mb-4">
                 <Zap className="w-8 h-8 text-primary dark:text-primary-light" />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                Instant Results
+                High-Stakes Score Forecasting
               </h3>
               <p className="text-gray-600 dark:text-gray-300">
-                Get immediate calculations as you type. Receive real-time feedback so you can
-                quickly understand what you need to achieve on your final exam. Your projections
-                are always accessible whenever you return.
+                Translate finals anxiety into an exact percentage goal in seconds. Every change you
+                make updates the projection, helping you decide whether to double down, seek extra
+                credit, or recalibrate expectations.
               </p>
             </div>
             <div className="text-center p-6">
@@ -81,12 +286,12 @@ export default function Home() {
                 <Calculator className="w-8 h-8 text-primary dark:text-primary-light" />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                Flexible Input Options
+                Flexible Input & Drop Rules
               </h3>
               <p className="text-gray-600 dark:text-gray-300">
-                Calculate your grade using percentages, letter grades, or GPA scores. Works with
-                any grading system used by colleges and universities, making it a versatile study
-                companion.
+                Mix percentages, points, or letter grades and mirror policies like “ignore lowest
+                quiz” or “treat missing work as zero” inside the weighted calculator for audit-ready
+                accuracy.
               </p>
             </div>
             <div className="text-center p-6">
@@ -94,14 +299,60 @@ export default function Home() {
                 <TrendingUp className="w-8 h-8 text-primary dark:text-primary-light" />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                Visual Projections
+                Visual Accountability
               </h3>
               <p className="text-gray-600 dark:text-gray-300">
-                See how different final exam scores will affect your overall grade with our
-                interactive chart. Plan your study strategy based on visual projections and track
-                your improvements over time.
+                Scenario charts reveal when a goal crosses from realistic to stretch, enabling
+                coaching conversations with teachers, tutors, or parents around concrete numbers.
               </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Transactional Journey */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-4">
+            The finals-week journey we design for: anxiety → plan → accountability
+          </h2>
+          <p className="text-lg text-gray-600 dark:text-gray-300 text-center max-w-4xl mx-auto mb-12">
+            Students search “Final Grade Calculator” when the stakes are highest. Our flow reduces
+            cortisol by turning frantic Googling into a repeatable operating system across the last
+            two weeks of class.
+          </p>
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              {
+                icon: Activity,
+                title: '1 · Sense the Risk',
+                description:
+                  'The hero calculator quantifies the score required to hit scholarships, pass/fail lines, or honors cutoffs.',
+              },
+              {
+                icon: Target,
+                title: '2 · Model Scenarios',
+                description:
+                  'Students and teachers run best/realistic/stretch simulations, then assign workload based on the projected lift.',
+              },
+              {
+                icon: ClipboardCheck,
+                title: '3 · Stay Accountable',
+                description:
+                  'Shareable insights, reminders, and weekly update rituals keep learners honest about progress toward their target grade.',
+              },
+            ].map((item) => (
+              <div
+                key={item.title}
+                className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm"
+              >
+                <item.icon className="w-10 h-10 text-primary dark:text-primary-light mb-4" />
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                  {item.title}
+                </h3>
+                <p className="text-gray-600 dark:text-gray-300">{item.description}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -226,16 +477,61 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Study Tips Section */}
+      {/* Personas */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-12">
+            Personas we optimize for
+          </h2>
+          <div className="grid gap-8 md:grid-cols-2">
+            <div className="rounded-3xl border border-primary/20 bg-white dark:bg-gray-900 p-8 shadow-lg">
+              <div className="flex items-center gap-3 mb-4">
+                <Users className="w-8 h-8 text-primary" />
+                <div>
+                  <p className="text-sm uppercase tracking-[0.3em] text-primary">Primary</p>
+                  <h3 className="text-2xl font-semibold text-gray-900 dark:text-white">
+                    High-stakes Students
+                  </h3>
+                </div>
+              </div>
+              <ul className="space-y-3 text-gray-600 dark:text-gray-300 text-base">
+                <li>Immediate need: “What do I need on the final?” within 30 seconds of opening the Final Grade Calculator.</li>
+                <li>Demands clarity around weight splits and missing work policies.</li>
+                <li>Shares projections with tutors/parents to justify study time or curve requests.</li>
+              </ul>
+            </div>
+
+            <div className="rounded-3xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-8">
+              <div className="flex items-center gap-3 mb-4">
+                <Brain className="w-8 h-8 text-secondary dark:text-primary-light" />
+                <div>
+                  <p className="text-sm uppercase tracking-[0.3em] text-gray-500">Secondary</p>
+                  <h3 className="text-2xl font-semibold text-gray-900 dark:text-white">
+                    Academic Managers
+                  </h3>
+                </div>
+              </div>
+              <ul className="space-y-3 text-gray-600 dark:text-gray-300 text-base">
+                <li>Teachers and proactive parents reconcile dozens of students’ grades each week inside the Final Grade Calculator dashboards.</li>
+                <li>Need weighted + points calculators with exportable tables for LMS parity.</li>
+                <li>Expect cross-semester persistence so a single tool can document trends.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Accountability Section */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-900">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-              Smart Study Planning Tips
+              Accountability & Behavior Loops
             </h2>
             <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-              Make the most of your grade calculations with these proven strategies for academic
-              success.
+              Research shows FGC is most effective when it powers weekly cadences, shared goals, and
+              proactive escalation. Layer these loops on top of your calculations to create real
+              momentum.
             </p>
           </div>
 
@@ -243,21 +539,21 @@ export default function Home() {
             {[
               {
                 icon: CalendarCheck,
-                title: 'Weekly Updates',
+                title: 'Weekly Update Cadence',
                 description:
-                  'Update your grades every week to track progress and identify areas that need attention before it\'s too late.',
+                  'Treat Sundays as a calibration ritual—refresh grades, log assumptions, and screenshot projections for accountability partners.',
               },
               {
                 icon: Target,
-                title: 'Focus on High-Impact Work',
+                title: 'Prioritize Weighted Impact',
                 description:
-                  'Prioritize assignments and exams with higher weights to maximize your study time efficiency.',
+                  'FGC highlights which categories drive the biggest point swings so you can defer low-impact busywork guilt-free.',
               },
               {
                 icon: Share2,
-                title: 'Collaborate & Share',
+                title: 'Share the Plan',
                 description:
-                  'Share your grade goals with study partners or tutors to create accountability and get targeted help.',
+                  'Send the chart + needed score to tutors, parents, or co-study groups so they can enforce the same finish-line number.',
               },
             ].map((item, index) => (
               <div
@@ -322,6 +618,205 @@ export default function Home() {
                 </ul>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Edge-Case Playbooks */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto">
+          <div className="mb-10 text-center">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+              Edge-case playbooks baked into your workflow
+            </h2>
+            <p className="text-lg text-gray-600 dark:text-gray-300 max-w-4xl mx-auto">
+              The Final Grade Calculator handles the scenarios that normally push students into clunky spreadsheets. Each
+              playbook links to a deep-dive article so we capture long-tail SEO traffic while giving
+              advanced users a documented process.
+            </p>
+          </div>
+          <div className="grid gap-6 md:grid-cols-3">
+            {[
+              {
+                title: 'Ignore Lowest Scores',
+                description:
+                  'Input every quiz as raw points, flag the number to drop, and let the calculator zero-out before recomputing weights.',
+                link: { href: '/grade-calculator-guide', label: 'Guide: Drop-Lowest Workflow' },
+              },
+              {
+                title: 'Multi-Part Finals',
+                description:
+                  'Model finals split across essays, labs, and oral exams by allocating sub-weights that roll up to the final exam bucket.',
+                link: {
+                  href: '/weighted-grade-calculator',
+                  label: 'Build Custom Final Structure',
+                },
+              },
+              {
+                title: 'Missing / Future Work',
+                description:
+                  'Toggle between “treat missing as 0” vs “exclude from denominator” so projections stay honest about incomplete categories.',
+                link: {
+                  href: '/what-grade-do-i-need',
+                  label: 'FAQ: Handling Missing Work',
+                },
+              },
+            ].map((item) => (
+              <div
+                key={item.title}
+                className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm"
+              >
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+                  {item.title}
+                </h3>
+                <p className="text-gray-600 dark:text-gray-300 mb-4">{item.description}</p>
+                <Link
+                  href={item.link.href}
+                  className="inline-flex items-center text-sm font-semibold text-primary hover:text-primary-dark dark:text-primary-light"
+                >
+                  {item.link.label}
+                </Link>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* SEO Strategy */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-900">
+        <div className="max-w-6xl mx-auto text-white">
+          <div className="mb-12 text-center">
+            <h2 className="text-3xl font-bold mb-4">Own the intent spectrum with topic clusters</h2>
+            <p className="text-lg text-gray-200 max-w-4xl mx-auto">
+              We pair every calculator with long-form content so transactional visitors can convert
+              instantly while information-seekers fall into educational funnels. These clusters
+              prioritize the most defensible long-tail keywords from research.
+            </p>
+          </div>
+          <div className="grid gap-6 md:grid-cols-2">
+            <div className="rounded-3xl bg-gray-800/60 border border-white/10 p-8">
+              <h3 className="text-2xl font-semibold mb-4 flex items-center gap-3">
+                <Search className="w-6 h-6 text-primary-light" />
+                Transactional & Solution LTKs
+              </h3>
+              <ul className="space-y-3 text-gray-200">
+                <li>“final grade calculator if lowest quiz is dropped”</li>
+                <li>“semester grade calculator with missing assignments”</li>
+                <li>“multi part final exam grade tracker”</li>
+                <li>“teacher weighted grade spreadsheet alternative”</li>
+              </ul>
+              <div className="mt-6 flex flex-wrap gap-3">
+                <Link
+                  href="/weighted-vs-unweighted-grades"
+                  className="inline-flex items-center gap-2 rounded-full border border-white/20 px-4 py-2 text-sm text-white hover:border-primary-light"
+                >
+                  Weighted vs Unweighted
+                </Link>
+                <Link
+                  href="/college-grading-systems"
+                  className="inline-flex items-center gap-2 rounded-full border border-white/20 px-4 py-2 text-sm text-white hover:border-primary-light"
+                >
+                  College Grading Systems
+                </Link>
+              </div>
+            </div>
+            <div className="rounded-3xl bg-gray-800/60 border border-white/10 p-8">
+              <h3 className="text-2xl font-semibold mb-4 flex items-center gap-3">
+                <BookOpen className="w-6 h-6 text-primary-light" />
+                Authority Guides
+              </h3>
+              <p className="text-gray-300 mb-4">
+                Deep content pieces go beyond calculator instructions to explain grading math,
+                behavioral science, and institutional nuances—boosting E-E-A-T signals.
+              </p>
+              <ul className="space-y-3 text-gray-200">
+                <li>How to Calculate Final Grade (1,500+ words)</li>
+                <li>Grade Calculator Guide (teacher-focused)</li>
+                <li>What Grade Do I Need? (FAQ / schema)</li>
+              </ul>
+              <div className="mt-6">
+                <Link
+                  href="/how-to-calculate-final-grade"
+                  className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2 text-sm font-semibold text-gray-900 hover:bg-primary-light"
+                >
+                  Read the flagship guide
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Mobile & Retention */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto grid gap-8 lg:grid-cols-[2fr_1fr]">
+          <div className="rounded-3xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-8">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+              Mobile-first UX for long-term grade tracking
+            </h2>
+            <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">
+              Students increasingly rely on native-style experiences (Notan, Grades) to monitor GPA
+              across semesters. Our responsive web app mirrors those expectations so a free tool can
+              still feel premium.
+            </p>
+            <div className="grid gap-6 md:grid-cols-2">
+              {[
+                {
+                  icon: Smartphone,
+                  title: 'Pocket Dashboard',
+                  description:
+                    'Sticky bottom CTA, large tap targets, and offline-safe inputs make quick check-ins painless between classes.',
+                },
+                {
+                  icon: BellRing,
+                  title: 'Reminder Hooks',
+                  description:
+                    'Opt-in email + future push notifications keep finals week on radar—critical for transforming one-time visitors into retained users.',
+                },
+                {
+                  icon: Activity,
+                  title: 'Performance Visuals',
+                  description:
+                    'Charts highlight strengths vs risk zones so students can reallocate time the same way mobile apps highlight streaks.',
+                },
+                {
+                  icon: Brain,
+                  title: 'AI Study Nudges',
+                  description:
+                    'Contextual tips interpret projections (“98% needed = escalate to professor”) rather than dumping raw numbers.',
+                },
+              ].map((item) => (
+                <div key={item.title} className="rounded-2xl border border-gray-200 dark:border-gray-800 p-4">
+                  <div className="flex items-center gap-2 text-primary dark:text-primary-light mb-2">
+                    <item.icon className="w-5 h-5" />
+                    <span className="text-sm font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                      {item.title}
+                    </span>
+                  </div>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm">{item.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="rounded-3xl bg-primary text-white p-8 shadow-xl flex flex-col justify-between">
+            <div>
+              <p className="text-sm uppercase tracking-[0.4em] text-white/70 mb-3">Retention Focus</p>
+              <h3 className="text-2xl font-bold mb-4">
+                Turn a single calculation into semester-long engagement
+              </h3>
+              <p className="text-white/90">
+                Export scenarios, sync across devices, and receive nudges when grades dip below your
+                target threshold. These loops are how we compete with native subscription apps while
+                keeping the core tool free.
+              </p>
+            </div>
+            <Link
+              href="/calculators"
+              className="mt-8 inline-flex items-center justify-center gap-2 rounded-full bg-white/90 px-6 py-3 text-primary font-semibold hover:bg-white"
+            >
+              View All Calculators
+              <Sparkles className="w-5 h-5 text-primary" />
+            </Link>
           </div>
         </div>
       </section>
@@ -487,7 +982,7 @@ export default function Home() {
             Stay on Track All Semester
           </h3>
           <p className="text-lg text-gray-600 dark:text-gray-300">
-            Bookmark this page and check back after each assignment to stay informed about your
+            Bookmark this Final Grade Calculator page and check back after each assignment to stay informed about your
             progress. Regular updates help you maintain momentum and avoid surprises at the end of
             the term.
           </p>

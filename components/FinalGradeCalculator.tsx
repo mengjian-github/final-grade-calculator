@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import {
   calculateNeededGrade,
   calculateFinalGrade,
@@ -162,7 +163,7 @@ export default function FinalGradeCalculatorComponent() {
         <div className="grid md:grid-cols-2 gap-6 mb-8">
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Current Grade (%)
+              Current Grade (% displayed in LMS)
             </label>
             <input
               type="number"
@@ -175,7 +176,8 @@ export default function FinalGradeCalculatorComponent() {
               placeholder="85"
             />
             <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-              Letter grade: {percentageToLetter(parseFloat(currentGrade) || 0)}
+              Enter the exact value shown in your gradebook (usually truncated to two decimals). Letter grade:{' '}
+              {percentageToLetter(parseFloat(currentGrade) || 0)}
             </p>
           </div>
 
@@ -221,7 +223,7 @@ export default function FinalGradeCalculatorComponent() {
 
           <div className="md:col-span-2">
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Final Exam Weight (%)
+              Final Exam Weight (% of course grade)
             </label>
             <input
               type="number"
@@ -243,7 +245,15 @@ export default function FinalGradeCalculatorComponent() {
               className="w-full mt-2"
             />
             <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-              Current work: {100 - parseFloat(finalWeight)}%
+              Input 30 if your syllabus says the final is 30% (no decimal conversion needed). Current work weight:{' '}
+              {isNaN(parseFloat(finalWeight)) ? '—' : 100 - parseFloat(finalWeight)}%
+            </p>
+            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+              Need to drop lowest quizzes or treat missing work as zero? Use the{' '}
+              <Link href="/weighted-grade-calculator" className="text-primary hover:text-primary-dark">
+                weighted calculator
+              </Link>{' '}
+              for full category control.
             </p>
           </div>
         </div>
@@ -330,6 +340,15 @@ export default function FinalGradeCalculatorComponent() {
             </div>
           </div>
         )}
+
+        <div className="mt-8 rounded-2xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/40 p-6 text-sm text-gray-600 dark:text-gray-300 space-y-2">
+          <p className="font-semibold text-gray-900 dark:text-white">Accuracy checklist</p>
+          <ul className="list-disc list-inside space-y-1">
+            <li>The Final Grade Calculator treats weights as percentages; current coursework automatically receives 100 − w%.</li>
+            <li>Results keep full precision before rounding to two decimals, mirroring LMS math.</li>
+            <li>Missing assignments are assumed complete; model 0s or drops in the weighted calculator.</li>
+          </ul>
+        </div>
       </div>
     </div>
   );
