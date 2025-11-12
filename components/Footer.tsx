@@ -42,6 +42,16 @@ export default function Footer() {
               Calculate your final grade quickly and accurately. Free online tool for students to
               determine what they need to score on final exams to achieve their target grades.
             </p>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mt-4">
+              Questions? Email{' '}
+              <a
+                href="mailto:support@finalgradecalculator.app"
+                className="text-primary dark:text-primary-light font-medium hover:underline"
+              >
+                support@finalgradecalculator.app
+              </a>
+              .
+            </p>
           </div>
 
           {/* Calculators */}
