@@ -4,9 +4,9 @@ import Link from 'next/link';
 import { Calculator, BookOpen, TrendingUp } from 'lucide-react';
 
 export const metadata: Metadata = generateMetadata({
-  title: 'How to Calculate Final Grade - Step-by-Step Guide',
+  title: 'Final Grade Calculator: Formula & Examples',
   description:
-    'Learn how to calculate your final grade with our comprehensive guide. Understand the formula, see examples, and use our calculator to determine what you need on your final exam.',
+    'Master the final-grade formula, walk through real examples, and use our Final Grade Calculator to see exactly what score you need on your last exam.',
   keywords: [
     'how to calculate final grade',
     'final grade formula',
