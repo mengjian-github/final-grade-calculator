@@ -52,6 +52,13 @@ export default function RootLayout({
             `,
           }}
         />
+        {/* Plausible (self-hosted) */}
+        <script async src="https://plausible.shipsolo.io/js/pa-ujsUAutSjzcquCGI9ia67.js"></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}}; plausible.init()`
+          }}
+        />
       </head>
       <body className="flex flex-col min-h-screen antialiased">
         <Header />
