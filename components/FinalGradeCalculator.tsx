@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { trackEvent } from '@/lib/analytics';
 import {
   calculateNeededGrade,
   calculateFinalGrade,
@@ -98,6 +99,7 @@ export default function FinalGradeCalculatorComponent() {
       ) {
         const needed = calculateNeededGrade(current, desired, weight);
         setResult(needed);
+        trackEvent('calculate_click', { mode: 'needed', result: Math.round(needed) });
 
         // Generate chart data
         const data = [];
@@ -119,6 +121,7 @@ export default function FinalGradeCalculatorComponent() {
       ) {
         const final = calculateFinalGrade(current, finalGrade, weight);
         setResult(final);
+        trackEvent('calculate_click', { mode: 'predict', result: Math.round(final) });
       }
     }
   }, [currentGrade, desiredGrade, finalWeight, finalExamGrade, mode]);

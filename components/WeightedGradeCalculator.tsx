@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Plus, Trash2, Calculator } from 'lucide-react';
 import { percentageToLetter } from '@/lib/gradeCalculations';
+import { trackEvent } from '@/lib/analytics';
 
 interface GradeItem {
   id: string;
@@ -50,6 +51,7 @@ export default function WeightedGradeCalculator() {
 
     if (totalW > 0) {
       setCurrentGrade(weightedSum / totalW);
+      trackEvent('weighted_calculate', { items: items.length, current_grade: Math.round(weightedSum / totalW) });
     }
 
     // Calculate needed grade for remaining items
