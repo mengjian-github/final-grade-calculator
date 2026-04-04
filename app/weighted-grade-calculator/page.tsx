@@ -16,9 +16,9 @@ import {
 } from 'lucide-react';
 
 export const metadata: Metadata = generateMetadata({
-  title: 'Weighted Grade Calculator | Final Grade Calculator',
+  title: 'Weighted Grade Calculator — Multi-Category Score Planner',
   description:
-    'Use our weighted grade calculator to manage complex grading categories, plan remaining assignments, and map the scores needed for every course target.',
+    'Calculate weighted grades across assignments, quizzes, and exams. Supports drop-lowest rules, missing work as zero, and custom category weights.',
   keywords: [
     'weighted grade calculator',
     'grade weight calculator',

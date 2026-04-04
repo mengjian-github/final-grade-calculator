@@ -27,9 +27,9 @@ import {
 } from 'lucide-react';
 
 export const metadata: Metadata = generateMetadata({
-  title: 'Final Grade Calculator | See What Score You Need',
+  title: 'Final Grade Calculator — Exact Score You Need on Finals (2026)',
   description:
-    'Free Final Grade Calculator that reveals the exact exam score you need, highlights achievable vs stretch goals, and visualizes every scenario in seconds.',
+    'Enter your current grade and final exam weight — instantly see the exact score needed. Supports weighted categories, drop-lowest rules, and scenario charts.',
   keywords: [
     'final exam calculator',
     'finals grade calculator',
@@ -100,7 +100,7 @@ export default function Home() {
             High-Stakes Final Exam Planning
           </p>
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6">
-            Final Grade Calculator: turn finals anxiety into an actionable strategy
+            Final Grade Calculator
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-4xl mx-auto">
             The Final Grade Calculator (FGC) quantifies the exact score you need on upcoming assessments,
