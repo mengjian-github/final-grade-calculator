@@ -99,12 +99,11 @@ export default function WhatGradeDoINeedPage() {
             <HelpCircle className="w-8 h-8 text-primary dark:text-primary-light" />
           </div>
           <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white mb-6">
-            What Grade Do I Need? FAQ
+            What Grade Do I Need on My Final?
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-300">
-            This question shows up every time deadlines approach. Use this page to translate worry
-            into actionable numbers, whether you're preparing for finals, protecting a scholarship,
-            or balancing multiple courses.
+            Find the exact score you need on your final exam, then use the scenarios below to plan
+            scholarships, passing thresholds, and weighted grade recovery.
           </p>
         </header>
 
@@ -123,6 +122,17 @@ export default function WhatGradeDoINeedPage() {
             that marks when projects, labs, and exams occur. For every entry, note the score you need
             to feel comfortable with the outcome. This forward-looking approach encourages steady
             progress and keeps you from cramming at the last minute.
+          </p>
+          <p>
+            For a direct score target, start with the{' '}
+            <Link href="/" className="text-primary hover:text-primary-dark dark:text-primary-light dark:hover:text-white underline underline-offset-4">
+              Final Grade Calculator
+            </Link>
+            . If your syllabus uses categories, switch to the{' '}
+            <Link href="/weighted-grade-calculator" className="text-primary hover:text-primary-dark dark:text-primary-light dark:hover:text-white underline underline-offset-4">
+              Weighted Grade Calculator
+            </Link>
+            .
           </p>
           <div className="not-prose mt-8 grid gap-4 md:grid-cols-2">
             <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/60 p-6 shadow-sm">
@@ -202,6 +212,21 @@ export default function WhatGradeDoINeedPage() {
                 {tip}
               </div>
             ))}
+          </div>
+        </section>
+
+        <section className="not-prose rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/60 p-6 shadow-sm">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Related calculators</h2>
+          <div className="flex flex-wrap gap-3">
+            <Link href="/" className="rounded-full border border-gray-300 dark:border-gray-600 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:border-primary hover:text-primary dark:hover:text-primary-light">
+              Final Grade Calculator
+            </Link>
+            <Link href="/weighted-grade-calculator" className="rounded-full border border-gray-300 dark:border-gray-600 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:border-primary hover:text-primary dark:hover:text-primary-light">
+              Weighted Grade Calculator
+            </Link>
+            <Link href="/grade-converter" className="rounded-full border border-gray-300 dark:border-gray-600 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:border-primary hover:text-primary dark:hover:text-primary-light">
+              Grade Converter
+            </Link>
           </div>
         </section>
       </div>

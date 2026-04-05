@@ -39,9 +39,9 @@ export default function WeightedGradeCalculatorPage() {
             Weighted Grade Calculator
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-8">
-            Calculate your weighted course grade with ease. Add multiple assignments, tests, and
-            exams with different weights to determine your overall grade and see exactly what you
-            need to reach your target.
+            Calculate weighted grades across homework, quizzes, labs, and exams with custom category
+            weights. See your current average, spot weak categories, and model exactly what you need
+            to reach your target grade.
           </p>
           <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
             Bookmark this tool so you can update it every time a score posts and keep insights close
@@ -53,6 +53,23 @@ export default function WeightedGradeCalculatorPage() {
       {/* Calculator Section */}
       <section className="py-8 px-4 sm:px-6 lg:px-8">
         <WeightedGradeCalculator />
+      </section>
+
+      <section className="py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto rounded-3xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-8 shadow-sm">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Related grade planning pages</h2>
+          <div className="flex flex-wrap gap-3">
+            <Link href="/" className="rounded-full border border-gray-300 dark:border-gray-600 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:border-primary hover:text-primary dark:hover:text-primary-light">
+              Final Grade Calculator
+            </Link>
+            <Link href="/what-grade-do-i-need" className="rounded-full border border-gray-300 dark:border-gray-600 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:border-primary hover:text-primary dark:hover:text-primary-light">
+              What Grade Do I Need on My Final?
+            </Link>
+            <Link href="/grade-converter" className="rounded-full border border-gray-300 dark:border-gray-600 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:border-primary hover:text-primary dark:hover:text-primary-light">
+              Grade Converter
+            </Link>
+          </div>
+        </div>
       </section>
 
       {/* Features Section */}
@@ -115,6 +132,13 @@ export default function WeightedGradeCalculatorPage() {
                 Weighted systems assign different percentages to homework, labs, projects, and exams.
                 Keep this tool open while you review feedback so you can adjust priorities the moment
                 grades post.
+              </p>
+              <p className="text-gray-600 dark:text-gray-300">
+                If you only need the exact score required on one upcoming exam, jump to our{' '}
+                <Link href="/" className="text-primary hover:text-primary-dark dark:text-primary-light dark:hover:text-white underline underline-offset-4">
+                  Final Grade Calculator
+                </Link>{' '}
+                for a faster single-final workflow.
               </p>
               <div className="grid gap-4 sm:grid-cols-2 text-sm text-gray-700 dark:text-gray-200">
                 {[
