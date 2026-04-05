@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
-    "start": "next start"
+    "start": "next start",
+    "build:pages": "next build",
+    "deploy:pages": "wrangler pages deployment create out --project-name final-grade-calculator --branch main --commit-dirty=true"
   },
   "dependencies": {
     "lucide-react": "^0.546.0",
