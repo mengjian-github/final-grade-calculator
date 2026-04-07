@@ -278,6 +278,12 @@ export default function FinalGradeCalculatorComponent() {
               <div className="text-2xl font-semibold text-gray-700 dark:text-gray-300">
                 {percentageToLetter(result)}
               </div>
+              {mode === 'needed' && (
+                <p className="mt-4 text-base text-gray-700 dark:text-gray-200">
+                  You need <strong>{result.toFixed(2)}%</strong> on your final to finish with{' '}
+                  <strong>{desiredGrade || 'your target'}%</strong> in the course.
+                </p>
+              )}
             </div>
 
             {suggestion && mode === 'needed' && (
@@ -291,9 +297,26 @@ export default function FinalGradeCalculatorComponent() {
                     suggestionToneStyles[suggestion.color]?.icon ?? 'text-primary'
                   }`}
                 />
-                <p className="text-sm font-medium text-gray-800 dark:text-gray-100">
-                  {suggestion.message}
-                </p>
+                <div className="space-y-3">
+                  <p className="text-sm font-medium text-gray-800 dark:text-gray-100">
+                    {suggestion.message}
+                  </p>
+                  <div className="flex flex-wrap gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setDesiredGrade('90')}
+                      className="inline-flex items-center rounded-lg bg-white/80 px-3 py-2 text-sm font-semibold text-gray-900 hover:bg-white dark:bg-gray-900/70 dark:text-gray-100 dark:hover:bg-gray-900"
+                    >
+                      Try Another Target
+                    </button>
+                    <Link
+                      href="/weighted-grade-calculator"
+                      className="inline-flex items-center rounded-lg border border-current px-3 py-2 text-sm font-semibold"
+                    >
+                      Open Weighted Calculator
+                    </Link>
+                  </div>
+                </div>
               </div>
             )}
           </div>

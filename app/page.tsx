@@ -97,33 +97,32 @@ export default function Home() {
       <section className="py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto text-center">
           <p className="text-sm font-semibold uppercase tracking-[0.2em] text-primary dark:text-primary-light mb-4">
-            High-Stakes Final Exam Planning
+            Final Exam Calculator
           </p>
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6">
             Final Grade Calculator
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-4xl mx-auto">
-            The Final Grade Calculator (FGC) quantifies the exact score you need on upcoming assessments,
-            translating vague stress into precise, weighted targets you can act on immediately. Built
-            for students and academic teams who treat every percentage point like a decision trigger,
-            this Final Grade Calculator keeps instructions transparent and trustworthy.
+            Enter your current grade and final exam weight to see the exact score you need. Use the
+            weighted calculator when your course includes homework, quizzes, projects, and exams with
+            different weights.
           </p>
 
           <div className="mt-10 grid gap-6 sm:grid-cols-3 text-left">
           {[
             {
-              title: 'Risk Model Ready',
+              title: 'Exact score in seconds',
               description:
-                'The Final Grade Calculator mirrors LMS rounding with transparent weighted math you can audit.',
+                'See the percentage you need on the final right away, with no spreadsheet setup.',
             },
             {
-              title: 'Behavior Planner',
+              title: 'Best for one final exam',
               description:
-                'Final Grade Calculator scenarios surface achievable vs stretch goals so you can escalate early.',
+                'Use this page when you only need to answer, “What grade do I need on my final?”',
             },
             {
-              title: 'Flow for Urgency',
-              description: 'Optimized for finals week with instant charts, guidance, and exports.',
+              title: 'Weighted mode when needed',
+              description: 'Jump to the weighted calculator for homework, quiz, lab, and project splits.',
             },
           ].map((item) => (
               <div
@@ -144,23 +143,52 @@ export default function Home() {
               className="inline-flex items-center gap-2 rounded-lg bg-primary px-8 py-3 text-base font-semibold text-white shadow-lg shadow-primary/30 transition hover:bg-primary-dark"
             >
               <Zap className="w-5 h-5" />
-              Run Final Grade Calculator Scenario
+              Calculate My Final Exam Score
             </Link>
             <Link
               href="/weighted-grade-calculator"
               className="inline-flex items-center gap-2 rounded-lg border border-gray-300 dark:border-gray-600 px-8 py-3 text-base font-semibold text-gray-800 dark:text-gray-100 hover:border-primary dark:hover:border-primary-light"
             >
               <Calculator className="w-5 h-5" />
-              Build Multi-Item Model
+              Use Weighted Grade Calculator
             </Link>
           </div>
 
           <p className="mt-6 text-sm text-gray-500 dark:text-gray-400">
-            Join thousands of students and teachers who refresh the Final Grade Calculator daily to keep finals week predictable.
+            For “final exam calculator”, “what grade do I need on my final”, and “grade needed on final”.
           </p>
 
           <div id="calculator" className="mt-10 bg-white dark:bg-gray-900 rounded-3xl border border-gray-200 dark:border-gray-800 shadow-xl shadow-primary/10 p-4 sm:p-6">
             <FinalGradeCalculator />
+          </div>
+
+          <div className="mt-6 grid gap-4 sm:grid-cols-3 text-left">
+            {[
+              {
+                href: '/what-grade-do-i-need',
+                title: 'What grade do I need on my final?',
+                description: 'Quick answer page for single-exam intent.',
+              },
+              {
+                href: '/weighted-grade-calculator',
+                title: 'Weighted Grade Calculator',
+                description: 'Use this when your course has multiple categories and weights.',
+              },
+              {
+                href: '/grade-converter',
+                title: 'Grade Converter',
+                description: 'Convert percentages, letters, and GPA before planning your target.',
+              },
+            ].map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/60 p-5 shadow-sm transition hover:border-primary dark:hover:border-primary-light"
+              >
+                <p className="text-sm font-semibold text-gray-900 dark:text-white">{item.title}</p>
+                <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">{item.description}</p>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
