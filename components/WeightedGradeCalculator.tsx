@@ -25,6 +25,14 @@ export default function WeightedGradeCalculator() {
   const [targetGrade, setTargetGrade] = useState<string>('90');
   const [neededGrade, setNeededGrade] = useState<number | null>(null);
 
+  const trackManualWeightedCalculation = () => {
+    trackEvent('weighted_calculate', {
+      items: items.length,
+      current_grade: Math.round(currentGrade),
+      source: 'manual_cta',
+    });
+  };
+
   useEffect(() => {
     let weightedSum = 0;
     let totalW = 0;
@@ -164,11 +172,22 @@ export default function WeightedGradeCalculator() {
         {/* Add Item Button */}
         <button
           onClick={addItem}
-          className="w-full py-3 px-4 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg hover:border-primary dark:hover:border-primary-light transition-colors text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary-light font-medium flex items-center justify-center gap-2 mb-8"
+          className="w-full py-3 px-4 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg hover:border-primary dark:hover:border-primary-light transition-colors text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary-light font-medium flex items-center justify-center gap-2 mb-4"
         >
           <Plus className="w-5 h-5 text-primary dark:text-primary-light" />
           Add Grade Item
         </button>
+
+        <div className="mb-8 flex justify-center">
+          <button
+            type="button"
+            onClick={trackManualWeightedCalculation}
+            className="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-3 text-sm font-semibold text-white shadow-lg transition hover:bg-primary/90"
+          >
+            <Calculator className="h-4 w-4" />
+            Update Weighted Grade
+          </button>
+        </div>
 
         {/* Results */}
         <div className="grid md:grid-cols-2 gap-6">

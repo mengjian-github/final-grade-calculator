@@ -129,6 +129,15 @@ export default function FinalGradeCalculatorComponent() {
   const suggestion =
     mode === 'needed' && result !== null ? getGradeSuggestion(result) : null;
 
+  const trackManualCalculation = () => {
+    if (result === null) return;
+    trackEvent('calculate_click', {
+      mode,
+      result: Math.round(result),
+      source: 'manual_cta',
+    });
+  };
+
   return (
     <div className="w-full max-w-5xl mx-auto">
       <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-700">
@@ -259,6 +268,18 @@ export default function FinalGradeCalculatorComponent() {
               for full category control.
             </p>
           </div>
+        </div>
+
+        <div className="mb-8 flex justify-center">
+          <button
+            type="button"
+            onClick={trackManualCalculation}
+            disabled={result === null}
+            className="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-3 text-sm font-semibold text-white shadow-lg transition hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <Calculator className="h-4 w-4" />
+            Update Calculation
+          </button>
         </div>
 
         {/* Result Display */}
