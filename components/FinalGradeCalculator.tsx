@@ -331,7 +331,7 @@ export default function FinalGradeCalculatorComponent() {
               </div>
               {mode === 'needed' && (
                 <p className="mt-4 text-base text-gray-700 dark:text-gray-200">
-                  You need <strong>{result.toFixed(2)}%</strong> on your final to finish with{' '}
+                  You need <strong>{result.toFixed(2)}%</strong> on your final exam to finish with{' '}
                   <strong>{desiredGrade || 'your target'}%</strong> in the course.
                 </p>
               )}
