@@ -99,7 +99,6 @@ export default function FinalGradeCalculatorComponent() {
       ) {
         const needed = calculateNeededGrade(current, desired, weight);
         setResult(needed);
-        trackEvent('calculate_click', { mode: 'needed', result: Math.round(needed) });
 
         // Generate chart data
         const data = [];
@@ -121,7 +120,6 @@ export default function FinalGradeCalculatorComponent() {
       ) {
         const final = calculateFinalGrade(current, finalGrade, weight);
         setResult(final);
-        trackEvent('calculate_click', { mode: 'predict', result: Math.round(final) });
       }
     }
   }, [currentGrade, desiredGrade, finalWeight, finalExamGrade, mode]);
@@ -132,8 +130,9 @@ export default function FinalGradeCalculatorComponent() {
   const trackManualCalculation = () => {
     if (result === null) return;
     trackEvent('calculate_click', {
-      mode,
-      result: Math.round(result),
+      calculator_type: 'final_grade',
+      input_mode: mode,
+      result_state: mode === 'predict' ? 'predict' : result <= 100 ? 'achievable' : 'unachievable',
       source: 'manual_cta',
     });
   };

@@ -27,8 +27,10 @@ export default function WeightedGradeCalculator() {
 
   const trackManualWeightedCalculation = () => {
     trackEvent('weighted_calculate', {
-      items: items.length,
-      current_grade: Math.round(currentGrade),
+      calculator_type: 'weighted_grade',
+      input_mode: 'weighted_items',
+      result_state: neededGrade === null ? 'predict' : neededGrade <= 100 ? 'achievable' : 'unachievable',
+      items_count: items.length,
       source: 'manual_cta',
     });
   };
@@ -59,7 +61,6 @@ export default function WeightedGradeCalculator() {
 
     if (totalW > 0) {
       setCurrentGrade(weightedSum / totalW);
-      trackEvent('weighted_calculate', { items: items.length, current_grade: Math.round(weightedSum / totalW) });
     }
 
     // Calculate needed grade for remaining items
