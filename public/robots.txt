@@ -3,7 +3,7 @@ Allow: /
 
 # Disallow admin or sensitive paths if any
 Disallow: /api/
-Disallow: /_next/
+Allow: /_next/static/
 
 # Sitemap location
 Sitemap: https://finalgradecalculator.app/sitemap.xml

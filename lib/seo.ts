@@ -6,6 +6,7 @@ interface SEOProps {
   keywords?: string[];
   canonical?: string;
   ogImage?: string;
+  appendSiteName?: boolean;
 }
 
 const BASE_URL = 'https://finalgradecalculator.app';
@@ -16,8 +17,9 @@ export function generateMetadata({
   keywords = [],
   canonical,
   ogImage = '/logo.png',
+  appendSiteName = true,
 }: SEOProps): Metadata {
-  const fullTitle = title.includes('Final Grade Calculator')
+  const fullTitle = !appendSiteName || title.includes('Final Grade Calculator')
     ? title
     : `${title} | Final Grade Calculator`;
 

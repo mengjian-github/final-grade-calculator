@@ -27,7 +27,7 @@ import {
 } from 'lucide-react';
 
 export const metadata: Metadata = generateMetadata({
-  title: 'Final Grade Calculator — Exact Score You Need on Finals (2026)',
+  title: 'Final Grade Calculator | Score Needed on Final',
   description:
     'Enter your current grade and final exam weight — instantly see the exact score needed. Supports weighted categories, drop-lowest rules, and scenario charts.',
   keywords: [
