@@ -879,48 +879,7 @@ export default function Home() {
             Frequently Asked Questions
           </h2>
           <div className="grid gap-6 md:grid-cols-2">
-            {[
-              {
-                question: 'How often should I update my grades?',
-                answer:
-                  'Update after every graded assignment to keep projections accurate. Frequent updates reveal trends and help you identify areas that need attention early.',
-              },
-              {
-                question: 'Can this handle weighted grading systems?',
-                answer:
-                  'Yes. Add categories with their respective weights and the calculator computes totals instantly, giving you a detailed breakdown you can revisit anytime.',
-              },
-              {
-                question: 'How does this help with scholarship goals?',
-                answer:
-                  'Track GPA requirements for each class and identify high-impact assignments. This helps you protect funding and document your progress effectively.',
-              },
-              {
-                question: 'Will this work for curved classes?',
-                answer:
-                  'Add estimated curve adjustments to model different scenarios. You can compare no-curve versus curved outcomes side by side.',
-              },
-              {
-                question: 'Can parents or tutors use this tool?',
-                answer:
-                  'Absolutely. Share your calculations so everyone works from the same data. This makes collaboration and support much more effective.',
-              },
-              {
-                question: 'Is my data stored or saved?',
-                answer:
-                  'All data stays in your browser session for privacy. You can export results when needed, then start fresh next term.',
-              },
-              {
-                question: 'How do I track multiple classes?',
-                answer:
-                  'Use separate browser tabs for each course, or export results to a spreadsheet. This lets you maintain a master view of all your classes.',
-              },
-              {
-                question: 'What if I need more than 100% on my final?',
-                answer:
-                  'If the calculator shows you need above 100%, your target may be unrealistic. Use this as a conversation starter with your professor about extra credit or adjusting your goal.',
-              },
-            ].map((item, index) => (
+            {homeFaqs.map((item, index) => (
               <div
                 key={index}
                 className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm flex flex-col gap-3"
@@ -988,8 +947,8 @@ export default function Home() {
                 <strong className="block text-gray-900 dark:text-white mb-2">Example</strong>
                 <p>
                   With an 85% current grade, a final exam worth 30%, and a target of 90%, you would
-                  need to score 96% on your final. If that seems too high, consider adjusting your
-                  target or exploring extra credit opportunities.
+                  need to score 101.67% on your final. If that is above what your class allows,
+                  consider adjusting your target or exploring extra credit opportunities.
                 </p>
               </div>
             </div>
