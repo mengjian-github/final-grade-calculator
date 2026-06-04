@@ -27,9 +27,9 @@ import {
 } from 'lucide-react';
 
 export const metadata: Metadata = generateMetadata({
-  title: 'Final Grade Calculator | Score Needed on Final',
+  title: 'Final Grade Calculator - What Score Do I Need?',
   description:
-    'Enter your current grade and final exam weight — instantly see the exact score needed. Supports weighted categories, drop-lowest rules, and scenario charts.',
+    'Enter your current grade, target grade, and final exam weight to see the exact score you need on your final. Includes formula, examples, and weighted-grade options.',
   keywords: [
     'final exam calculator',
     'finals grade calculator',
@@ -41,27 +41,46 @@ export const metadata: Metadata = generateMetadata({
 });
 
 export default function Home() {
+  const defaultAnswer = '101.67%';
+  const defaultFormula = '(90 - 85 × 0.70) ÷ 0.30 = 101.67';
+  const homeFaqs = [
+    {
+      question: 'How do I calculate what grade I need on my final?',
+      answer:
+        'Use required final score = (target grade - current grade × (1 - final weight)) ÷ final weight. Enter final weight as a decimal in the formula or as a percentage in the calculator.',
+    },
+    {
+      question: 'What score do I need on my final to get an A?',
+      answer:
+        'Enter your current grade, set your target to the minimum A grade used by your school, and enter the final exam weight. The calculator returns the required final exam percentage.',
+    },
+    {
+      question: 'What if I need more than 100% on the final?',
+      answer:
+        'Your target is not reachable from the current grade and final weight without extra credit, grade changes, or a lower target.',
+    },
+    {
+      question: 'Should I use the final grade calculator or weighted grade calculator?',
+      answer:
+        'Use the final grade calculator for one final exam. Use the weighted calculator when homework, quizzes, labs, projects, missing work, or dropped assignments affect your grade.',
+    },
+    {
+      question: 'Does the calculator use percentages or decimals?',
+      answer:
+        'Enter percentages in the tool, such as 30 for a final worth 30%. The formula treats 30% as 0.30.',
+    },
+  ];
   const faqStructuredData = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
-    mainEntity: [
-      {
-        '@type': 'Question',
-        name: 'How does the Final Grade Calculator figure out what I need on my exam?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'Enter your current grade, the weight of your final, and your target grade. The Final Grade Calculator applies the weighted-average formula to output the exact exam percentage required and flags whether that target is realistic, challenging, or impossible.',
-        },
+    mainEntity: homeFaqs.map((faq) => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: faq.answer,
       },
-      {
-        '@type': 'Question',
-        name: 'Can the Final Grade Calculator handle dropped assignments or missing work?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'Yes. Use the Weighted Grade Calculator mode to import each assignment, drop the lowest quiz scores, or treat missing work as zero so the projection stays aligned with your syllabus.',
-        },
-      },
-    ],
+    })),
   };
 
   const softwareStructuredData = {
@@ -103,47 +122,55 @@ export default function Home() {
             Final Grade Calculator
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-4xl mx-auto">
-            Enter your current grade and final exam weight to see the exact score you need. Use the
-            weighted calculator when your course includes homework, quizzes, projects, and exams with
-            different weights.
+            Enter your current grade, target grade, and final exam weight to see the exact score you need on your final exam.
           </p>
 
-          <div className="mt-10 grid gap-6 sm:grid-cols-3 text-left">
-          {[
-            {
-              title: 'Exact score in seconds',
-              description:
-                'See the percentage you need on the final right away, with no spreadsheet setup.',
-            },
-            {
-              title: 'Best for one final exam',
-              description:
-                'Use this page when you only need to answer, “What grade do I need on my final?”',
-            },
-            {
-              title: 'Weighted mode when needed',
-              description: 'Jump to the weighted calculator for homework, quiz, lab, and project splits.',
-            },
-          ].map((item) => (
-              <div
-                key={item.title}
-                className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/60 p-5 shadow-sm backdrop-blur"
-              >
-                <p className="text-xs font-semibold text-primary dark:text-primary-light uppercase tracking-wide">
-                  {item.title}
+          <div className="mt-8 rounded-3xl border border-primary/30 bg-white text-left shadow-xl shadow-primary/10 dark:border-primary-light/30 dark:bg-gray-900">
+            <div className="grid gap-0 md:grid-cols-[1fr_1.4fr]">
+              <div className="border-b border-gray-200 p-6 dark:border-gray-800 md:border-b-0 md:border-r">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary dark:text-primary-light">
+                  Quick answer
                 </p>
-                <p className="mt-2 text-gray-600 dark:text-gray-300 text-sm">{item.description}</p>
+                <h2 className="mt-3 text-2xl font-bold text-gray-900 dark:text-white">
+                  What score do I need on my final?
+                </h2>
+                <p className="mt-3 text-sm text-gray-600 dark:text-gray-300">
+                  Default example: current grade 85%, target grade 90%, final exam weight 30%.
+                </p>
+                <p className="mt-5 text-5xl font-black tracking-tight text-primary dark:text-primary-light">
+                  {defaultAnswer}
+                </p>
+                <p className="mt-3 text-sm font-semibold text-error">
+                  You need {defaultAnswer} on your final exam. Because this is above 100%, the 90% target requires extra credit or a lower target.
+                </p>
               </div>
-            ))}
+              <div className="p-6">
+                <p className="text-sm font-semibold text-gray-900 dark:text-white">Answer-first formula</p>
+                <p className="mt-3 text-sm text-gray-600 dark:text-gray-300">
+                  To find the score you need on your final exam, enter your current course grade, your target course grade, and the final exam weight.
+                </p>
+                <p className="mt-3 rounded-2xl bg-gray-50 p-4 font-mono text-sm text-gray-800 dark:bg-gray-800 dark:text-gray-100">
+                  Required final score = (target grade - current grade × (1 - final weight)) ÷ final weight<br />
+                  {defaultFormula}
+                </p>
+                <p className="mt-4 text-sm text-gray-600 dark:text-gray-300">
+                  Final weight is a decimal in the formula, so 30% becomes 0.30. The calculator below loads with the same values.
+                </p>
+              </div>
+            </div>
           </div>
 
-          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <div id="calculator" className="mt-8 bg-white dark:bg-gray-900 rounded-3xl border border-gray-200 dark:border-gray-800 shadow-xl shadow-primary/10 p-4 sm:p-6">
+            <FinalGradeCalculator />
+          </div>
+
+          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
               href="#calculator"
               className="inline-flex items-center gap-2 rounded-lg bg-primary px-8 py-3 text-base font-semibold text-white shadow-lg shadow-primary/30 transition hover:bg-primary-dark"
             >
               <Zap className="w-5 h-5" />
-              Calculate My Final Exam Score
+              Calculate the Score I Need
             </Link>
             <Link
               href="/weighted-grade-calculator"
@@ -155,12 +182,8 @@ export default function Home() {
           </div>
 
           <p className="mt-6 text-sm text-gray-500 dark:text-gray-400">
-            For “final exam calculator”, “what grade do I need on my final”, and “grade needed on final”.
+            Built for “final grade calculator”, “final exam calculator”, and “what grade do I need on my final”.
           </p>
-
-          <div id="calculator" className="mt-10 bg-white dark:bg-gray-900 rounded-3xl border border-gray-200 dark:border-gray-800 shadow-xl shadow-primary/10 p-4 sm:p-6">
-            <FinalGradeCalculator />
-          </div>
 
           <div className="mt-6 grid gap-4 sm:grid-cols-3 text-left">
             {[

@@ -24,6 +24,9 @@ export default function WeightedGradeCalculator() {
   const [totalWeight, setTotalWeight] = useState<number>(0);
   const [targetGrade, setTargetGrade] = useState<string>('90');
   const [neededGrade, setNeededGrade] = useState<number | null>(null);
+  const [calculationStatus, setCalculationStatus] = useState<string>(
+    'Weighted calculator is live. Add grades and weights, then press Update Weighted Grade for confirmation.'
+  );
 
   const trackManualWeightedCalculation = () => {
     trackEvent('weighted_calculate', {
@@ -33,6 +36,22 @@ export default function WeightedGradeCalculator() {
       items_count: items.length,
       source: 'manual_cta',
     });
+
+    if (totalWeight <= 0) {
+      setCalculationStatus('Add at least one positive weight before calculating; no Infinity result is displayed.');
+      return;
+    }
+
+    if (neededGrade === null) {
+      setCalculationStatus(`Updated: current weighted grade is ${currentGrade.toFixed(2)}% across ${totalWeight.toFixed(0)}% total weight.`);
+      return;
+    }
+
+    setCalculationStatus(
+      neededGrade > 100
+        ? `Updated: you need ${neededGrade.toFixed(2)}% on remaining items, which is above 100%.`
+        : `Updated: you need ${neededGrade.toFixed(2)}% on remaining items.`
+    );
   };
 
   useEffect(() => {
@@ -61,6 +80,8 @@ export default function WeightedGradeCalculator() {
 
     if (totalW > 0) {
       setCurrentGrade(weightedSum / totalW);
+    } else {
+      setCurrentGrade(0);
     }
 
     // Calculate needed grade for remaining items
@@ -190,6 +211,19 @@ export default function WeightedGradeCalculator() {
           </button>
         </div>
 
+        <div
+          aria-live="polite"
+          className="mb-8 rounded-xl border border-primary/20 bg-primary/5 px-4 py-3 text-sm font-medium text-gray-800 dark:border-primary-light/30 dark:bg-primary/10 dark:text-gray-100"
+        >
+          {calculationStatus}
+        </div>
+
+        {totalWeight <= 0 && (
+          <div className="mb-8 rounded-xl border border-warning/40 bg-warning/10 px-4 py-3 text-sm font-semibold text-gray-900 dark:text-gray-100">
+            Add positive category weights to calculate a weighted grade. The app now suppresses divide-by-zero / Infinity states.
+          </div>
+        )}
+
         {/* Results */}
         <div className="grid md:grid-cols-2 gap-6">
           {/* Current Grade */}
@@ -284,7 +318,7 @@ export default function WeightedGradeCalculator() {
               {items.map((item) => {
                 const grade = parseFloat(item.grade);
                 const weight = parseFloat(item.weight);
-                const contribution = !isNaN(grade) && !isNaN(weight)
+                const contribution = !isNaN(grade) && !isNaN(weight) && totalWeight > 0
                   ? ((grade * weight) / totalWeight).toFixed(2)
                   : '—';
 

@@ -83,6 +83,9 @@ export default function FinalGradeCalculatorComponent() {
 
   const [result, setResult] = useState<number | null>(null);
   const [chartData, setChartData] = useState<any[]>([]);
+  const [calculationStatus, setCalculationStatus] = useState<string>(
+    'Live result is already updated for the default 85 / 90 / 30 example.'
+  );
 
   useEffect(() => {
     const current = parseFloat(currentGrade);
@@ -99,6 +102,11 @@ export default function FinalGradeCalculatorComponent() {
       ) {
         const needed = calculateNeededGrade(current, desired, weight);
         setResult(needed);
+        setCalculationStatus(
+          needed > 100
+            ? `Updated: you need ${needed.toFixed(2)}%, so this target requires extra credit or a lower goal.`
+            : `Updated: you need ${needed.toFixed(2)}% on the final exam.`
+        );
 
         // Generate chart data
         const data = [];
@@ -110,6 +118,10 @@ export default function FinalGradeCalculatorComponent() {
           });
         }
         setChartData(data);
+      } else {
+        setResult(null);
+        setChartData([]);
+        setCalculationStatus('Enter a current grade, target grade, and final weight from 0 to 100 to calculate.');
       }
     } else {
       if (
@@ -120,6 +132,10 @@ export default function FinalGradeCalculatorComponent() {
       ) {
         const final = calculateFinalGrade(current, finalGrade, weight);
         setResult(final);
+        setCalculationStatus(`Updated: your projected course grade is ${final.toFixed(2)}%.`);
+      } else {
+        setResult(null);
+        setCalculationStatus('Enter a current grade, final exam score, and final weight from 0 to 100 to predict.');
       }
     }
   }, [currentGrade, desiredGrade, finalWeight, finalExamGrade, mode]);
@@ -135,6 +151,14 @@ export default function FinalGradeCalculatorComponent() {
       result_state: mode === 'predict' ? 'predict' : result <= 100 ? 'achievable' : 'unachievable',
       source: 'manual_cta',
     });
+
+    setCalculationStatus(
+      mode === 'needed'
+        ? result > 100
+          ? `Confirmed: ${result.toFixed(2)}% is the correct needed score, and it is above 100%.`
+          : `Confirmed: ${result.toFixed(2)}% is the needed final exam score.`
+        : `Confirmed: ${result.toFixed(2)}% is the projected final course grade.`
+    );
   };
 
   return (
@@ -279,6 +303,13 @@ export default function FinalGradeCalculatorComponent() {
             <Calculator className="h-4 w-4" />
             Update Calculation
           </button>
+        </div>
+
+        <div
+          aria-live="polite"
+          className="mb-8 rounded-xl border border-primary/20 bg-primary/5 px-4 py-3 text-sm font-medium text-gray-800 dark:border-primary-light/30 dark:bg-primary/10 dark:text-gray-100"
+        >
+          {calculationStatus}
         </div>
 
         {/* Result Display */}
