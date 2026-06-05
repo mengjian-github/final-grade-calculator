@@ -442,7 +442,7 @@ export default function FinalGradeCalculatorComponent() {
             className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-primary/25 transition hover:bg-primary/90 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
           >
             <Calculator className="h-4 w-4" />
-            Update Calculation
+            Calculate
           </button>
         </div>
 
