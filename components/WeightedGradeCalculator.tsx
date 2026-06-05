@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Plus, Trash2, Calculator } from 'lucide-react';
 import { percentageToLetter } from '@/lib/gradeCalculations';
 import { trackEvent } from '@/lib/analytics';
@@ -11,6 +11,21 @@ interface GradeItem {
   grade: string;
   weight: string;
 }
+
+const isFiniteNumber = (value: number) => Number.isFinite(value) && !Number.isNaN(value);
+
+const formatSafePercent = (value: number | null) => {
+  if (value === null || !isFiniteNumber(value)) return '—';
+  return `${value.toFixed(2)}%`;
+};
+
+const getWeightedResultState = (neededGrade: number | null, totalWeight: number) => {
+  if (totalWeight <= 0) return 'invalid';
+  if (neededGrade === null || !isFiniteNumber(neededGrade)) return 'current_only';
+  if (neededGrade < 0) return 'already_achieved';
+  if (neededGrade <= 100) return 'achievable';
+  return 'unachievable';
+};
 
 export default function WeightedGradeCalculator() {
   const [items, setItems] = useState<GradeItem[]>([
@@ -27,12 +42,26 @@ export default function WeightedGradeCalculator() {
   const [calculationStatus, setCalculationStatus] = useState<string>(
     'Weighted calculator is live. Add grades and weights, then press Update Weighted Grade for confirmation.'
   );
+  const hasTrackedStart = useRef(false);
+  const lastResultSignature = useRef<string | null>(null);
+
+  const trackStartCalculator = (source = 'input_change') => {
+    if (hasTrackedStart.current) return;
+    hasTrackedStart.current = true;
+    trackEvent('start_calculator', {
+      calculator_type: 'weighted_grade',
+      input_mode: 'weighted_items',
+      result_state: getWeightedResultState(neededGrade, totalWeight),
+      items_count: items.length,
+      source,
+    });
+  };
 
   const trackManualWeightedCalculation = () => {
     trackEvent('weighted_calculate', {
       calculator_type: 'weighted_grade',
       input_mode: 'weighted_items',
-      result_state: neededGrade === null ? 'predict' : neededGrade <= 100 ? 'achievable' : 'unachievable',
+      result_state: getWeightedResultState(neededGrade, totalWeight),
       items_count: items.length,
       source: 'manual_cta',
     });
@@ -58,21 +87,21 @@ export default function WeightedGradeCalculator() {
     let weightedSum = 0;
     let totalW = 0;
     let remainingWeight = 0;
-    let remainingWeightItems: GradeItem[] = [];
 
     items.forEach((item) => {
       const grade = parseFloat(item.grade);
       const weight = parseFloat(item.weight);
+      const hasPositiveWeight = isFiniteNumber(weight) && weight > 0;
+      const hasGrade = isFiniteNumber(grade);
 
-      if (!isNaN(weight)) {
+      if (hasPositiveWeight) {
         totalW += weight;
       }
 
-      if (!isNaN(grade) && !isNaN(weight)) {
-        weightedSum += (grade * weight);
-      } else if (!isNaN(weight) && (isNaN(grade) || item.grade === '')) {
+      if (hasGrade && hasPositiveWeight) {
+        weightedSum += grade * weight;
+      } else if (hasPositiveWeight && (item.grade.trim() === '' || !hasGrade)) {
         remainingWeight += weight;
-        remainingWeightItems.push(item);
       }
     });
 
@@ -84,17 +113,46 @@ export default function WeightedGradeCalculator() {
       setCurrentGrade(0);
     }
 
-    // Calculate needed grade for remaining items
+    // Calculate needed grade for remaining positive-weight items only.
     const target = parseFloat(targetGrade);
-    if (remainingWeight > 0 && !isNaN(target)) {
+    if (remainingWeight > 0 && isFiniteNumber(target) && totalW > 0) {
       const needed = ((target * totalW) - weightedSum) / remainingWeight;
-      setNeededGrade(needed);
+      setNeededGrade(isFiniteNumber(needed) ? needed : null);
     } else {
       setNeededGrade(null);
     }
   }, [items, targetGrade]);
 
+  useEffect(() => {
+    if (totalWeight <= 0 || !isFiniteNumber(currentGrade)) return;
+
+    const resultValue = neededGrade !== null && isFiniteNumber(neededGrade) ? neededGrade : currentGrade;
+    const signature = JSON.stringify({
+      items: items.map((item) => [item.grade, item.weight]),
+      targetGrade,
+      totalWeight: totalWeight.toFixed(2),
+      currentGrade: currentGrade.toFixed(2),
+      neededGrade: neededGrade === null ? null : neededGrade.toFixed(2),
+    });
+
+    const timer = window.setTimeout(() => {
+      if (lastResultSignature.current === signature) return;
+      lastResultSignature.current = signature;
+      trackEvent('result_view', {
+        calculator_type: 'weighted_grade',
+        input_mode: 'weighted_items',
+        result_state: getWeightedResultState(neededGrade, totalWeight),
+        result_value: Number(resultValue.toFixed(2)),
+        items_count: items.length,
+        source: 'auto_result',
+      });
+    }, 700);
+
+    return () => window.clearTimeout(timer);
+  }, [currentGrade, items, neededGrade, targetGrade, totalWeight]);
+
   const addItem = () => {
+    trackStartCalculator('add_item');
     const newItem: GradeItem = {
       id: Date.now().toString(),
       name: `Item ${items.length + 1}`,
@@ -105,15 +163,45 @@ export default function WeightedGradeCalculator() {
   };
 
   const removeItem = (id: string) => {
+    trackStartCalculator('remove_item');
     if (items.length > 1) {
       setItems(items.filter((item) => item.id !== id));
     }
   };
 
   const updateItem = (id: string, field: keyof GradeItem, value: string) => {
+    trackStartCalculator('input_change');
     setItems(
       items.map((item) => (item.id === id ? { ...item, [field]: value } : item))
     );
+  };
+
+  const updateTargetGrade = (value: string) => {
+    trackStartCalculator('target_change');
+    setTargetGrade(value);
+  };
+
+  const copyWeightedResult = async () => {
+    if (totalWeight <= 0) return;
+
+    const text = neededGrade === null
+      ? `Weighted Grade Calculator: my current weighted grade is ${currentGrade.toFixed(2)}% across ${totalWeight.toFixed(0)}% total weight.`
+      : `Weighted Grade Calculator: current grade ${currentGrade.toFixed(2)}%; needed on remaining items ${neededGrade.toFixed(2)}%.`;
+
+    try {
+      await navigator.clipboard.writeText(text);
+      setCalculationStatus('Copied weighted grade result to clipboard.');
+      trackEvent('copy_result', {
+        calculator_type: 'weighted_grade',
+        input_mode: 'weighted_items',
+        result_state: getWeightedResultState(neededGrade, totalWeight),
+        result_value: Number((neededGrade ?? currentGrade).toFixed(2)),
+        items_count: items.length,
+        source: 'result_cta',
+      });
+    } catch {
+      setCalculationStatus('Copy failed. You can still select the result text manually.');
+    }
   };
 
   return (
@@ -204,7 +292,7 @@ export default function WeightedGradeCalculator() {
           <button
             type="button"
             onClick={trackManualWeightedCalculation}
-            className="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-3 text-sm font-semibold text-white shadow-lg transition hover:bg-primary/90"
+            className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-primary/25 transition hover:bg-primary/90 active:scale-[0.98]"
           >
             <Calculator className="h-4 w-4" />
             Update Weighted Grade
@@ -235,7 +323,7 @@ export default function WeightedGradeCalculator() {
               </h3>
             </div>
             <div className="text-4xl font-bold text-primary dark:text-primary-light mb-2">
-              {currentGrade.toFixed(2)}%
+              {formatSafePercent(currentGrade)}
             </div>
             <div className="text-xl font-semibold text-gray-700 dark:text-gray-300">
               {percentageToLetter(currentGrade)}
@@ -262,7 +350,7 @@ export default function WeightedGradeCalculator() {
               <input
                 type="number"
                 value={targetGrade}
-                onChange={(e) => setTargetGrade(e.target.value)}
+                onChange={(e) => updateTargetGrade(e.target.value)}
                 min="0"
                 max="100"
                 step="0.01"
@@ -272,7 +360,7 @@ export default function WeightedGradeCalculator() {
             {neededGrade !== null && (
               <div>
                 <div className="text-3xl font-bold text-secondary dark:text-primary-light mb-2">
-                  {neededGrade.toFixed(2)}%
+                  {formatSafePercent(neededGrade)}
                 </div>
                 <div className="text-lg font-semibold text-gray-700 dark:text-gray-300">
                   {percentageToLetter(neededGrade)}
@@ -290,6 +378,17 @@ export default function WeightedGradeCalculator() {
               </div>
             )}
           </div>
+        </div>
+
+        <div className="mt-6 flex justify-center">
+          <button
+            type="button"
+            onClick={copyWeightedResult}
+            disabled={totalWeight <= 0}
+            className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-primary/40 bg-white px-4 py-2 text-sm font-semibold text-primary transition hover:border-primary hover:bg-primary/5 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-900 dark:text-primary-light"
+          >
+            Copy result
+          </button>
         </div>
 
         {/* Breakdown Table */}
@@ -318,7 +417,7 @@ export default function WeightedGradeCalculator() {
               {items.map((item) => {
                 const grade = parseFloat(item.grade);
                 const weight = parseFloat(item.weight);
-                const contribution = !isNaN(grade) && !isNaN(weight) && totalWeight > 0
+                const contribution = isFiniteNumber(grade) && isFiniteNumber(weight) && weight > 0 && totalWeight > 0
                   ? ((grade * weight) / totalWeight).toFixed(2)
                   : '—';
 

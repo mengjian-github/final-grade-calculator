@@ -1,5 +1,8 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
+import { trackEvent } from '@/lib/analytics';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -20,8 +23,19 @@ export default function Footer() {
     ],
     trust: [
       { name: 'Privacy Policy', href: '/privacy' },
-      { name: 'Contact', href: '/contact' },
+      { name: 'Contact', href: '/contact', eventName: 'contact_click' },
     ],
+  };
+
+  const trackFooterLink = (link: { name: string; href: string; eventName?: string }) => {
+    if (!link.eventName) return;
+
+    trackEvent(link.eventName, {
+      calculator_type: 'site_navigation',
+      input_mode: 'footer_link',
+      result_state: 'contact_intent',
+      destination: link.href,
+    });
   };
 
   return (
@@ -65,6 +79,7 @@ export default function Footer() {
                 <li key={link.name}>
                   <Link
                     href={link.href}
+                    onClick={() => trackFooterLink(link)}
                     className="text-sm text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-light transition-colors"
                   >
                     {link.name}
@@ -84,6 +99,7 @@ export default function Footer() {
                 <li key={link.name}>
                   <Link
                     href={link.href}
+                    onClick={() => trackFooterLink(link)}
                     className="text-sm text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-light transition-colors"
                   >
                     {link.name}
@@ -103,6 +119,7 @@ export default function Footer() {
                 <li key={link.name}>
                   <Link
                     href={link.href}
+                    onClick={() => trackFooterLink(link)}
                     className="text-sm text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-light transition-colors"
                   >
                     {link.name}

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { trackEvent } from '@/lib/analytics';
 import {
@@ -74,6 +74,39 @@ const ChartTooltip = ({ active, payload, label }: ChartTooltipProps) => {
   );
 };
 
+const getFinalGradeResultState = (mode: 'needed' | 'predict', result: number) => {
+  if (mode === 'predict') return 'predict';
+  if (result < 0) return 'already_achieved';
+  if (result <= 100) return 'achievable';
+  return 'unachievable';
+};
+
+const quickActions = [
+  {
+    id: 'need-a-minus',
+    label: 'I need an A- (90%)',
+    currentGrade: '85',
+    desiredGrade: '90',
+    finalWeight: '30',
+  },
+  {
+    id: 'need-to-pass',
+    label: 'I just need to pass (70%)',
+    currentGrade: '64',
+    desiredGrade: '70',
+    finalWeight: '25',
+  },
+  {
+    id: 'final-worth-40',
+    label: 'My final is worth 40%',
+    currentGrade: '78',
+    desiredGrade: '85',
+    finalWeight: '40',
+  },
+];
+
+type QuickAction = (typeof quickActions)[number];
+
 export default function FinalGradeCalculatorComponent() {
   const [currentGrade, setCurrentGrade] = useState<string>('85');
   const [desiredGrade, setDesiredGrade] = useState<string>('90');
@@ -86,6 +119,29 @@ export default function FinalGradeCalculatorComponent() {
   const [calculationStatus, setCalculationStatus] = useState<string>(
     'Live result is already updated for the default 85 / 90 / 30 example.'
   );
+  const hasTrackedStart = useRef(false);
+  const lastResultSignature = useRef<string | null>(null);
+
+  const trackStartCalculator = (inputMode: 'needed' | 'predict' = mode, source = 'input_change') => {
+    if (hasTrackedStart.current) return;
+    hasTrackedStart.current = true;
+    trackEvent('start_calculator', {
+      calculator_type: 'final_grade',
+      input_mode: inputMode,
+      result_state: result === null ? 'invalid' : getFinalGradeResultState(inputMode, result),
+      source,
+    });
+  };
+
+  const updateField = (setter: (value: string) => void, value: string) => {
+    trackStartCalculator(mode, 'input_change');
+    setter(value);
+  };
+
+  const updateMode = (nextMode: 'needed' | 'predict') => {
+    trackStartCalculator(nextMode, 'mode_switch');
+    setMode(nextMode);
+  };
 
   useEffect(() => {
     const current = parseFloat(currentGrade);
@@ -140,6 +196,33 @@ export default function FinalGradeCalculatorComponent() {
     }
   }, [currentGrade, desiredGrade, finalWeight, finalExamGrade, mode]);
 
+  useEffect(() => {
+    if (result === null || !Number.isFinite(result)) return;
+
+    const signature = [
+      mode,
+      currentGrade,
+      desiredGrade,
+      finalWeight,
+      finalExamGrade,
+      result.toFixed(2),
+    ].join('|');
+
+    const timer = window.setTimeout(() => {
+      if (lastResultSignature.current === signature) return;
+      lastResultSignature.current = signature;
+      trackEvent('result_view', {
+        calculator_type: 'final_grade',
+        input_mode: mode,
+        result_state: getFinalGradeResultState(mode, result),
+        result_value: Number(result.toFixed(2)),
+        source: 'auto_result',
+      });
+    }, 700);
+
+    return () => window.clearTimeout(timer);
+  }, [currentGrade, desiredGrade, finalWeight, finalExamGrade, mode, result]);
+
   const suggestion =
     mode === 'needed' && result !== null ? getGradeSuggestion(result) : null;
 
@@ -148,7 +231,7 @@ export default function FinalGradeCalculatorComponent() {
     trackEvent('calculate_click', {
       calculator_type: 'final_grade',
       input_mode: mode,
-      result_state: mode === 'predict' ? 'predict' : result <= 100 ? 'achievable' : 'unachievable',
+      result_state: getFinalGradeResultState(mode, result),
       source: 'manual_cta',
     });
 
@@ -161,13 +244,71 @@ export default function FinalGradeCalculatorComponent() {
     );
   };
 
+  const copyResult = async () => {
+    if (result === null) return;
+
+    const text =
+      mode === 'needed'
+        ? `Final Grade Calculator: I need ${result.toFixed(2)}% on the final exam to finish with ${desiredGrade || 'my target'}%.`
+        : `Final Grade Calculator: my projected final course grade is ${result.toFixed(2)}%.`;
+
+    try {
+      await navigator.clipboard.writeText(text);
+      setCalculationStatus('Copied result to clipboard.');
+      trackEvent('copy_result', {
+        calculator_type: 'final_grade',
+        input_mode: mode,
+        result_state: getFinalGradeResultState(mode, result),
+        result_value: Number(result.toFixed(2)),
+        source: 'result_cta',
+      });
+    } catch {
+      setCalculationStatus('Copy failed. You can still select the result text manually.');
+    }
+  };
+
+  const applyQuickAction = (action: QuickAction) => {
+    setMode('needed');
+    setCurrentGrade(action.currentGrade);
+    setDesiredGrade(action.desiredGrade);
+    setFinalWeight(action.finalWeight);
+    setFinalExamGrade('');
+    trackStartCalculator('needed', 'quick_action');
+    trackEvent('quick_action_click', {
+      calculator_type: 'final_grade',
+      quick_action_id: action.id,
+      current_grade: action.currentGrade,
+      desired_grade: action.desiredGrade,
+      final_weight: action.finalWeight,
+    });
+    setCalculationStatus(`Loaded: ${action.label}. The result updates automatically.`);
+  };
+
   return (
     <div className="w-full max-w-5xl mx-auto">
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-700">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-4 sm:p-8 border border-gray-200 dark:border-gray-700">
+        <div className="mb-5 rounded-2xl border border-primary/20 bg-primary/5 p-4 text-left dark:border-primary-light/30 dark:bg-primary/10">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary dark:text-primary-light">
+            Quick student questions
+          </p>
+          <div className="mt-3 grid gap-2 sm:grid-cols-3">
+            {quickActions.map((action) => (
+              <button
+                key={action.id}
+                type="button"
+                onClick={() => applyQuickAction(action)}
+                className="rounded-xl border border-primary/20 bg-white px-3 py-2 text-left text-sm font-semibold text-gray-800 transition hover:border-primary hover:bg-primary/10 dark:border-primary-light/30 dark:bg-gray-900 dark:text-gray-100 dark:hover:border-primary-light"
+              >
+                {action.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* Mode Toggle */}
-        <div className="flex gap-4 mb-8">
+        <div className="flex gap-3 mb-5">
           <button
-            onClick={() => setMode('needed')}
+            onClick={() => updateMode('needed')}
             className={`flex-1 py-3 px-6 rounded-lg font-medium transition-all ${
               mode === 'needed'
                 ? 'bg-primary text-white shadow-lg scale-105'
@@ -180,7 +321,7 @@ export default function FinalGradeCalculatorComponent() {
             </div>
           </button>
           <button
-            onClick={() => setMode('predict')}
+            onClick={() => updateMode('predict')}
             className={`flex-1 py-3 px-6 rounded-lg font-medium transition-all ${
               mode === 'predict'
                 ? 'bg-primary text-white shadow-lg scale-105'
@@ -195,7 +336,7 @@ export default function FinalGradeCalculatorComponent() {
         </div>
 
         {/* Input Form */}
-        <div className="grid md:grid-cols-2 gap-6 mb-8">
+        <div className="grid md:grid-cols-2 gap-4 sm:gap-6 mb-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Current Grade (% displayed in LMS)
@@ -203,7 +344,7 @@ export default function FinalGradeCalculatorComponent() {
             <input
               type="number"
               value={currentGrade}
-              onChange={(e) => setCurrentGrade(e.target.value)}
+              onChange={(e) => updateField(setCurrentGrade, e.target.value)}
               min="0"
               max="100"
               step="0.01"
@@ -224,7 +365,7 @@ export default function FinalGradeCalculatorComponent() {
               <input
                 type="number"
                 value={desiredGrade}
-                onChange={(e) => setDesiredGrade(e.target.value)}
+                onChange={(e) => updateField(setDesiredGrade, e.target.value)}
                 min="0"
                 max="100"
                 step="0.01"
@@ -243,7 +384,7 @@ export default function FinalGradeCalculatorComponent() {
               <input
                 type="number"
                 value={finalExamGrade}
-                onChange={(e) => setFinalExamGrade(e.target.value)}
+                onChange={(e) => updateField(setFinalExamGrade, e.target.value)}
                 min="0"
                 max="100"
                 step="0.01"
@@ -263,7 +404,7 @@ export default function FinalGradeCalculatorComponent() {
             <input
               type="number"
               value={finalWeight}
-              onChange={(e) => setFinalWeight(e.target.value)}
+              onChange={(e) => updateField(setFinalWeight, e.target.value)}
               min="0"
               max="100"
               step="1"
@@ -273,7 +414,7 @@ export default function FinalGradeCalculatorComponent() {
             <input
               type="range"
               value={finalWeight}
-              onChange={(e) => setFinalWeight(e.target.value)}
+              onChange={(e) => updateField(setFinalWeight, e.target.value)}
               min="0"
               max="100"
               step="1"
@@ -293,12 +434,12 @@ export default function FinalGradeCalculatorComponent() {
           </div>
         </div>
 
-        <div className="mb-8 flex justify-center">
+        <div className="mb-6 flex justify-center">
           <button
             type="button"
             onClick={trackManualCalculation}
             disabled={result === null}
-            className="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-3 text-sm font-semibold text-white shadow-lg transition hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
+            className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-primary/25 transition hover:bg-primary/90 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
           >
             <Calculator className="h-4 w-4" />
             Update Calculation
@@ -335,6 +476,16 @@ export default function FinalGradeCalculatorComponent() {
                   <strong>{desiredGrade || 'your target'}%</strong> in the course.
                 </p>
               )}
+            </div>
+
+            <div className="mt-5 flex justify-center">
+              <button
+                type="button"
+                onClick={copyResult}
+                className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-primary/40 bg-white px-4 py-2 text-sm font-semibold text-primary transition hover:border-primary hover:bg-primary/5 dark:bg-gray-900 dark:text-primary-light"
+              >
+                Copy result
+              </button>
             </div>
 
             {suggestion && mode === 'needed' && (
