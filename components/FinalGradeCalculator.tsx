@@ -287,24 +287,6 @@ export default function FinalGradeCalculatorComponent() {
   return (
     <div className="w-full max-w-5xl mx-auto">
       <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-4 sm:p-8 border border-gray-200 dark:border-gray-700">
-        <div className="mb-5 rounded-2xl border border-primary/20 bg-primary/5 p-4 text-left dark:border-primary-light/30 dark:bg-primary/10">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary dark:text-primary-light">
-            Quick student questions
-          </p>
-          <div className="mt-3 grid gap-2 sm:grid-cols-3">
-            {quickActions.map((action) => (
-              <button
-                key={action.id}
-                type="button"
-                onClick={() => applyQuickAction(action)}
-                className="rounded-xl border border-primary/20 bg-white px-3 py-2 text-left text-sm font-semibold text-gray-800 transition hover:border-primary hover:bg-primary/10 dark:border-primary-light/30 dark:bg-gray-900 dark:text-gray-100 dark:hover:border-primary-light"
-              >
-                {action.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
         {/* Mode Toggle */}
         <div className="flex gap-3 mb-5">
           <button
@@ -336,10 +318,10 @@ export default function FinalGradeCalculatorComponent() {
         </div>
 
         {/* Input Form */}
-        <div className="grid md:grid-cols-2 gap-4 sm:gap-6 mb-6">
+        <div className="grid grid-cols-2 gap-4 sm:gap-6 mb-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Current Grade (% displayed in LMS)
+            <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Current grade (%)
             </label>
             <input
               type="number"
@@ -351,7 +333,7 @@ export default function FinalGradeCalculatorComponent() {
               className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
               placeholder="85"
             />
-            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+            <p className="mt-1 hidden text-xs text-gray-500 dark:text-gray-400 sm:block">
               Enter the exact value shown in your gradebook (usually truncated to two decimals). Letter grade:{' '}
               {percentageToLetter(parseFloat(currentGrade) || 0)}
             </p>
@@ -359,8 +341,8 @@ export default function FinalGradeCalculatorComponent() {
 
           {mode === 'needed' ? (
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Desired Final Grade (%)
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Target grade (%)
               </label>
               <input
                 type="number"
@@ -372,14 +354,14 @@ export default function FinalGradeCalculatorComponent() {
                 className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
                 placeholder="90"
               />
-              <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+              <p className="mt-1 hidden text-xs text-gray-500 dark:text-gray-400 sm:block">
                 Target: {percentageToLetter(parseFloat(desiredGrade) || 0)}
               </p>
             </div>
           ) : (
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Final Exam Grade (%)
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Final exam score (%)
               </label>
               <input
                 type="number"
@@ -391,15 +373,15 @@ export default function FinalGradeCalculatorComponent() {
                 className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
                 placeholder="88"
               />
-              <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+              <p className="mt-1 hidden text-xs text-gray-500 dark:text-gray-400 sm:block">
                 Score: {percentageToLetter(parseFloat(finalExamGrade) || 0)}
               </p>
             </div>
           )}
 
-          <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Final Exam Weight (% of course grade)
+          <div className="col-span-2 md:col-span-2">
+            <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Final weight (%)
             </label>
             <input
               type="number"
@@ -420,11 +402,11 @@ export default function FinalGradeCalculatorComponent() {
               step="1"
               className="w-full mt-2"
             />
-            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+            <p className="mt-1 hidden text-xs text-gray-500 dark:text-gray-400 sm:block">
               Input 30 if your syllabus says the final is 30% (no decimal conversion needed). Current work weight:{' '}
               {isNaN(parseFloat(finalWeight)) ? '—' : 100 - parseFloat(finalWeight)}%
             </p>
-            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+            <p className="mt-1 hidden text-xs text-gray-500 dark:text-gray-400 sm:block">
               Need to drop lowest quizzes or treat missing work as zero? Use the{' '}
               <Link href="/weighted-grade-calculator" className="text-primary hover:text-primary-dark">
                 weighted calculator
@@ -444,6 +426,24 @@ export default function FinalGradeCalculatorComponent() {
             <Calculator className="h-4 w-4" />
             Calculate
           </button>
+        </div>
+
+        <div className="mb-6 rounded-2xl border border-primary/20 bg-primary/5 p-4 text-left dark:border-primary-light/30 dark:bg-primary/10">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary dark:text-primary-light">
+            Quick student questions
+          </p>
+          <div className="mt-3 grid gap-2 sm:grid-cols-3">
+            {quickActions.map((action) => (
+              <button
+                key={action.id}
+                type="button"
+                onClick={() => applyQuickAction(action)}
+                className="rounded-xl border border-primary/20 bg-white px-3 py-2 text-left text-sm font-semibold text-gray-800 transition hover:border-primary hover:bg-primary/10 dark:border-primary-light/30 dark:bg-gray-900 dark:text-gray-100 dark:hover:border-primary-light"
+              >
+                {action.label}
+              </button>
+            ))}
+          </div>
         </div>
 
         <div
