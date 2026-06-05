@@ -18,12 +18,16 @@ export default function Footer() {
       { name: 'College Grading Systems', href: '/college-grading-systems' },
       { name: 'What Grade Do I Need?', href: '/what-grade-do-i-need' },
     ],
+    trust: [
+      { name: 'Privacy Policy', href: '/privacy' },
+      { name: 'Contact', href: '/contact' },
+    ],
   };
 
   return (
     <footer className="bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 mt-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
           <div>
             <Link href="/" className="flex items-center gap-2 mb-4">
@@ -77,6 +81,25 @@ export default function Footer() {
             </h3>
             <ul className="space-y-2">
               {footerLinks.resources.map((link) => (
+                <li key={link.name}>
+                  <Link
+                    href={link.href}
+                    className="text-sm text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-light transition-colors"
+                  >
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Trust */}
+          <div>
+            <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4">
+              Trust
+            </h3>
+            <ul className="space-y-2">
+              {footerLinks.trust.map((link) => (
                 <li key={link.name}>
                   <Link
                     href={link.href}
