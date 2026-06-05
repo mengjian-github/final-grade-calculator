@@ -67,7 +67,7 @@ export default function WeightedGradeCalculator() {
     });
 
     if (totalWeight <= 0) {
-      setCalculationStatus('Add at least one positive weight before calculating; no Infinity result is displayed.');
+      setCalculationStatus('Add at least one positive weight before calculating; invalid weighted results stay hidden.');
       return;
     }
 
@@ -308,7 +308,7 @@ export default function WeightedGradeCalculator() {
 
         {totalWeight <= 0 && (
           <div className="mb-8 rounded-xl border border-warning/40 bg-warning/10 px-4 py-3 text-sm font-semibold text-gray-900 dark:text-gray-100">
-            Add positive category weights to calculate a weighted grade. The app now suppresses divide-by-zero / Infinity states.
+            Add positive category weights to calculate a weighted grade. Invalid weighted results stay hidden until enough data is available.
           </div>
         )}
 
