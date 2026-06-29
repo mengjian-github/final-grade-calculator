@@ -189,6 +189,57 @@ export default function FinalGradeCalculatorComponent() {
   const suggestion =
     mode === 'needed' && result !== null ? getGradeSuggestion(result) : null;
 
+  const getResultStatus = (result: number, mode: 'needed' | 'predict'): 'achievable' | 'stretch' | 'impossible' | 'predict' => {
+    if (mode === 'predict') return 'predict';
+    if (result < 0) return 'achievable';
+    if (result <= 60) return 'achievable';
+    if (result <= 100) return 'stretch';
+    return 'impossible';
+  };
+
+  const statusConfig: Record<string, { badge: string; badgeColor: string; bg: string; border: string; icon: string; headline: string; cta: string; actionType: string }> = {
+    achievable: {
+      badge: 'Achievable',
+      badgeColor: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300',
+      bg: 'bg-emerald-50 dark:bg-emerald-900/20',
+      border: 'border-emerald-200 dark:border-emerald-800',
+      icon: 'text-emerald-500',
+      headline: 'Target is within reach',
+      cta: 'Copy result & plan study time',
+      actionType: 'plan_study',
+    },
+    stretch: {
+      badge: 'Stretch',
+      badgeColor: 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300',
+      bg: 'bg-amber-50 dark:bg-amber-900/20',
+      border: 'border-amber-200 dark:border-amber-800',
+      icon: 'text-amber-500',
+      headline: 'High effort needed',
+      cta: 'Explore weighted scenarios',
+      actionType: 'explore_weighted',
+    },
+    impossible: {
+      badge: 'Impossible',
+      badgeColor: 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300',
+      bg: 'bg-red-50 dark:bg-red-900/20',
+      border: 'border-red-200 dark:border-red-800',
+      icon: 'text-red-500',
+      headline: 'Target not reachable',
+      cta: 'Adjust target or check extra credit',
+      actionType: 'adjust_target',
+    },
+    predict: {
+      badge: 'Projected',
+      badgeColor: 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300',
+      bg: 'bg-blue-50 dark:bg-blue-900/20',
+      border: 'border-blue-200 dark:border-blue-800',
+      icon: 'text-blue-500',
+      headline: 'Your projected course grade',
+      cta: 'Copy result & compare with target',
+      actionType: 'compare_target',
+    },
+  };
+
   const trackManualCalculation = () => {
     if (result === null) return;
     trackEvent('calculate_click', {
@@ -212,9 +263,22 @@ export default function FinalGradeCalculatorComponent() {
     }
   };
 
+  const trackNextAction = (actionType: string, target?: string) => {
+    if (result === null) return;
+    trackEvent('result_next_action_click', {
+      calculator_type: 'final_grade',
+      input_mode: mode,
+      result_state: getFinalGradeResultState(mode, result),
+      result_value: Number(result.toFixed(2)),
+      action_type: actionType,
+      target: target || 'inline',
+    });
+  };
+
   const copyResult = async () => {
     if (result === null) return;
 
+    const status = getResultStatus(result, mode);
     const isAchievable = mode === 'needed' ? result <= 100 : true;
     const nextStep = mode === 'needed'
       ? result > 100
@@ -229,6 +293,7 @@ Current grade: ${currentGrade}%
 Target grade: ${desiredGrade}%
 Final weight: ${finalWeight}%
 Result: I need ${result.toFixed(2)}% on the final exam.
+Status: ${statusConfig[status].badge}
 Achievable: ${isAchievable ? 'Yes' : 'No'}
 Next step: ${nextStep}
 https://finalgradecalculator.app`
@@ -237,6 +302,7 @@ Current grade: ${currentGrade}%
 Final exam score: ${finalExamGrade || '—'}%
 Final weight: ${finalWeight}%
 Result: My projected final course grade is ${result.toFixed(2)}%.
+Status: ${statusConfig[status].badge}
 Next step: ${nextStep}
 https://finalgradecalculator.app`;
 
@@ -396,7 +462,11 @@ https://finalgradecalculator.app`;
             </p>
             <p className="mt-1 hidden text-xs text-gray-500 dark:text-gray-400 sm:block">
               Need to drop lowest quizzes or treat missing work as zero? Use the{' '}
-              <Link href="/weighted-grade-calculator" className="text-primary hover:text-primary-dark">
+              <Link 
+                href="/weighted-grade-calculator" 
+                onClick={() => trackEvent('open_weighted_calculator', { source: 'input_hint', calculator_type: 'final_grade' })}
+                className="text-primary hover:text-primary-dark"
+              >
                 weighted calculator
               </Link>{' '}
               for full category control.
@@ -416,7 +486,7 @@ https://finalgradecalculator.app`;
           </button>
         </div>
 
-        <div className="mb-6 rounded-2xl border border-primary/20 bg-primary/5 p-4 text-left dark:border-primary-light/30 dark:bg-primary/10">
+        <div className="mb-6 rounded-2xl border border-primary/20 bg-primary/5 p-4 text-left dark:border-primary-light/30 dark:bg-primary/10" id="quick-actions">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary dark:text-primary-light">
             Quick student questions
           </p>
@@ -443,72 +513,91 @@ https://finalgradecalculator.app`;
 
         {/* Result Display */}
         {result !== null && (
-          <div ref={resultRef} className="bg-gradient-to-r from-primary/10 to-primary-light/10 dark:from-primary/20 dark:to-primary-light/20 rounded-xl p-6 mb-8">
-            <div className="flex items-center gap-3 mb-4">
-              <Award className="w-8 h-8 text-primary dark:text-primary-light" />
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                {mode === 'needed' ? 'Grade Needed on Final Exam' : 'Your Final Grade'}
-              </h3>
-            </div>
+          <div ref={resultRef} className="mb-8">
+            {(() => {
+              const status = getResultStatus(result, mode);
+              const cfg = statusConfig[status];
+              return (
+                <div className={`rounded-2xl border ${cfg.border} ${cfg.bg} p-5 sm:p-6`}>
+                  {/* Status badge + headline */}
+                  <div className="flex items-center gap-3 mb-4">
+                    <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider ${cfg.badgeColor}`}>
+                      {cfg.badge}
+                    </span>
+                    <h3 className="text-lg font-bold text-gray-900 dark:text-white">
+                      {cfg.headline}
+                    </h3>
+                  </div>
 
-            <div className="text-center">
-              <div className="text-6xl font-bold text-primary dark:text-primary-light mb-2">
-                {result.toFixed(2)}%
-              </div>
-              <div className="text-2xl font-semibold text-gray-700 dark:text-gray-300">
-                {percentageToLetter(result)}
-              </div>
-              {mode === 'needed' && (
-                <p className="mt-4 text-base text-gray-700 dark:text-gray-200">
-                  You need <strong>{result.toFixed(2)}%</strong> on your final exam to finish with{' '}
-                  <strong>{desiredGrade || 'your target'}%</strong> in the course.
-                </p>
-              )}
-            </div>
+                  {/* Required score first */}
+                  <div className="text-center mb-4">
+                    <div className="text-5xl sm:text-6xl font-black text-gray-900 dark:text-white mb-1">
+                      {result.toFixed(2)}%
+                    </div>
+                    <div className="text-lg font-semibold text-gray-600 dark:text-gray-300">
+                      {mode === 'needed' ? 'Required on final exam' : 'Projected course grade'}
+                    </div>
+                    <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                      Letter equivalent: {percentageToLetter(result)}
+                    </div>
+                  </div>
 
-            <div className="mt-5 flex justify-center">
-              <button
-                type="button"
-                onClick={copyResult}
-                className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-primary/40 bg-white px-4 py-2 text-sm font-semibold text-primary transition hover:border-primary hover:bg-primary/5 dark:bg-gray-900 dark:text-primary-light"
-              >
-                Copy result
-              </button>
-            </div>
+                  {/* One-line interpretation */}
+                  {suggestion && mode === 'needed' && (
+                    <p className="text-sm text-center text-gray-700 dark:text-gray-200 mb-4">
+                      {suggestion.message}
+                    </p>
+                  )}
 
-            {suggestion && mode === 'needed' && (
-              <div
-                className={`mt-4 flex items-start gap-3 p-4 rounded-lg border-l-4 ${
-                  suggestionToneStyles[suggestion.color]?.background ?? 'bg-white dark:bg-gray-900'
-                } ${suggestionToneStyles[suggestion.color]?.border ?? 'border-primary'}`}
-              >
-                <AlertCircle
-                  className={`w-5 h-5 flex-shrink-0 mt-0.5 ${
-                    suggestionToneStyles[suggestion.color]?.icon ?? 'text-primary'
-                  }`}
-                />
-                <div className="space-y-3">
-                  <p className="text-sm font-medium text-gray-800 dark:text-gray-100">
-                    {suggestion.message}
-                  </p>
-                  <div className="flex flex-wrap gap-3">
+                  {/* Primary next action */}
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
                     <button
                       type="button"
-                      onClick={() => setDesiredGrade('90')}
-                      className="inline-flex items-center rounded-lg bg-white/80 px-3 py-2 text-sm font-semibold text-gray-900 hover:bg-white dark:bg-gray-900/70 dark:text-gray-100 dark:hover:bg-gray-900"
+                      onClick={() => {
+                        trackNextAction(cfg.actionType, 'copy');
+                        copyResult();
+                      }}
+                      className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 px-5 py-2.5 text-sm font-semibold text-gray-900 dark:text-white shadow-sm transition hover:bg-gray-50 dark:hover:bg-gray-800"
                     >
-                      Try Another Target
+                      Copy result
                     </button>
-                    <Link
-                      href="/weighted-grade-calculator"
-                      className="inline-flex items-center rounded-lg border border-current px-3 py-2 text-sm font-semibold"
-                    >
-                      Open Weighted Calculator
-                    </Link>
+                    {mode === 'needed' && status === 'stretch' && (
+                      <Link
+                        href="/weighted-grade-calculator"
+                        onClick={() => trackNextAction('explore_weighted', 'weighted_link')}
+                        className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-primary/25 transition hover:bg-primary/90"
+                      >
+                        Explore weighted scenarios
+                      </Link>
+                    )}
+                    {mode === 'needed' && status === 'impossible' && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          trackNextAction('adjust_target', 'lower_target');
+                          setDesiredGrade(String(Math.max(0, parseFloat(desiredGrade) - 5)));
+                        }}
+                        className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-primary/25 transition hover:bg-primary/90"
+                      >
+                        Lower target by 5%
+                      </button>
+                    )}
+                    {mode === 'predict' && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          trackNextAction('switch_needed', 'mode_toggle');
+                          updateMode('needed');
+                        }}
+                        className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-primary/25 transition hover:bg-primary/90"
+                      >
+                        What do I need on the final?
+                      </button>
+                    )}
                   </div>
                 </div>
-              </div>
-            )}
+              );
+            })()}
           </div>
         )}
 

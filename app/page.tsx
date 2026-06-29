@@ -26,7 +26,7 @@ import {
 } from 'lucide-react';
 
 export const metadata: Metadata = generateMetadata({
-  title: 'Final Grade Calculator - What Score Do I Need on My Final?',
+  title: 'Final Grade Calculator - Required Final Exam Score | What Grade Do I Need?',
   description:
     'Calculate the final exam score you need to reach your target course grade. Enter current grade, desired grade, and final weight for an instant required score.',
   keywords: [
@@ -93,11 +93,6 @@ export default function Home() {
       price: '0',
       priceCurrency: 'USD',
     },
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: '4.8',
-      ratingCount: '1284',
-    },
     description:
       'Final Grade Calculator shows the exact score needed on finals, supports weighted categories, and visualizes scenarios for rapid study planning.',
     url: 'https://finalgradecalculator.app/',
@@ -122,10 +117,10 @@ export default function Home() {
             Final Grade Calculator
           </p>
           <h1 className="mb-4 text-3xl font-bold text-gray-900 dark:text-white sm:text-5xl lg:text-6xl">
-            What Score Do I Need on My Final?
+            Final Grade Calculator
           </h1>
           <p className="mx-auto max-w-4xl text-base text-gray-600 dark:text-gray-300 sm:text-xl">
-            Enter your current course grade, target course grade, and final exam weight. The calculator gives the exact required final exam score first.
+            What score do I need on my final? Enter your current course grade, target course grade, and final exam weight. The calculator gives the exact required final exam score first.
           </p>
 
           <div id="calculator" className="mt-6 bg-white dark:bg-gray-900 rounded-3xl border border-gray-200 dark:border-gray-800 shadow-xl shadow-primary/10 p-3 sm:p-6">
