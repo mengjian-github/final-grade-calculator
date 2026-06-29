@@ -11,16 +11,9 @@ import {
   percentageToLetter,
 } from '@/lib/gradeCalculations';
 import { Calculator, TrendingUp, Award, AlertCircle } from 'lucide-react';
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  ReferenceLine,
-} from 'recharts';
+import dynamic from 'next/dynamic';
+
+const FinalGradeChart = dynamic(() => import('./FinalGradeChart'), { ssr: false });
 
 const suggestionToneStyles: Record<
   string,
@@ -43,37 +36,6 @@ const suggestionToneStyles: Record<
   },
 };
 
-type ChartTooltipPayload = {
-  value: number;
-  payload: {
-    finalExam: number;
-    finalGrade: number;
-  };
-};
-
-interface ChartTooltipProps {
-  active?: boolean;
-  payload?: ChartTooltipPayload[];
-  label?: number;
-}
-
-const ChartTooltip = ({ active, payload, label }: ChartTooltipProps) => {
-  if (!active || !payload || payload.length === 0 || label === undefined) {
-    return null;
-  }
-
-  const gradeValue = payload[0].value;
-
-  return (
-    <div className="rounded-lg border border-primary/40 bg-white px-4 py-3 text-sm text-gray-900 shadow-lg dark:border-primary/60 dark:bg-gray-900 dark:text-gray-100">
-      <p className="font-semibold">Final Exam: {label}%</p>
-      <p className="text-gray-600 dark:text-gray-300">
-        Final Grade: {gradeValue.toFixed(2)}% ({percentageToLetter(gradeValue)})
-      </p>
-    </div>
-  );
-};
-
 const getFinalGradeResultState = (mode: 'needed' | 'predict', result: number) => {
   if (mode === 'predict') return 'predict';
   if (result < 0) return 'already_achieved';
@@ -85,9 +47,9 @@ const quickActions = [
   {
     id: 'need-a-minus',
     label: 'I need an A- (90%)',
-    currentGrade: '85',
-    desiredGrade: '90',
-    finalWeight: '30',
+    currentGrade: '82',
+    desiredGrade: '88',
+    finalWeight: '25',
   },
   {
     id: 'need-to-pass',
@@ -108,17 +70,18 @@ const quickActions = [
 type QuickAction = (typeof quickActions)[number];
 
 export default function FinalGradeCalculatorComponent() {
-  const [currentGrade, setCurrentGrade] = useState<string>('85');
-  const [desiredGrade, setDesiredGrade] = useState<string>('90');
-  const [finalWeight, setFinalWeight] = useState<string>('30');
+  const [currentGrade, setCurrentGrade] = useState<string>('82');
+  const [desiredGrade, setDesiredGrade] = useState<string>('88');
+  const [finalWeight, setFinalWeight] = useState<string>('25');
   const [mode, setMode] = useState<'needed' | 'predict'>('needed');
   const [finalExamGrade, setFinalExamGrade] = useState<string>('');
 
   const [result, setResult] = useState<number | null>(null);
   const [chartData, setChartData] = useState<any[]>([]);
   const [calculationStatus, setCalculationStatus] = useState<string>(
-    'Live result is already updated for the default 85 / 90 / 30 example.'
+    'Live result is already updated for the default 82 / 88 / 25 example.'
   );
+  const resultRef = useRef<HTMLDivElement>(null);
   const hasTrackedStart = useRef(false);
   const lastResultSignature = useRef<string | null>(null);
 
@@ -242,15 +205,40 @@ export default function FinalGradeCalculatorComponent() {
           : `Confirmed: ${result.toFixed(2)}% is the needed final exam score.`
         : `Confirmed: ${result.toFixed(2)}% is the projected final course grade.`
     );
+
+    // Mobile scroll-to-result: ensure result is visible after manual calculate
+    if (resultRef.current) {
+      resultRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   };
 
   const copyResult = async () => {
     if (result === null) return;
 
+    const isAchievable = mode === 'needed' ? result <= 100 : true;
+    const nextStep = mode === 'needed'
+      ? result > 100
+        ? 'Target may need extra credit or a lower goal.'
+        : 'Focus your study time on reaching this score.'
+      : 'Compare with your target and adjust if needed.';
+
     const text =
       mode === 'needed'
-        ? `Final Grade Calculator: I need ${result.toFixed(2)}% on the final exam to finish with ${desiredGrade || 'my target'}%.`
-        : `Final Grade Calculator: my projected final course grade is ${result.toFixed(2)}%.`;
+        ? `Final Grade Calculator
+Current grade: ${currentGrade}%
+Target grade: ${desiredGrade}%
+Final weight: ${finalWeight}%
+Result: I need ${result.toFixed(2)}% on the final exam.
+Achievable: ${isAchievable ? 'Yes' : 'No'}
+Next step: ${nextStep}
+https://finalgradecalculator.app`
+        : `Final Grade Calculator
+Current grade: ${currentGrade}%
+Final exam score: ${finalExamGrade || '—'}%
+Final weight: ${finalWeight}%
+Result: My projected final course grade is ${result.toFixed(2)}%.
+Next step: ${nextStep}
+https://finalgradecalculator.app`;
 
     try {
       await navigator.clipboard.writeText(text);
@@ -455,7 +443,7 @@ export default function FinalGradeCalculatorComponent() {
 
         {/* Result Display */}
         {result !== null && (
-          <div className="bg-gradient-to-r from-primary/10 to-primary-light/10 dark:from-primary/20 dark:to-primary-light/20 rounded-xl p-6 mb-8">
+          <div ref={resultRef} className="bg-gradient-to-r from-primary/10 to-primary-light/10 dark:from-primary/20 dark:to-primary-light/20 rounded-xl p-6 mb-8">
             <div className="flex items-center gap-3 mb-4">
               <Award className="w-8 h-8 text-primary dark:text-primary-light" />
               <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
@@ -526,47 +514,7 @@ export default function FinalGradeCalculatorComponent() {
 
         {/* Chart */}
         {mode === 'needed' && chartData.length > 0 && (
-          <div className="mt-8">
-            <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
-              Final Grade Projection
-            </h4>
-            <div className="bg-gray-50 dark:bg-gray-900/40 rounded-lg p-4">
-              <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={chartData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis
-                    dataKey="finalExam"
-                    label={{ value: 'Final Exam Score (%)', position: 'insideBottom', offset: -5 }}
-                  />
-                  <YAxis
-                    label={{ value: 'Final Grade (%)', angle: -90, position: 'insideLeft' }}
-                  />
-                  <Tooltip content={<ChartTooltip />} wrapperStyle={{ outline: 'none' }} />
-                  <ReferenceLine
-                    y={parseFloat(desiredGrade)}
-                    stroke="#10B981"
-                    strokeDasharray="3 3"
-                    label="Target"
-                  />
-                  {result !== null && result >= 0 && result <= 100 && (
-                    <ReferenceLine
-                      x={result}
-                      stroke="#F59E0B"
-                      strokeDasharray="3 3"
-                      label="Needed"
-                    />
-                  )}
-                  <Line
-                    type="monotone"
-                    dataKey="finalGrade"
-                    stroke="#0EA5E9"
-                    strokeWidth={3}
-                    dot={false}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
+          <FinalGradeChart chartData={chartData} desiredGrade={desiredGrade} result={result} />
         )}
 
         <div className="mt-8 rounded-2xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/40 p-6 text-sm text-gray-600 dark:text-gray-300 space-y-2">

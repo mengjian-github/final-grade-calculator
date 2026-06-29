@@ -26,22 +26,22 @@ import {
 } from 'lucide-react';
 
 export const metadata: Metadata = generateMetadata({
-  title: 'Required Final Exam Score Calculator - What Score Do I Need?',
+  title: 'Final Grade Calculator - What Score Do I Need on My Final?',
   description:
     'Calculate the final exam score you need to reach your target course grade. Enter current grade, desired grade, and final weight for an instant required score.',
   keywords: [
-    'required final exam score calculator',
+    'final grade calculator',
     'what score do i need on my final',
     'course grade calculator',
-    'final grade calculator',
+    'final exam calculator',
     'student grade calculator',
   ],
   canonical: '/',
 });
 
 export default function Home() {
-  const defaultAnswer = '101.67%';
-  const defaultFormula = '(90 - 85 × 0.70) ÷ 0.30 = 101.67';
+  const defaultAnswer = '90.00%';
+  const defaultFormula = '(88 - 82 × 0.75) ÷ 0.25 = 90.00';
   const homeFaqs = [
     {
       question: 'How do I calculate what grade I need on my final?',
@@ -119,7 +119,7 @@ export default function Home() {
       <section className="px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
         <div className="max-w-6xl mx-auto text-center">
           <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-primary dark:text-primary-light">
-            Required Final Exam Score Calculator
+            Final Grade Calculator
           </p>
           <h1 className="mb-4 text-3xl font-bold text-gray-900 dark:text-white sm:text-5xl lg:text-6xl">
             What Score Do I Need on My Final?
@@ -142,13 +142,13 @@ export default function Home() {
                   What score do I need on my final?
                 </h2>
                 <p className="mt-3 text-sm text-gray-600 dark:text-gray-300">
-                  Default example: current grade 85%, target grade 90%, final exam weight 30%.
+                  Default example: current grade 82%, target grade 88%, final exam weight 25%.
                 </p>
                 <p className="mt-5 text-5xl font-black tracking-tight text-primary dark:text-primary-light">
                   {defaultAnswer}
                 </p>
-                <p className="mt-3 text-sm font-semibold text-error">
-                  You need {defaultAnswer} on your final exam. Because this is above 100%, the 90% target requires extra credit or a lower target.
+                <p className="mt-3 text-sm font-semibold text-success">
+                  You need {defaultAnswer} on your final exam. This target is achievable—focus your study time on reaching this score.
                 </p>
               </div>
               <div className="p-6">
@@ -951,10 +951,10 @@ export default function Home() {
               </p>
               <div className="bg-gradient-to-r from-primary/10 to-primary-light/10 dark:from-primary/20 dark:to-primary-light/20 rounded-2xl p-6 text-sm text-gray-700 dark:text-gray-200">
                 <strong className="block text-gray-900 dark:text-white mb-2">Example</strong>
-                <p>
-                  With an 85% current grade, a final exam worth 30%, and a target of 90%, you would
-                  need to score 101.67% on your final. If that is above what your class allows,
-                  consider adjusting your target or exploring extra credit opportunities.
+                <p className="text-gray-600 dark:text-gray-300 mb-4">
+                  With an 82% current grade, a final exam worth 25%, and a target of 88%, you would
+                  need to score 90.00% on your final. If that feels high, try adjusting your target or
+                  exploring extra credit opportunities.
                 </p>
               </div>
             </div>

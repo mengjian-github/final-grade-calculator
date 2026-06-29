@@ -23,6 +23,7 @@ export default function Footer() {
     ],
     trust: [
       { name: 'Privacy Policy', href: '/privacy' },
+      { name: 'Terms of Use', href: '/terms' },
       { name: 'Contact', href: '/contact', eventName: 'contact_click' },
     ],
   };
@@ -46,7 +47,7 @@ export default function Footer() {
           <div>
             <Link href="/" className="flex items-center gap-2 mb-4">
               <Image
-                src="/logo.png"
+                src="/logo-128.png"
                 alt="Final Grade Calculator"
                 width={32}
                 height={32}

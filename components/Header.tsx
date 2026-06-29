@@ -23,7 +23,7 @@ export default function Header() {
           <div className="flex items-center">
             <Link href="/" className="flex items-center gap-2 group">
               <Image
-                src="/logo.png"
+                src="/logo-128.png"
                 alt="Final Grade Calculator Logo"
                 width={40}
                 height={40}

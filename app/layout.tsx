@@ -26,7 +26,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={inter.variable}>
-      <head>
+      <body className="flex flex-col min-h-screen antialiased">
+        <Header />
+        <main className="flex-1">{children}</main>
+        <Footer />
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-S5X8Y1T7RF"></script>
         <script
           dangerouslySetInnerHTML={{
@@ -56,11 +59,6 @@ export default function RootLayout({
             __html: `window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}}; plausible.init()`
           }}
         />
-      </head>
-      <body className="flex flex-col min-h-screen antialiased">
-        <Header />
-        <main className="flex-1">{children}</main>
-        <Footer />
       </body>
     </html>
   );
