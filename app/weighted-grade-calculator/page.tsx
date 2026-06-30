@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import WeightedGradeCalculator from '@/components/WeightedGradeCalculator';
+import JsonLd from '@/components/JsonLd';
 import { generateMetadata } from '@/lib/seo';
 import Link from 'next/link';
 import {
@@ -31,8 +32,39 @@ export const metadata: Metadata = generateMetadata({
 });
 
 export default function WeightedGradeCalculatorPage() {
+  const structuredData = [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Final Grade Calculator', item: 'https://finalgradecalculator.app/' },
+        { '@type': 'ListItem', position: 2, name: 'Weighted Grade Calculator', item: 'https://finalgradecalculator.app/weighted-grade-calculator' },
+      ],
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      name: 'Weighted Grade Calculator',
+      applicationCategory: 'EducationalApplication',
+      operatingSystem: 'Web',
+      url: 'https://finalgradecalculator.app/weighted-grade-calculator',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'HowTo',
+      name: 'How to calculate a weighted grade',
+      step: [
+        { '@type': 'HowToStep', position: 1, name: 'Add each category', text: 'Enter assignments, quizzes, labs, projects, and exams as separate categories.' },
+        { '@type': 'HowToStep', position: 2, name: 'Enter weights', text: 'Type the percentage weight from your syllabus for each category.' },
+        { '@type': 'HowToStep', position: 3, name: 'Review the projection', text: 'Check the weighted average and adjust upcoming scores to model your target.' },
+      ],
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
+      <JsonLd id="weighted-grade-structured-data" data={structuredData} />
       {/* Hero Section */}
       <section className="py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">

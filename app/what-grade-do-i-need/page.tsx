@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import { generateMetadata } from '@/lib/seo';
+import JsonLd from '@/components/JsonLd';
 import Link from 'next/link';
 import { HelpCircle, Calculator } from 'lucide-react';
 
@@ -92,8 +93,39 @@ export default function WhatGradeDoINeedPage() {
     },
   ];
 
+  const structuredData = [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Final Grade Calculator', item: 'https://finalgradecalculator.app/' },
+        { '@type': 'ListItem', position: 2, name: 'What Grade Do I Need?', item: 'https://finalgradecalculator.app/what-grade-do-i-need' },
+      ],
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faqs.map((faq) => ({
+        '@type': 'Question',
+        name: faq.question,
+        acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+      })),
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'HowTo',
+      name: 'How to find what grade you need on your final',
+      step: [
+        { '@type': 'HowToStep', position: 1, name: 'Find your current grade', text: 'Use the current course grade from your gradebook.' },
+        { '@type': 'HowToStep', position: 2, name: 'Enter the final exam weight', text: 'Use your syllabus final exam percentage.' },
+        { '@type': 'HowToStep', position: 3, name: 'Set your target', text: 'Choose the course grade you want to reach and calculate the required score.' },
+      ],
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
+      <JsonLd id="what-grade-structured-data" data={structuredData} />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <header className="text-center mb-12">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 dark:bg-primary/20 mb-6">

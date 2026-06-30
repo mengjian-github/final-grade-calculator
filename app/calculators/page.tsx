@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import { generateMetadata } from '@/lib/seo';
+import JsonLd from '@/components/JsonLd';
 import Link from 'next/link';
 import { Calculator, Award, BarChart3, BookOpen, HelpCircle, GraduationCap } from 'lucide-react';
 
@@ -83,8 +84,41 @@ export default function CalculatorsPage() {
     },
   ];
 
+  const itemListStructuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Grade calculators and resources',
+    itemListElement: [...calculatorTools, ...resources].map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: item.title,
+      url: `https://finalgradecalculator.app${item.href}`,
+    })),
+  };
+
+  const breadcrumbStructuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Final Grade Calculator',
+        item: 'https://finalgradecalculator.app/',
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Calculators',
+        item: 'https://finalgradecalculator.app/calculators',
+      },
+    ],
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
+      <JsonLd id="calculators-breadcrumb-schema" data={breadcrumbStructuredData} />
+      <JsonLd id="calculators-itemlist-schema" data={itemListStructuredData} />
       {/* Hero Section */}
       <section className="py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
@@ -99,6 +133,21 @@ export default function CalculatorsPage() {
             Bookmark this hub so our tools are always a tap away, whether you need quick homework
             projections or long-term scholarship planning.
           </p>
+          <div className="mx-auto mt-8 max-w-4xl space-y-4 rounded-3xl border border-gray-200 bg-white/80 p-6 text-left text-gray-700 shadow-sm dark:border-gray-700 dark:bg-gray-900/60 dark:text-gray-200">
+            <p>
+              This calculator hub is designed for students who need more than one quick formula. Start
+              with the final grade calculator when the question is “what score do I need on my final,”
+              then move to the weighted grade calculator when homework, quizzes, labs, projects, and
+              attendance all carry different percentages. Use the grade converter when your school or
+              scholarship application asks for letters, percentages, or GPA values in a different scale.
+            </p>
+            <p>
+              The best workflow is simple: collect the numbers from your syllabus, calculate the
+              current risk, convert the result into a study target, and revisit the hub after each new
+              grade posts. Keeping the tools connected prevents small mistakes, such as entering 0.30
+              instead of 30 for a final weight, from becoming a bad plan during finals week.
+            </p>
+          </div>
         </div>
       </section>
 

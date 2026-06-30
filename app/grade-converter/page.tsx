@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import GradeConverter from '@/components/GradeConverter';
+import JsonLd from '@/components/JsonLd';
 import { generateMetadata } from '@/lib/seo';
 import { Globe2, Calculator, ArrowLeftRight, GraduationCap, ClipboardList, Share2 } from 'lucide-react';
 
@@ -18,8 +19,39 @@ export const metadata: Metadata = generateMetadata({
 });
 
 export default function GradeConverterPage() {
+  const structuredData = [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Final Grade Calculator', item: 'https://finalgradecalculator.app/' },
+        { '@type': 'ListItem', position: 2, name: 'Grade Converter', item: 'https://finalgradecalculator.app/grade-converter' },
+      ],
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      name: 'Grade Converter',
+      applicationCategory: 'EducationalApplication',
+      operatingSystem: 'Web',
+      url: 'https://finalgradecalculator.app/grade-converter',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'HowTo',
+      name: 'How to convert grades',
+      step: [
+        { '@type': 'HowToStep', position: 1, name: 'Choose the input scale', text: 'Select percentage, letter grade, or GPA as the value you know.' },
+        { '@type': 'HowToStep', position: 2, name: 'Enter the grade', text: 'Type the grade value and adjust the scale if your school differs.' },
+        { '@type': 'HowToStep', position: 3, name: 'Copy the equivalents', text: 'Use the converted percentage, letter, or GPA result in your planning tools.' },
+      ],
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 py-16 px-4 sm:px-6 lg:px-8">
+      <JsonLd id="grade-converter-structured-data" data={structuredData} />
       <div className="max-w-7xl mx-auto text-center mb-12">
         <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white mb-6">
           Grade Converter

@@ -65,12 +65,19 @@ const quickActions = [
     desiredGrade: '85',
     finalWeight: '40',
   },
+  {
+    id: 'extra-credit-check',
+    label: 'Check impossible / extra credit',
+    currentGrade: '85',
+    desiredGrade: '90',
+    finalWeight: '30',
+  },
 ];
 
 type QuickAction = (typeof quickActions)[number];
 
 export default function FinalGradeCalculatorComponent() {
-  const [currentGrade, setCurrentGrade] = useState<string>('82');
+  const [currentGrade, setCurrentGrade] = useState<string>('86');
   const [desiredGrade, setDesiredGrade] = useState<string>('88');
   const [finalWeight, setFinalWeight] = useState<string>('25');
   const [mode, setMode] = useState<'needed' | 'predict'>('needed');
@@ -79,11 +86,13 @@ export default function FinalGradeCalculatorComponent() {
   const [result, setResult] = useState<number | null>(null);
   const [chartData, setChartData] = useState<any[]>([]);
   const [calculationStatus, setCalculationStatus] = useState<string>(
-    'Live result is already updated for the default 82 / 88 / 25 example.'
+    'Live result is already updated for the default 86 / 88 / 25 example.'
   );
   const resultRef = useRef<HTMLDivElement>(null);
   const hasTrackedStart = useRef(false);
   const lastResultSignature = useRef<string | null>(null);
+
+  const getResultEventSource = () => (hasTrackedStart.current ? 'user_input' : 'default_auto');
 
   const trackStartCalculator = (inputMode: 'needed' | 'predict' = mode, source = 'input_change') => {
     if (hasTrackedStart.current) return;
@@ -174,12 +183,14 @@ export default function FinalGradeCalculatorComponent() {
     const timer = window.setTimeout(() => {
       if (lastResultSignature.current === signature) return;
       lastResultSignature.current = signature;
-      trackEvent('result_view', {
+      const source = getResultEventSource();
+
+      trackEvent(source === 'default_auto' ? 'default_result_view' : 'user_result_view', {
         calculator_type: 'final_grade',
         input_mode: mode,
         result_state: getFinalGradeResultState(mode, result),
         result_value: Number(result.toFixed(2)),
-        source: 'auto_result',
+        source,
       });
     }, 700);
 
@@ -272,6 +283,7 @@ export default function FinalGradeCalculatorComponent() {
       result_value: Number(result.toFixed(2)),
       action_type: actionType,
       target: target || 'inline',
+      source: getResultEventSource(),
     });
   };
 
@@ -314,7 +326,7 @@ https://finalgradecalculator.app`;
         input_mode: mode,
         result_state: getFinalGradeResultState(mode, result),
         result_value: Number(result.toFixed(2)),
-        source: 'result_cta',
+        source: getResultEventSource(),
       });
     } catch {
       setCalculationStatus('Copy failed. You can still select the result text manually.');
@@ -339,40 +351,40 @@ https://finalgradecalculator.app`;
   };
 
   return (
-    <div className="w-full max-w-5xl mx-auto">
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-4 sm:p-8 border border-gray-200 dark:border-gray-700">
+    <div className="mx-auto w-full max-w-5xl min-w-0 overflow-hidden">
+      <div className="min-w-0 overflow-hidden rounded-2xl border border-gray-200 bg-white p-3 shadow-xl dark:border-gray-700 dark:bg-gray-800 sm:p-8">
         {/* Mode Toggle */}
-        <div className="flex gap-3 mb-5">
+        <div className="mb-5 grid grid-cols-2 gap-2 sm:gap-3">
           <button
             onClick={() => updateMode('needed')}
-            className={`flex-1 py-3 px-6 rounded-lg font-medium transition-all ${
+            className={`min-w-0 rounded-lg px-2 py-3 text-xs font-medium transition-all sm:px-6 sm:text-base ${
               mode === 'needed'
-                ? 'bg-primary text-white shadow-lg scale-105'
+                ? 'bg-primary text-white shadow-lg ring-2 ring-primary/20'
                 : 'bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-800'
             }`}
           >
-            <div className="flex items-center justify-center gap-2">
-              <Calculator className="w-5 h-5" />
-              <span>What Do I Need?</span>
+            <div className="flex min-w-0 items-center justify-center gap-1 sm:gap-2">
+              <Calculator className="h-4 w-4 shrink-0 sm:h-5 sm:w-5" />
+              <span className="truncate sm:whitespace-normal">What Do I Need?</span>
             </div>
           </button>
           <button
             onClick={() => updateMode('predict')}
-            className={`flex-1 py-3 px-6 rounded-lg font-medium transition-all ${
+            className={`min-w-0 rounded-lg px-2 py-3 text-xs font-medium transition-all sm:px-6 sm:text-base ${
               mode === 'predict'
-                ? 'bg-primary text-white shadow-lg scale-105'
+                ? 'bg-primary text-white shadow-lg ring-2 ring-primary/20'
                 : 'bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-800'
             }`}
           >
-            <div className="flex items-center justify-center gap-2">
-              <TrendingUp className="w-5 h-5" />
-              <span>Predict My Grade</span>
+            <div className="flex min-w-0 items-center justify-center gap-1 sm:gap-2">
+              <TrendingUp className="h-4 w-4 shrink-0 sm:h-5 sm:w-5" />
+              <span className="truncate sm:whitespace-normal">Predict My Grade</span>
             </div>
           </button>
         </div>
 
         {/* Input Form */}
-        <div className="grid grid-cols-2 gap-4 sm:gap-6 mb-6">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 mb-6">
           <div>
             <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Current grade (%)
@@ -433,7 +445,7 @@ https://finalgradecalculator.app`;
             </div>
           )}
 
-          <div className="col-span-2 md:col-span-2">
+          <div className="sm:col-span-2">
             <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Final weight (%)
             </label>
@@ -490,7 +502,7 @@ https://finalgradecalculator.app`;
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary dark:text-primary-light">
             Quick student questions
           </p>
-          <div className="mt-3 grid gap-2 sm:grid-cols-3">
+          <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
             {quickActions.map((action) => (
               <button
                 key={action.id}
@@ -531,7 +543,7 @@ https://finalgradecalculator.app`;
 
                   {/* Required score first */}
                   <div className="text-center mb-4">
-                    <div className="text-5xl sm:text-6xl font-black text-gray-900 dark:text-white mb-1">
+                    <div className="break-words text-4xl font-black text-gray-900 dark:text-white mb-1 sm:text-6xl">
                       {result.toFixed(2)}%
                     </div>
                     <div className="text-lg font-semibold text-gray-600 dark:text-gray-300">

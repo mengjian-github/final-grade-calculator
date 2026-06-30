@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import FinalGradeCalculator from '@/components/FinalGradeCalculator';
+import JsonLd from '@/components/JsonLd';
 import { generateMetadata } from '@/lib/seo';
 import Link from 'next/link';
 import {
@@ -26,7 +27,7 @@ import {
 } from 'lucide-react';
 
 export const metadata: Metadata = generateMetadata({
-  title: 'Final Grade Calculator - Required Final Exam Score | What Grade Do I Need?',
+  title: 'Final Grade Calculator | Required Exam Score',
   description:
     'Calculate the final exam score you need to reach your target course grade. Enter current grade, desired grade, and final weight for an instant required score.',
   keywords: [
@@ -40,8 +41,8 @@ export const metadata: Metadata = generateMetadata({
 });
 
 export default function Home() {
-  const defaultAnswer = '90.00%';
-  const defaultFormula = '(88 - 82 × 0.75) ÷ 0.25 = 90.00';
+  const defaultAnswer = '94.00%';
+  const defaultFormula = '(88 - 86 × 0.75) ÷ 0.25 = 94.00';
   const homeFaqs = [
     {
       question: 'How do I calculate what grade I need on my final?',
@@ -98,20 +99,67 @@ export default function Home() {
     url: 'https://finalgradecalculator.app/',
   };
 
+  const breadcrumbStructuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Final Grade Calculator',
+        item: 'https://finalgradecalculator.app/',
+      },
+    ],
+  };
+
+  const howToStructuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    name: 'How to calculate the grade you need on your final exam',
+    description:
+      'Enter your current grade, target grade, and final exam weight to calculate the required final exam score.',
+    totalTime: 'PT1M',
+    supply: [
+      { '@type': 'HowToSupply', name: 'Current course grade percentage' },
+      { '@type': 'HowToSupply', name: 'Target course grade percentage' },
+      { '@type': 'HowToSupply', name: 'Final exam weight percentage' },
+    ],
+    step: [
+      {
+        '@type': 'HowToStep',
+        position: 1,
+        name: 'Enter your current grade',
+        text: 'Type the current course grade shown in your gradebook as a percentage.',
+      },
+      {
+        '@type': 'HowToStep',
+        position: 2,
+        name: 'Set the final exam weight',
+        text: 'Enter the final exam weight as a percentage, such as 25 for a final worth 25%.',
+      },
+      {
+        '@type': 'HowToStep',
+        position: 3,
+        name: 'Choose your target grade',
+        text: 'Enter the course grade you want to finish with.',
+      },
+      {
+        '@type': 'HowToStep',
+        position: 4,
+        name: 'Read the required score',
+        text: 'Review the required final exam percentage and next-step recommendation.',
+      },
+    ],
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
-      <script
-        id="faq-schema"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqStructuredData) }}
-      />
-      <script
-        id="software-schema"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareStructuredData) }}
-      />
+      <JsonLd id="breadcrumb-schema" data={breadcrumbStructuredData} />
+      <JsonLd id="faq-schema" data={faqStructuredData} />
+      <JsonLd id="software-schema" data={softwareStructuredData} />
+      <JsonLd id="howto-schema" data={howToStructuredData} />
       {/* Hero Section */}
-      <section className="px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+      <section className="overflow-hidden px-3 py-8 sm:px-6 sm:py-12 lg:px-8">
         <div className="max-w-6xl mx-auto text-center">
           <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-primary dark:text-primary-light">
             Final Grade Calculator
@@ -123,7 +171,7 @@ export default function Home() {
             What score do I need on my final? Enter your current course grade, target course grade, and final exam weight. The calculator gives the exact required final exam score first.
           </p>
 
-          <div id="calculator" className="mt-6 bg-white dark:bg-gray-900 rounded-3xl border border-gray-200 dark:border-gray-800 shadow-xl shadow-primary/10 p-3 sm:p-6">
+          <div id="calculator" className="mt-6 min-w-0 overflow-hidden rounded-3xl border border-gray-200 bg-white p-2 shadow-xl shadow-primary/10 dark:border-gray-800 dark:bg-gray-900 sm:p-6">
             <FinalGradeCalculator />
           </div>
 
@@ -137,7 +185,7 @@ export default function Home() {
                   What score do I need on my final?
                 </h2>
                 <p className="mt-3 text-sm text-gray-600 dark:text-gray-300">
-                  Default example: current grade 82%, target grade 88%, final exam weight 25%.
+                  Default example: current grade 86%, target grade 88%, final exam weight 25%.
                 </p>
                 <p className="mt-5 text-5xl font-black tracking-tight text-primary dark:text-primary-light">
                   {defaultAnswer}
@@ -151,7 +199,7 @@ export default function Home() {
                 <p className="mt-3 text-sm text-gray-600 dark:text-gray-300">
                   To find the score you need on your final exam, enter your current course grade, your target course grade, and the final exam weight.
                 </p>
-                <p className="mt-3 rounded-2xl bg-gray-50 p-4 font-mono text-sm text-gray-800 dark:bg-gray-800 dark:text-gray-100">
+                <p className="mt-3 overflow-hidden break-words rounded-2xl bg-gray-50 p-4 font-mono text-sm text-gray-800 dark:bg-gray-800 dark:text-gray-100">
                   Required final score = (target grade - current grade × (1 - final weight)) ÷ final weight<br />
                   {defaultFormula}
                 </p>
