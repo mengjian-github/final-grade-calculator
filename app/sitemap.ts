@@ -15,6 +15,7 @@ const routes = [
   '/college-grading-systems',
   '/what-grade-do-i-need',
   '/privacy',
+  '/terms',
   '/contact',
 ];
 
