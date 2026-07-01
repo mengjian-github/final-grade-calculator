@@ -318,6 +318,14 @@ Status: ${statusConfig[status].badge}
 Next step: ${nextStep}
 https://finalgradecalculator.app`;
 
+    trackEvent('copy_result_click', {
+      calculator_type: 'final_grade',
+      input_mode: mode,
+      result_state: getFinalGradeResultState(mode, result),
+      result_value: Number(result.toFixed(2)),
+      source: getResultEventSource(),
+    });
+
     try {
       await navigator.clipboard.writeText(text);
       setCalculationStatus('Copied result to clipboard.');
@@ -486,7 +494,7 @@ https://finalgradecalculator.app`;
           </div>
         </div>
 
-        <div className="mb-6 flex justify-center">
+        <div className="mb-4 flex justify-center sm:mb-6">
           <button
             type="button"
             onClick={trackManualCalculation}
@@ -497,6 +505,37 @@ https://finalgradecalculator.app`;
             Calculate
           </button>
         </div>
+
+        {result !== null && (
+          <div
+            aria-live="polite"
+            className="mb-4 rounded-2xl border border-primary/30 bg-white p-4 shadow-lg shadow-primary/10 dark:border-primary-light/30 dark:bg-gray-900 sm:hidden"
+          >
+            <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-primary dark:text-primary-light">
+              Live answer
+            </p>
+            <div className="mt-2 flex items-end justify-between gap-3">
+              <div>
+                <p className="text-3xl font-black tracking-tight text-gray-900 dark:text-white">
+                  {result.toFixed(2)}%
+                </p>
+                <p className="mt-1 text-xs font-semibold text-gray-600 dark:text-gray-300">
+                  {mode === 'needed' ? 'needed on the final' : 'projected course grade'}
+                </p>
+              </div>
+              <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-bold text-primary dark:bg-primary-light/20 dark:text-primary-light">
+                {getResultStatus(result, mode) === 'impossible' ? 'Extra credit' : getResultStatus(result, mode)}
+              </span>
+            </div>
+            <p className="mt-2 text-xs text-gray-600 dark:text-gray-300">
+              {mode === 'needed'
+                ? result > 100
+                  ? 'This target is above 100%; lower the goal or add extra credit.'
+                  : `You need ${result.toFixed(2)}% on the final exam.`
+                : `Your projected course grade is ${result.toFixed(2)}%.`}
+            </p>
+          </div>
+        )}
 
         <div className="mb-6 rounded-2xl border border-primary/20 bg-primary/5 p-4 text-left dark:border-primary-light/30 dark:bg-primary/10" id="quick-actions">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary dark:text-primary-light">

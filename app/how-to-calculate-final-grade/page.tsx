@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import { generateMetadata } from '@/lib/seo';
+import JsonLd from '@/components/JsonLd';
 import Link from 'next/link';
 import { Calculator, BookOpen, TrendingUp } from 'lucide-react';
 
@@ -18,8 +19,117 @@ export const metadata: Metadata = generateMetadata({
 });
 
 export default function HowToCalculateFinalGrade() {
+  const faqItems = [
+    {
+      question: 'Does the final count as a test or as its own category?',
+      answer:
+        'Use the final exam weight listed in your syllabus. If the final counts as a regular test, include it in the test category with the weighted grade calculator; if it has its own percentage, use the final grade calculator with that exact weight.',
+    },
+    {
+      question: 'How do I calculate a two-part final exam?',
+      answer:
+        'Combine both parts into one final score first. For example, if the written final is 70% of the final and the presentation is 30%, calculate that blended final score, then enter the final category weight in the calculator.',
+    },
+    {
+      question: 'What if I already took the final?',
+      answer:
+        'Switch from “what do I need” to a projected final grade calculation. Enter your current grade before the final, the final exam score you actually received, and the final weight to estimate the course grade.',
+    },
+    {
+      question: 'How often should I recalculate my grades?',
+      answer:
+        'Update your projections every time a new score appears. Frequent recalculations keep your plan accurate and help you adjust quickly to stay motivated.',
+    },
+    {
+      question: 'What if my goal changes mid-semester?',
+      answer:
+        'Adjust your target and run new scenarios. When your goal changes, update your study schedule accordingly to keep progress aligned.',
+    },
+    {
+      question: 'Can participation points influence my grade?',
+      answer:
+        'Yes. Include participation percentages so your estimate reflects every graded category listed in the syllabus.',
+    },
+    {
+      question: 'Do extra credit opportunities help?',
+      answer:
+        'Absolutely. Add extra credit to your calculator to see how those points raise your projection and bring you closer to your goal.',
+    },
+  ];
+
+  const howToStructuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    name: 'How to calculate your final grade',
+    description:
+      'Calculate a needed final exam score from current grade, target grade, and final exam weight, including common test-category and two-part-final cases.',
+    totalTime: 'PT2M',
+    tool: [{ '@type': 'HowToTool', name: 'Final Grade Calculator' }],
+    step: [
+      {
+        '@type': 'HowToStep',
+        position: 1,
+        name: 'Find your current grade before the final',
+        text: 'Use the course grade shown before the final exam, including graded assignments already posted in the LMS.',
+      },
+      {
+        '@type': 'HowToStep',
+        position: 2,
+        name: 'Confirm how the final is weighted',
+        text: 'Check whether the final counts as its own category or as a test. Enter the exact final exam weight from the syllabus.',
+      },
+      {
+        '@type': 'HowToStep',
+        position: 3,
+        name: 'Enter your target grade',
+        text: 'Choose the course grade you want, such as the minimum percentage for an A or the passing grade required by your program.',
+      },
+      {
+        '@type': 'HowToStep',
+        position: 4,
+        name: 'Read the required final score',
+        text: 'Use the returned percentage to decide whether the target is achievable, requires extra credit, or should be adjusted.',
+      },
+    ],
+  };
+
+  const faqStructuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqItems.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.answer,
+      },
+    })),
+  };
+
+  const breadcrumbStructuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Final Grade Calculator',
+        item: 'https://finalgradecalculator.app/',
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'How to Calculate Final Grade',
+        item: 'https://finalgradecalculator.app/how-to-calculate-final-grade',
+      },
+    ],
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
+      <JsonLd id="howto-calculate-final-grade-schema" data={howToStructuredData} />
+      <JsonLd id="howto-calculate-final-grade-faq-schema" data={faqStructuredData} />
+      <JsonLd id="howto-calculate-final-grade-breadcrumb-schema" data={breadcrumbStructuredData} />
       <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <header className="mb-12">
           <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white mb-6">
@@ -228,6 +338,38 @@ export default function HowToCalculateFinalGrade() {
 
           <section className="mb-16">
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
+              Final exam edge cases students search for
+            </h2>
+            <div className="grid gap-6 md:grid-cols-3">
+              <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+                  If the final counts as a test
+                </h3>
+                <p className="text-gray-600 dark:text-gray-300">
+                  Some syllabi treat the final as one more test instead of a separate final-exam category. In that case, first calculate the test-category average with the final included, then use the weighted calculator to roll that category into the full course grade.
+                </p>
+              </div>
+              <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+                  Two-part final exam
+                </h3>
+                <p className="text-gray-600 dark:text-gray-300">
+                  When the final has a written exam plus a project, lab, presentation, or oral component, blend those parts into one final score using their sub-weights. Then enter that combined final category in the calculator.
+                </p>
+              </div>
+              <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+                  Already took the final
+                </h3>
+                <p className="text-gray-600 dark:text-gray-300">
+                  If you already know your final exam score, use the prediction mode instead of the needed-score mode. Enter the final score you received to estimate the final course grade and compare it with the letter-grade cutoff.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <section className="mb-16">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
               Tips for Successful Final Grade Management
             </h2>
             <div className="grid md:grid-cols-2 gap-6">
@@ -320,48 +462,7 @@ export default function HowToCalculateFinalGrade() {
               Final Grade FAQ
             </h2>
             <div className="space-y-6">
-              {[
-                {
-                  question: 'How often should I recalculate my grades?',
-                  answer:
-                    'Update your projections every time a new score appears. Frequent recalculations keep your plan accurate and help you adjust quickly to stay motivated.',
-                },
-                {
-                  question: 'What if my goal changes mid-semester?',
-                  answer:
-                    'Adjust your target and run new scenarios. When your goal changes, update your study schedule accordingly to keep progress aligned.',
-                },
-                {
-                  question: 'Can participation points influence my grade?',
-                  answer:
-                    'Yes. Include participation percentages so your estimate reflects every graded category listed in the syllabus.',
-                },
-                {
-                  question: 'How do group projects affect my grade?',
-                  answer:
-                    'Group projects often carry significant weight. Communicate expectations early and track progress together to ensure strong performance.',
-                },
-                {
-                  question: 'What if I am retaking a course?',
-                  answer:
-                    'Use your previous results as a benchmark and track how new scores replace old ones. This helps you see improvement and stay on track.',
-                },
-                {
-                  question: 'Do extra credit opportunities help?',
-                  answer:
-                    'Absolutely. Add extra credit to your calculator to see how those points raise your projection and bring you closer to your goal.',
-                },
-                {
-                  question: 'Should I monitor grades across all my classes?',
-                  answer:
-                    'Create a master sheet that lists each class, its target, and current status. This snapshot helps you manage priorities effectively.',
-                },
-                {
-                  question: 'How does time management support academic success?',
-                  answer:
-                    'Good time management ensures you focus on high-impact tasks. Block study sessions that match each assessment\'s weight for consistent preparation.',
-                },
-              ].map((item, index) => (
+              {faqItems.map((item, index) => (
                 <div
                   key={index}
                   className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700"
