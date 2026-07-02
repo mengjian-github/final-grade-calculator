@@ -152,12 +152,45 @@ export default function Home() {
     ],
   };
 
+  const siteNavigationStructuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Final Grade Calculator internal study paths',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'How to Calculate Final Grade',
+        url: 'https://finalgradecalculator.app/how-to-calculate-final-grade',
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Weighted Grade Calculator',
+        url: 'https://finalgradecalculator.app/weighted-grade-calculator',
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: 'What Grade Do I Need on My Final',
+        url: 'https://finalgradecalculator.app/what-grade-do-i-need',
+      },
+      {
+        '@type': 'ListItem',
+        position: 4,
+        name: 'Grade Converter',
+        url: 'https://finalgradecalculator.app/grade-converter',
+      },
+    ],
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
       <JsonLd id="breadcrumb-schema" data={breadcrumbStructuredData} />
       <JsonLd id="faq-schema" data={faqStructuredData} />
       <JsonLd id="software-schema" data={softwareStructuredData} />
       <JsonLd id="howto-schema" data={howToStructuredData} />
+      <JsonLd id="site-navigation-schema" data={siteNavigationStructuredData} />
       {/* Hero Section */}
       <section className="overflow-hidden px-3 py-8 sm:px-6 sm:py-12 lg:px-8">
         <div className="max-w-6xl mx-auto text-center">
@@ -258,6 +291,45 @@ export default function Home() {
                 <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">{item.description}</p>
               </Link>
             ))}
+          </div>
+
+          <div className="mt-6 rounded-2xl border border-primary/20 bg-primary/5 p-5 text-left dark:border-primary-light/30 dark:bg-primary/10">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary dark:text-primary-light">
+              Start with the page that matches your syllabus
+            </p>
+            <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {[
+                {
+                  href: '/how-to-calculate-final-grade',
+                  label: 'Formula guide',
+                  copy: 'Step-by-step final grade formula, examples, and edge cases.',
+                },
+                {
+                  href: '/weighted-grade-calculator',
+                  label: 'Weighted categories',
+                  copy: 'Use this when homework, quizzes, labs, or projects have separate weights.',
+                },
+                {
+                  href: '/what-grade-do-i-need',
+                  label: 'Fast answer page',
+                  copy: 'Answer the exact question “what grade do I need on my final?”',
+                },
+                {
+                  href: '/grade-converter',
+                  label: 'Convert grades first',
+                  copy: 'Turn letters, GPA, or percentages into the same scale before calculating.',
+                },
+              ].map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="rounded-xl border border-primary/20 bg-white p-4 shadow-sm transition hover:border-primary hover:bg-primary/10 dark:border-primary-light/30 dark:bg-gray-900 dark:hover:border-primary-light"
+                >
+                  <span className="text-sm font-bold text-gray-900 dark:text-white">{item.label}</span>
+                  <span className="mt-2 block text-xs leading-5 text-gray-600 dark:text-gray-300">{item.copy}</span>
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
       </section>

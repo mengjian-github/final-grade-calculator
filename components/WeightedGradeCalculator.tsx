@@ -138,14 +138,19 @@ export default function WeightedGradeCalculator() {
     const timer = window.setTimeout(() => {
       if (lastResultSignature.current === signature) return;
       lastResultSignature.current = signature;
-      trackEvent('result_view', {
+      const source = hasTrackedStart.current ? 'user_input' : 'default_auto';
+      const resultPayload = {
         calculator_type: 'weighted_grade',
         input_mode: 'weighted_items',
         result_state: getWeightedResultState(neededGrade, totalWeight),
         result_value: Number(resultValue.toFixed(2)),
         items_count: items.length,
-        source: 'auto_result',
-      });
+        source,
+      };
+
+      trackEvent('result_view', resultPayload);
+      trackEvent(source === 'default_auto' ? 'default_weighted_result_view' : 'user_weighted_result_view', resultPayload);
+      trackEvent(source === 'default_auto' ? 'default_result' : 'user_result', resultPayload);
     }, 700);
 
     return () => window.clearTimeout(timer);

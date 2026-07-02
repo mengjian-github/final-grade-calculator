@@ -185,13 +185,16 @@ export default function FinalGradeCalculatorComponent() {
       lastResultSignature.current = signature;
       const source = getResultEventSource();
 
-      trackEvent(source === 'default_auto' ? 'default_result_view' : 'user_result_view', {
+      const resultPayload = {
         calculator_type: 'final_grade',
         input_mode: mode,
         result_state: getFinalGradeResultState(mode, result),
         result_value: Number(result.toFixed(2)),
         source,
-      });
+      };
+
+      trackEvent(source === 'default_auto' ? 'default_result_view' : 'user_result_view', resultPayload);
+      trackEvent(source === 'default_auto' ? 'default_result' : 'user_result', resultPayload);
     }, 700);
 
     return () => window.clearTimeout(timer);

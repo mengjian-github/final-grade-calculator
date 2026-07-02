@@ -3,7 +3,8 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
-import { Menu, X, Calculator } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
+import { trackEvent } from '@/lib/analytics';
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -55,9 +56,18 @@ export default function Header() {
           <div className="md:hidden">
             <button
               type="button"
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 dark:text-gray-300 hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-md text-gray-700 transition-colors hover:bg-gray-100 hover:text-primary dark:text-gray-300 dark:hover:bg-gray-800"
+              onClick={() => {
+                const nextState = !mobileMenuOpen;
+                setMobileMenuOpen(nextState);
+                trackEvent('mobile_menu_toggle', {
+                  calculator_type: 'site_navigation',
+                  input_mode: 'header_menu',
+                  result_state: nextState ? 'open' : 'closed',
+                });
+              }}
               aria-label="Toggle menu"
+              aria-expanded={mobileMenuOpen}
             >
               {mobileMenuOpen ? (
                 <X className="h-6 w-6" />
@@ -77,7 +87,15 @@ export default function Header() {
                   key={item.name}
                   href={item.href}
                   className="text-base font-medium text-gray-700 hover:text-primary dark:text-gray-300 dark:hover:text-primary-light transition-colors"
-                  onClick={() => setMobileMenuOpen(false)}
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    trackEvent('mobile_nav_click', {
+                      calculator_type: 'site_navigation',
+                      input_mode: 'header_menu',
+                      result_state: 'navigate',
+                      destination: item.href,
+                    });
+                  }}
                 >
                   {item.name}
                 </Link>
