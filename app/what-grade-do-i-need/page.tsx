@@ -15,7 +15,7 @@ export const metadata: Metadata = generateMetadata({
     'grade calculator faq',
     'academic planning',
   ],
-  canonical: '/what-grade-do-i-need',
+  canonical: '/what-grade-do-i-need/',
   appendSiteName: false,
 });
 
@@ -99,7 +99,7 @@ export default function WhatGradeDoINeedPage() {
       '@type': 'BreadcrumbList',
       itemListElement: [
         { '@type': 'ListItem', position: 1, name: 'Final Grade Calculator', item: 'https://finalgradecalculator.app/' },
-        { '@type': 'ListItem', position: 2, name: 'What Grade Do I Need?', item: 'https://finalgradecalculator.app/what-grade-do-i-need' },
+        { '@type': 'ListItem', position: 2, name: 'What Grade Do I Need?', item: 'https://finalgradecalculator.app/what-grade-do-i-need/' },
       ],
     },
     {
@@ -115,6 +115,9 @@ export default function WhatGradeDoINeedPage() {
       '@context': 'https://schema.org',
       '@type': 'HowTo',
       name: 'How to find what grade you need on your final',
+      description:
+        'Use your current grade, final exam weight, and target grade to calculate the required final exam score.',
+      image: 'https://finalgradecalculator.app/product-screenshot.png',
       step: [
         { '@type': 'HowToStep', position: 1, name: 'Find your current grade', text: 'Use the current course grade from your gradebook.' },
         { '@type': 'HowToStep', position: 2, name: 'Enter the final exam weight', text: 'Use your syllabus final exam percentage.' },
@@ -162,7 +165,7 @@ export default function WhatGradeDoINeedPage() {
               Final Grade Calculator
             </Link>
             . If your syllabus uses categories, switch to the{' '}
-            <Link href="/weighted-grade-calculator" className="text-primary hover:text-primary-dark dark:text-primary-light dark:hover:text-white underline underline-offset-4">
+            <Link href="/weighted-grade-calculator/" className="text-primary hover:text-primary-dark dark:text-primary-light dark:hover:text-white underline underline-offset-4">
               Weighted Grade Calculator
             </Link>
             .
@@ -254,10 +257,10 @@ export default function WhatGradeDoINeedPage() {
             <Link href="/" className="rounded-full border border-gray-300 dark:border-gray-600 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:border-primary hover:text-primary dark:hover:text-primary-light">
               Final Grade Calculator
             </Link>
-            <Link href="/weighted-grade-calculator" className="rounded-full border border-gray-300 dark:border-gray-600 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:border-primary hover:text-primary dark:hover:text-primary-light">
+            <Link href="/weighted-grade-calculator/" className="rounded-full border border-gray-300 dark:border-gray-600 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:border-primary hover:text-primary dark:hover:text-primary-light">
               Weighted Grade Calculator
             </Link>
-            <Link href="/grade-converter" className="rounded-full border border-gray-300 dark:border-gray-600 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:border-primary hover:text-primary dark:hover:text-primary-light">
+            <Link href="/grade-converter/" className="rounded-full border border-gray-300 dark:border-gray-600 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:border-primary hover:text-primary dark:hover:text-primary-light">
               Grade Converter
             </Link>
           </div>

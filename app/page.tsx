@@ -94,6 +94,8 @@ export default function Home() {
       price: '0',
       priceCurrency: 'USD',
     },
+    image: 'https://finalgradecalculator.app/product-screenshot.png',
+    isAccessibleForFree: true,
     description:
       'Final Grade Calculator shows the exact score needed on finals, supports weighted categories, and visualizes scenarios for rapid study planning.',
     url: 'https://finalgradecalculator.app/',
@@ -118,6 +120,7 @@ export default function Home() {
     name: 'How to calculate the grade you need on your final exam',
     description:
       'Enter your current grade, target grade, and final exam weight to calculate the required final exam score.',
+    image: 'https://finalgradecalculator.app/product-screenshot.png',
     totalTime: 'PT1M',
     supply: [
       { '@type': 'HowToSupply', name: 'Current course grade percentage' },
@@ -161,25 +164,25 @@ export default function Home() {
         '@type': 'ListItem',
         position: 1,
         name: 'How to Calculate Final Grade',
-        url: 'https://finalgradecalculator.app/how-to-calculate-final-grade',
+        url: 'https://finalgradecalculator.app/how-to-calculate-final-grade/',
       },
       {
         '@type': 'ListItem',
         position: 2,
         name: 'Weighted Grade Calculator',
-        url: 'https://finalgradecalculator.app/weighted-grade-calculator',
+        url: 'https://finalgradecalculator.app/weighted-grade-calculator/',
       },
       {
         '@type': 'ListItem',
         position: 3,
         name: 'What Grade Do I Need on My Final',
-        url: 'https://finalgradecalculator.app/what-grade-do-i-need',
+        url: 'https://finalgradecalculator.app/what-grade-do-i-need/',
       },
       {
         '@type': 'ListItem',
         position: 4,
         name: 'Grade Converter',
-        url: 'https://finalgradecalculator.app/grade-converter',
+        url: 'https://finalgradecalculator.app/grade-converter/',
       },
     ],
   };
@@ -252,7 +255,7 @@ export default function Home() {
               Calculate the Score I Need
             </Link>
             <Link
-              href="/weighted-grade-calculator"
+              href="/weighted-grade-calculator/"
               className="inline-flex items-center gap-2 rounded-lg border border-gray-300 dark:border-gray-600 px-8 py-3 text-base font-semibold text-gray-800 dark:text-gray-100 hover:border-primary dark:hover:border-primary-light"
             >
               <Calculator className="w-5 h-5" />
@@ -267,17 +270,17 @@ export default function Home() {
           <div className="mt-6 grid gap-4 sm:grid-cols-3 text-left">
             {[
               {
-                href: '/what-grade-do-i-need',
+                href: '/what-grade-do-i-need/',
                 title: 'What grade do I need on my final?',
                 description: 'Quick answer page for single-exam intent.',
               },
               {
-                href: '/weighted-grade-calculator',
+                href: '/weighted-grade-calculator/',
                 title: 'Weighted Grade Calculator',
                 description: 'Use this when your course has multiple categories and weights.',
               },
               {
-                href: '/grade-converter',
+                href: '/grade-converter/',
                 title: 'Grade Converter',
                 description: 'Convert percentages, letters, and GPA before planning your target.',
               },
@@ -300,22 +303,22 @@ export default function Home() {
             <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
               {[
                 {
-                  href: '/how-to-calculate-final-grade',
+                  href: '/how-to-calculate-final-grade/',
                   label: 'Formula guide',
                   copy: 'Step-by-step final grade formula, examples, and edge cases.',
                 },
                 {
-                  href: '/weighted-grade-calculator',
+                  href: '/weighted-grade-calculator/',
                   label: 'Weighted categories',
                   copy: 'Use this when homework, quizzes, labs, or projects have separate weights.',
                 },
                 {
-                  href: '/what-grade-do-i-need',
+                  href: '/what-grade-do-i-need/',
                   label: 'Fast answer page',
                   copy: 'Answer the exact question “what grade do I need on my final?”',
                 },
                 {
-                  href: '/grade-converter',
+                  href: '/grade-converter/',
                   label: 'Convert grades first',
                   copy: 'Turn letters, GPA, or percentages into the same scale before calculating.',
                 },
@@ -406,7 +409,7 @@ export default function Home() {
               title: 'Missing Work Controls',
               description:
                 'Need to treat unsubmitted assignments as 0 or drop lowest quizzes? Switch to the weighted calculator to model category-level rules with full audit trails.',
-              cta: { href: '/weighted-grade-calculator', label: 'Open Weighted Calculator' },
+              cta: { href: '/weighted-grade-calculator/', label: 'Open Weighted Calculator' },
             },
           ].map((item) => (
             <div
@@ -613,7 +616,7 @@ export default function Home() {
           </p>
           <div className="grid md:grid-cols-2 gap-6">
             <Link
-              href="/weighted-grade-calculator"
+              href="/weighted-grade-calculator/"
               className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 hover:border-primary dark:hover:border-primary-light transition-colors"
             >
               <div className="flex items-start gap-4">
@@ -630,7 +633,7 @@ export default function Home() {
               </div>
             </Link>
             <Link
-              href="/grade-converter"
+              href="/grade-converter/"
               className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 hover:border-primary dark:hover:border-primary-light transition-colors"
             >
               <div className="flex items-start gap-4">
@@ -814,14 +817,14 @@ export default function Home() {
                 title: 'Ignore Lowest Scores',
                 description:
                   'Input every quiz as raw points, flag the number to drop, and let the calculator zero-out before recomputing weights.',
-                link: { href: '/grade-calculator-guide', label: 'Guide: Drop-Lowest Workflow' },
+                link: { href: '/grade-calculator-guide/', label: 'Guide: Drop-Lowest Workflow' },
               },
               {
                 title: 'Multi-Part Finals',
                 description:
                   'Model finals split across essays, labs, and oral exams by allocating sub-weights that roll up to the final exam bucket.',
                 link: {
-                  href: '/weighted-grade-calculator',
+                  href: '/weighted-grade-calculator/',
                   label: 'Build Custom Final Structure',
                 },
               },
@@ -830,7 +833,7 @@ export default function Home() {
                 description:
                   'Toggle between “treat missing as 0” vs “exclude from denominator” so projections stay honest about incomplete categories.',
                 link: {
-                  href: '/what-grade-do-i-need',
+                  href: '/what-grade-do-i-need/',
                   label: 'FAQ: Handling Missing Work',
                 },
               },
@@ -879,13 +882,13 @@ export default function Home() {
               </ul>
               <div className="mt-6 flex flex-wrap gap-3">
                 <Link
-                  href="/weighted-vs-unweighted-grades"
+                  href="/weighted-vs-unweighted-grades/"
                   className="inline-flex items-center gap-2 rounded-full border border-white/20 px-4 py-2 text-sm text-white hover:border-primary-light"
                 >
                   Weighted vs Unweighted
                 </Link>
                 <Link
-                  href="/college-grading-systems"
+                  href="/college-grading-systems/"
                   className="inline-flex items-center gap-2 rounded-full border border-white/20 px-4 py-2 text-sm text-white hover:border-primary-light"
                 >
                   College Grading Systems
@@ -908,7 +911,7 @@ export default function Home() {
               </ul>
               <div className="mt-6">
                 <Link
-                  href="/how-to-calculate-final-grade"
+                  href="/how-to-calculate-final-grade/"
                   className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2 text-sm font-semibold text-gray-900 hover:bg-primary-light"
                 >
                   Read the flagship guide
@@ -983,7 +986,7 @@ export default function Home() {
               </p>
             </div>
             <Link
-              href="/calculators"
+              href="/calculators/"
               className="mt-8 inline-flex items-center justify-center gap-2 rounded-full bg-white/90 px-6 py-3 text-primary font-semibold hover:bg-white"
             >
               View All Calculators
@@ -1097,7 +1100,7 @@ export default function Home() {
 
       <div className="mt-12 text-center">
         <Link
-          href="/how-to-calculate-final-grade"
+          href="/how-to-calculate-final-grade/"
           className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-lg font-medium hover:bg-primary-dark transition-colors"
         >
           <BookOpen className="w-5 h-5" />

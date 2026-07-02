@@ -6,7 +6,7 @@ export const metadata = generateMetadata({
   title: 'Privacy Policy',
   description:
     'Privacy Policy for Final Grade Calculator, including analytics, cookies, data use, and contact information.',
-  canonical: '/privacy',
+  canonical: '/privacy/',
   keywords: ['privacy policy', 'analytics cookies', 'student grade calculator privacy'],
 });
 
@@ -109,7 +109,7 @@ export default function PrivacyPage() {
               <span className="font-semibold text-primary dark:text-primary-light">
                 support [at] finalgradecalculator.app
               </span>
-              . You can also use the <Link href="/contact">Contact page</Link>.
+              . You can also use the <Link href="/contact/">Contact page</Link>.
             </p>
           </section>
         </div>

@@ -1,15 +1,14 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
+import { generateMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
-  title: 'Terms of Use | Final Grade Calculator',
+export const metadata: Metadata = generateMetadata({
+  title: 'Terms of Use',
   description:
     'Terms of use for Final Grade Calculator. Educational estimates, no official academic advice, and liability limitations.',
-  robots: {
-    index: true,
-    follow: true,
-  },
-};
+  canonical: '/terms/',
+  keywords: ['final grade calculator terms', 'grade calculator terms of use'],
+});
 
 export default function TermsPage() {
   const currentYear = new Date().getFullYear();
@@ -68,7 +67,7 @@ export default function TermsPage() {
               <p>
                 Grade values you enter are processed locally in your browser. We do not store
                 personal grades on our servers. For details on analytics and cookies, see our{' '}
-                <Link href="/privacy" className="text-primary hover:text-primary-dark dark:text-primary-light">
+                <Link href="/privacy/" className="text-primary hover:text-primary-dark dark:text-primary-light">
                   Privacy Policy
                 </Link>.
               </p>

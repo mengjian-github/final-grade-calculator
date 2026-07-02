@@ -7,7 +7,7 @@ export const metadata: Metadata = generateMetadata({
   description:
     'Compare weighted vs unweighted grades, learn how each scale shapes GPA, and follow actionable strategies for course planning and college admissions.',
   keywords: ['weighted grades', 'unweighted grades', 'GPA calculation', 'grade weighting'],
-  canonical: '/weighted-vs-unweighted-grades',
+  canonical: '/weighted-vs-unweighted-grades/',
 });
 
 export default function WeightedVsUnweightedPage() {
@@ -170,7 +170,7 @@ export default function WeightedVsUnweightedPage() {
         </p>
         <div className="not-prose mt-10 text-center">
           <Link
-            href="/weighted-grade-calculator"
+            href="/weighted-grade-calculator/"
             className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-lg font-semibold hover:bg-primary-dark transition-colors"
           >
             Explore Weighted Calculator

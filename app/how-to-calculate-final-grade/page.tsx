@@ -15,7 +15,7 @@ export const metadata: Metadata = generateMetadata({
     'final exam grade calculation',
     'grade calculation steps',
   ],
-  canonical: '/how-to-calculate-final-grade',
+  canonical: '/how-to-calculate-final-grade/',
 });
 
 export default function HowToCalculateFinalGrade() {
@@ -63,6 +63,7 @@ export default function HowToCalculateFinalGrade() {
     name: 'How to calculate your final grade',
     description:
       'Calculate a needed final exam score from current grade, target grade, and final exam weight, including common test-category and two-part-final cases.',
+    image: 'https://finalgradecalculator.app/product-screenshot.png',
     totalTime: 'PT2M',
     tool: [{ '@type': 'HowToTool', name: 'Final Grade Calculator' }],
     step: [
@@ -120,7 +121,7 @@ export default function HowToCalculateFinalGrade() {
         '@type': 'ListItem',
         position: 2,
         name: 'How to Calculate Final Grade',
-        item: 'https://finalgradecalculator.app/how-to-calculate-final-grade',
+        item: 'https://finalgradecalculator.app/how-to-calculate-final-grade/',
       },
     ],
   };

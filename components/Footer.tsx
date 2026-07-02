@@ -10,21 +10,21 @@ export default function Footer() {
   const footerLinks = {
     calculators: [
       { name: 'Final Grade Calculator', href: '/' },
-      { name: 'Weighted Grade Calculator', href: '/weighted-grade-calculator' },
-      { name: 'Grade Converter', href: '/grade-converter' },
-      { name: 'All Calculators', href: '/calculators' },
+      { name: 'Weighted Grade Calculator', href: '/weighted-grade-calculator/' },
+      { name: 'Grade Converter', href: '/grade-converter/' },
+      { name: 'All Calculators', href: '/calculators/' },
     ],
     resources: [
-      { name: 'How to Calculate Final Grade', href: '/how-to-calculate-final-grade' },
-      { name: 'Grade Calculator Guide', href: '/grade-calculator-guide' },
-      { name: 'Weighted vs Unweighted Grades', href: '/weighted-vs-unweighted-grades' },
-      { name: 'College Grading Systems', href: '/college-grading-systems' },
-      { name: 'What Grade Do I Need?', href: '/what-grade-do-i-need' },
+      { name: 'How to Calculate Final Grade', href: '/how-to-calculate-final-grade/' },
+      { name: 'Grade Calculator Guide', href: '/grade-calculator-guide/' },
+      { name: 'Weighted vs Unweighted Grades', href: '/weighted-vs-unweighted-grades/' },
+      { name: 'College Grading Systems', href: '/college-grading-systems/' },
+      { name: 'What Grade Do I Need?', href: '/what-grade-do-i-need/' },
     ],
     trust: [
-      { name: 'Privacy Policy', href: '/privacy' },
-      { name: 'Terms of Use', href: '/terms' },
-      { name: 'Contact', href: '/contact', eventName: 'contact_click' },
+      { name: 'Privacy Policy', href: '/privacy/' },
+      { name: 'Terms of Use', href: '/terms/' },
+      { name: 'Contact', href: '/contact/', eventName: 'contact_click' },
     ],
   };
 

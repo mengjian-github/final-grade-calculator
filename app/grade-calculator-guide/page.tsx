@@ -7,7 +7,7 @@ export const metadata: Metadata = generateMetadata({
   description:
     'Follow this grade calculator guide to understand formulas, analyze weighted scores, and plan study strategies that keep you on track for every class.',
   keywords: ['grade calculator guide', 'calculate my final grade', 'grade planning', 'academic success'],
-  canonical: '/grade-calculator-guide',
+  canonical: '/grade-calculator-guide/',
 });
 
 export default function GradeCalculatorGuidePage() {

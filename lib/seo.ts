@@ -11,6 +11,11 @@ interface SEOProps {
 
 const BASE_URL = 'https://finalgradecalculator.app';
 
+function normalizeCanonicalPath(path?: string): string {
+  if (!path || path === '/') return '/';
+  return path.endsWith('/') ? path : `${path}/`;
+}
+
 export function generateMetadata({
   title,
   description,
@@ -23,7 +28,8 @@ export function generateMetadata({
     ? title
     : `${title} | Final Grade Calculator`;
 
-  const canonicalUrl = canonical ? `${BASE_URL}${canonical}` : BASE_URL;
+  const canonicalPath = normalizeCanonicalPath(canonical);
+  const canonicalUrl = `${BASE_URL}${canonicalPath}`;
 
   return {
     title: fullTitle,

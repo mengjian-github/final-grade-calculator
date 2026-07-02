@@ -6,7 +6,7 @@ export const metadata = generateMetadata({
   title: 'Contact',
   description:
     'Contact Final Grade Calculator for feedback, corrections, privacy questions, and site safety reports.',
-  canonical: '/contact',
+  canonical: '/contact/',
   keywords: ['contact final grade calculator', 'grade calculator feedback', 'site safety contact'],
 });
 
@@ -95,7 +95,7 @@ export default function ContactPage() {
 
           <h2>Privacy</h2>
           <p>
-            Read our <Link href="/privacy">Privacy Policy</Link> for details about analytics, cookies,
+            Read our <Link href="/privacy/">Privacy Policy</Link> for details about analytics, cookies,
             and how limited site usage data is used to improve the calculator experience.
           </p>
         </section>

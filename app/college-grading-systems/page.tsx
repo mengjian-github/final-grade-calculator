@@ -7,7 +7,7 @@ export const metadata: Metadata = generateMetadata({
   description:
     'Explore college grading systems in the US and abroad, decode GPA scales, and learn how to translate credits, percentages, and classifications for applications.',
   keywords: ['college grading', 'grading systems', 'university grades', 'GPA scales'],
-  canonical: '/college-grading-systems',
+  canonical: '/college-grading-systems/',
 });
 
 export default function CollegeGradingSystemsPage() {
@@ -145,7 +145,7 @@ export default function CollegeGradingSystemsPage() {
         </p>
         <div className="not-prose mt-10 text-center">
           <Link
-            href="/grade-converter"
+            href="/grade-converter/"
             className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-lg font-semibold hover:bg-primary-dark transition-colors"
           >
             Explore Grade Converter

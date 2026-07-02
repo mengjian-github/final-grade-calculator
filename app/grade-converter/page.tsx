@@ -15,7 +15,7 @@ export const metadata: Metadata = generateMetadata({
     'letter grade to percentage',
     'grade conversion tool',
   ],
-  canonical: '/grade-converter',
+  canonical: '/grade-converter/',
 });
 
 export default function GradeConverterPage() {
@@ -25,7 +25,7 @@ export default function GradeConverterPage() {
       '@type': 'BreadcrumbList',
       itemListElement: [
         { '@type': 'ListItem', position: 1, name: 'Final Grade Calculator', item: 'https://finalgradecalculator.app/' },
-        { '@type': 'ListItem', position: 2, name: 'Grade Converter', item: 'https://finalgradecalculator.app/grade-converter' },
+        { '@type': 'ListItem', position: 2, name: 'Grade Converter', item: 'https://finalgradecalculator.app/grade-converter/' },
       ],
     },
     {
@@ -34,13 +34,19 @@ export default function GradeConverterPage() {
       name: 'Grade Converter',
       applicationCategory: 'EducationalApplication',
       operatingSystem: 'Web',
-      url: 'https://finalgradecalculator.app/grade-converter',
+      url: 'https://finalgradecalculator.app/grade-converter/',
+      description:
+        'Free web calculator that converts percentage grades, letter grades, and GPA values for academic planning.',
+      image: 'https://finalgradecalculator.app/product-screenshot.png',
+      isAccessibleForFree: true,
       offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
     },
     {
       '@context': 'https://schema.org',
       '@type': 'HowTo',
       name: 'How to convert grades',
+      description: 'Choose a grade scale, enter the known value, and copy the converted equivalents.',
+      image: 'https://finalgradecalculator.app/product-screenshot.png',
       step: [
         { '@type': 'HowToStep', position: 1, name: 'Choose the input scale', text: 'Select percentage, letter grade, or GPA as the value you know.' },
         { '@type': 'HowToStep', position: 2, name: 'Enter the grade', text: 'Type the grade value and adjust the scale if your school differs.' },
@@ -231,7 +237,7 @@ export default function GradeConverterPage() {
             </div>
             <div className="flex gap-4 mt-6 md:mt-0">
               <a
-                href="/weighted-grade-calculator"
+                href="/weighted-grade-calculator/"
                 className="inline-flex items-center gap-2 px-5 py-3 rounded-lg border border-primary text-primary hover:bg-primary hover:text-white transition-colors"
               >
                 <GraduationCap className="w-5 h-5" /> Weighted Calculator

@@ -11,9 +11,9 @@ export default function Header() {
 
   const navigation = [
     { name: 'Final Grade Calculator', href: '/' },
-    { name: 'Weighted Calculator', href: '/weighted-grade-calculator' },
-    { name: 'Grade Converter', href: '/grade-converter' },
-    { name: 'Guides', href: '/calculators' },
+    { name: 'Weighted Calculator', href: '/weighted-grade-calculator/' },
+    { name: 'Grade Converter', href: '/grade-converter/' },
+    { name: 'Guides', href: '/calculators/' },
   ];
 
   return (

@@ -27,7 +27,7 @@ export const metadata: Metadata = generateMetadata({
     'weighted average calculator',
     'course grade calculator',
   ],
-  canonical: '/weighted-grade-calculator',
+  canonical: '/weighted-grade-calculator/',
   appendSiteName: false,
 });
 
@@ -38,7 +38,7 @@ export default function WeightedGradeCalculatorPage() {
       '@type': 'BreadcrumbList',
       itemListElement: [
         { '@type': 'ListItem', position: 1, name: 'Final Grade Calculator', item: 'https://finalgradecalculator.app/' },
-        { '@type': 'ListItem', position: 2, name: 'Weighted Grade Calculator', item: 'https://finalgradecalculator.app/weighted-grade-calculator' },
+        { '@type': 'ListItem', position: 2, name: 'Weighted Grade Calculator', item: 'https://finalgradecalculator.app/weighted-grade-calculator/' },
       ],
     },
     {
@@ -47,13 +47,20 @@ export default function WeightedGradeCalculatorPage() {
       name: 'Weighted Grade Calculator',
       applicationCategory: 'EducationalApplication',
       operatingSystem: 'Web',
-      url: 'https://finalgradecalculator.app/weighted-grade-calculator',
+      url: 'https://finalgradecalculator.app/weighted-grade-calculator/',
+      description:
+        'Free web calculator for planning weighted course grades across assignments, quizzes, labs, projects, and exams.',
+      image: 'https://finalgradecalculator.app/product-screenshot.png',
+      isAccessibleForFree: true,
       offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
     },
     {
       '@context': 'https://schema.org',
       '@type': 'HowTo',
       name: 'How to calculate a weighted grade',
+      description:
+        'Add each grade category, enter syllabus weights, and review the weighted average projection.',
+      image: 'https://finalgradecalculator.app/product-screenshot.png',
       step: [
         { '@type': 'HowToStep', position: 1, name: 'Add each category', text: 'Enter assignments, quizzes, labs, projects, and exams as separate categories.' },
         { '@type': 'HowToStep', position: 2, name: 'Enter weights', text: 'Type the percentage weight from your syllabus for each category.' },
@@ -95,10 +102,10 @@ export default function WeightedGradeCalculatorPage() {
             <Link href="/" className="rounded-full border border-gray-300 dark:border-gray-600 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:border-primary hover:text-primary dark:hover:text-primary-light">
               Final Grade Calculator
             </Link>
-            <Link href="/what-grade-do-i-need" className="rounded-full border border-gray-300 dark:border-gray-600 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:border-primary hover:text-primary dark:hover:text-primary-light">
+            <Link href="/what-grade-do-i-need/" className="rounded-full border border-gray-300 dark:border-gray-600 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:border-primary hover:text-primary dark:hover:text-primary-light">
               What Grade Do I Need on My Final?
             </Link>
-            <Link href="/grade-converter" className="rounded-full border border-gray-300 dark:border-gray-600 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:border-primary hover:text-primary dark:hover:text-primary-light">
+            <Link href="/grade-converter/" className="rounded-full border border-gray-300 dark:border-gray-600 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:border-primary hover:text-primary dark:hover:text-primary-light">
               Grade Converter
             </Link>
           </div>
@@ -318,7 +325,7 @@ export default function WeightedGradeCalculatorPage() {
                   <Calculator className="w-5 h-5" /> Final Grade Tool
                 </Link>
                 <Link
-                  href="/grade-converter"
+                  href="/grade-converter/"
                   className="inline-flex items-center gap-2 px-5 py-3 rounded-lg border border-primary text-primary hover:bg-primary hover:text-white transition-colors"
                 >
                   <Users className="w-5 h-5" /> Grade Converter
@@ -452,7 +459,7 @@ export default function WeightedGradeCalculatorPage() {
               </p>
             </Link>
             <Link
-              href="/grade-converter"
+              href="/grade-converter/"
               className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 hover:border-primary transition-colors"
             >
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">

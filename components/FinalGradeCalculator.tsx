@@ -485,8 +485,8 @@ https://finalgradecalculator.app`;
             </p>
             <p className="mt-1 hidden text-xs text-gray-500 dark:text-gray-400 sm:block">
               Need to drop lowest quizzes or treat missing work as zero? Use the{' '}
-              <Link 
-                href="/weighted-grade-calculator" 
+              <Link
+                href="/weighted-grade-calculator/"
                 onClick={() => trackEvent('open_weighted_calculator', { source: 'input_hint', calculator_type: 'final_grade' })}
                 className="text-primary hover:text-primary-dark"
               >
@@ -617,7 +617,7 @@ https://finalgradecalculator.app`;
                     </button>
                     {mode === 'needed' && status === 'stretch' && (
                       <Link
-                        href="/weighted-grade-calculator"
+                        href="/weighted-grade-calculator/"
                         onClick={() => trackNextAction('explore_weighted', 'weighted_link')}
                         className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-primary/25 transition hover:bg-primary/90"
                       >

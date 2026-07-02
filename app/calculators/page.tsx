@@ -15,7 +15,7 @@ export const metadata: Metadata = generateMetadata({
     'student calculators',
     'academic tools',
   ],
-  canonical: '/calculators',
+  canonical: '/calculators/',
 });
 
 export default function CalculatorsPage() {
@@ -32,7 +32,7 @@ export default function CalculatorsPage() {
       title: 'Weighted Grade Calculator',
       description:
         'Calculate your course grade when assignments, quizzes, and exams carry different weights. Excels at complex grading systems and integrates seamlessly with other tools.',
-      href: '/weighted-grade-calculator',
+      href: '/weighted-grade-calculator/',
       icon: BarChart3,
       color: 'from-purple-500 to-pink-500',
     },
@@ -40,7 +40,7 @@ export default function CalculatorsPage() {
       title: 'Grade Converter',
       description:
         'Convert between percentages, letter grades (A-F), and GPA scores (0-4.0). Complements our other tools by keeping every scale in sync.',
-      href: '/grade-converter',
+      href: '/grade-converter/',
       icon: Award,
       color: 'from-green-500 to-emerald-500',
     },
@@ -51,35 +51,35 @@ export default function CalculatorsPage() {
       title: 'How to Calculate Final Grade',
       description:
         'Comprehensive step-by-step guide on calculating your final grade with practical strategies.',
-      href: '/how-to-calculate-final-grade',
+      href: '/how-to-calculate-final-grade/',
       icon: BookOpen,
     },
     {
       title: 'Grade Calculator Guide',
       description:
         'Complete guide to effective grade tracking, including best practices and strategies for academic success.',
-      href: '/grade-calculator-guide',
+      href: '/grade-calculator-guide/',
       icon: GraduationCap,
     },
     {
       title: 'Weighted vs Unweighted Grades',
       description:
         'Understand the difference between weighted and unweighted grading systems and how to work with each.',
-      href: '/weighted-vs-unweighted-grades',
+      href: '/weighted-vs-unweighted-grades/',
       icon: BarChart3,
     },
     {
       title: 'College Grading Systems',
       description:
         'Explore different grading systems used worldwide and learn how to translate between scales.',
-      href: '/college-grading-systems',
+      href: '/college-grading-systems/',
       icon: GraduationCap,
     },
     {
       title: 'What Grade Do I Need? FAQ',
       description:
         'Frequently asked questions about grade calculations, final exams, and academic planning with step-by-step guidance.',
-      href: '/what-grade-do-i-need',
+      href: '/what-grade-do-i-need/',
       icon: HelpCircle,
     },
   ];
@@ -110,7 +110,7 @@ export default function CalculatorsPage() {
         '@type': 'ListItem',
         position: 2,
         name: 'Calculators',
-        item: 'https://finalgradecalculator.app/calculators',
+        item: 'https://finalgradecalculator.app/calculators/',
       },
     ],
   };
@@ -421,7 +421,7 @@ export default function CalculatorsPage() {
               Final Grade Calculator Tool
             </Link>
             <Link
-              href="/weighted-grade-calculator"
+              href="/weighted-grade-calculator/"
               className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white dark:bg-gray-800 text-primary dark:text-primary-light border-2 border-primary dark:border-primary-light rounded-lg font-semibold text-lg hover:bg-primary hover:text-white dark:hover:bg-primary dark:hover:text-white transition-colors"
             >
               <BarChart3 className="w-6 h-6" />
