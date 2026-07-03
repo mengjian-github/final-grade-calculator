@@ -58,6 +58,8 @@ export default function WeightedGradeCalculator() {
   };
 
   const trackManualWeightedCalculation = () => {
+    trackStartCalculator('manual_cta');
+
     trackEvent('weighted_calculate', {
       calculator_type: 'weighted_grade',
       input_mode: 'weighted_items',

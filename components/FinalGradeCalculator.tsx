@@ -255,7 +255,18 @@ export default function FinalGradeCalculatorComponent() {
   };
 
   const trackManualCalculation = () => {
-    if (result === null) return;
+    trackStartCalculator(mode, 'manual_cta');
+
+    if (result === null) {
+      trackEvent('calculate_click', {
+        calculator_type: 'final_grade',
+        input_mode: mode,
+        result_state: 'invalid',
+        source: 'manual_cta',
+      });
+      return;
+    }
+
     trackEvent('calculate_click', {
       calculator_type: 'final_grade',
       input_mode: mode,

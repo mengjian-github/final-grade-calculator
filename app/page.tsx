@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import FinalGradeCalculator from '@/components/FinalGradeCalculator';
 import JsonLd from '@/components/JsonLd';
+import StickyCalculatorCta from '@/components/StickyCalculatorCta';
 import { generateMetadata } from '@/lib/seo';
 import Link from 'next/link';
 import {
@@ -187,13 +188,24 @@ export default function Home() {
     ],
   };
 
+  const websiteStructuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Final Grade Calculator',
+    url: 'https://finalgradecalculator.app/',
+    inLanguage: 'en-US',
+    description: 'Free final grade calculator and grade planning guides for students.',
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white pb-20 dark:from-gray-900 dark:to-gray-800 sm:pb-0">
       <JsonLd id="breadcrumb-schema" data={breadcrumbStructuredData} />
       <JsonLd id="faq-schema" data={faqStructuredData} />
       <JsonLd id="software-schema" data={softwareStructuredData} />
       <JsonLd id="howto-schema" data={howToStructuredData} />
       <JsonLd id="site-navigation-schema" data={siteNavigationStructuredData} />
+      <JsonLd id="website-schema" data={websiteStructuredData} />
+      <StickyCalculatorCta />
       {/* Hero Section */}
       <section className="overflow-hidden px-3 py-8 sm:px-6 sm:py-12 lg:px-8">
         <div className="max-w-6xl mx-auto text-center">
