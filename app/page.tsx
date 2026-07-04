@@ -71,6 +71,29 @@ export default function Home() {
         'Enter percentages in the tool, such as 30 for a final worth 30%. The formula treats 30% as 0.30.',
     },
   ];
+  const finalGradeExamples = [
+    {
+      current: '82%',
+      target: '90%',
+      weight: '30%',
+      needed: '108.67%',
+      interpretation: 'You need extra credit or a lower target.',
+    },
+    {
+      current: '86%',
+      target: '88%',
+      weight: '25%',
+      needed: '94.00%',
+      interpretation: 'Achievable if the final exam goes well.',
+    },
+    {
+      current: '91%',
+      target: '90%',
+      weight: '20%',
+      needed: '86.00%',
+      interpretation: 'You have a small cushion before the final.',
+    },
+  ];
   const faqStructuredData = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
@@ -255,6 +278,46 @@ export default function Home() {
                   Final weight is a decimal in the formula, so 30% becomes 0.30. The calculator above loads with the same values.
                 </p>
               </div>
+            </div>
+          </div>
+
+          <div className="mt-6 rounded-3xl border border-gray-200 bg-white p-5 text-left shadow-sm dark:border-gray-800 dark:bg-gray-900 sm:p-6">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary dark:text-primary-light">
+                  Final grade examples
+                </p>
+                <h2 className="mt-2 text-2xl font-bold text-gray-900 dark:text-white">
+                  Common “what grade do I need on my final?” scenarios
+                </h2>
+              </div>
+              <p className="text-sm text-gray-600 dark:text-gray-300 sm:max-w-sm">
+                Use these examples to sanity-check the calculator before entering your own syllabus numbers.
+              </p>
+            </div>
+            <div className="mt-5 overflow-x-auto">
+              <table className="w-full min-w-[640px] text-sm">
+                <thead>
+                  <tr className="border-b border-gray-200 text-left text-xs uppercase tracking-[0.14em] text-gray-500 dark:border-gray-800 dark:text-gray-400">
+                    <th className="py-3 pr-4">Current</th>
+                    <th className="py-3 pr-4">Target</th>
+                    <th className="py-3 pr-4">Final weight</th>
+                    <th className="py-3 pr-4">Needed on final</th>
+                    <th className="py-3">Meaning</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
+                  {finalGradeExamples.map((example) => (
+                    <tr key={`${example.current}-${example.target}-${example.weight}`}>
+                      <td className="py-3 pr-4 font-semibold text-gray-900 dark:text-white">{example.current}</td>
+                      <td className="py-3 pr-4 text-gray-700 dark:text-gray-200">{example.target}</td>
+                      <td className="py-3 pr-4 text-gray-700 dark:text-gray-200">{example.weight}</td>
+                      <td className="py-3 pr-4 font-bold text-primary dark:text-primary-light">{example.needed}</td>
+                      <td className="py-3 text-gray-600 dark:text-gray-300">{example.interpretation}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
 

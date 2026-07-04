@@ -46,15 +46,7 @@ export function getSourcePage() {
   return window.location.pathname || '/';
 }
 
-export function trackEvent(eventName: string, properties?: AnalyticsProperties) {
-  if (typeof window === 'undefined') return;
-
-  const eventProperties = cleanProperties({
-    source_page: getSourcePage(),
-    ...getUtmProperties(),
-    ...properties,
-  });
-
+function dispatchAnalyticsEvent(eventName: string, eventProperties: Record<string, AnalyticsValue>) {
   if (window.gtag) {
     try {
       window.gtag('event', eventName, eventProperties);
@@ -69,5 +61,32 @@ export function trackEvent(eventName: string, properties?: AnalyticsProperties) 
     } catch {
       // Keep existing Plausible behavior best-effort while preserving GA4 dispatch.
     }
+  }
+}
+
+export function trackEvent(eventName: string, properties?: AnalyticsProperties) {
+  if (typeof window === 'undefined') return;
+
+  const eventProperties = cleanProperties({
+    source_page: getSourcePage(),
+    ...getUtmProperties(),
+    ...properties,
+  });
+
+  dispatchAnalyticsEvent(eventName, eventProperties);
+
+  if (eventName === 'start_calculator') {
+    dispatchAnalyticsEvent('tool_start', {
+      ...eventProperties,
+      canonical_event: eventName,
+    });
+  }
+
+  if (eventName === 'user_result' || eventName === 'default_result') {
+    dispatchAnalyticsEvent('tool_result', {
+      ...eventProperties,
+      canonical_event: eventName,
+      result_origin: eventName === 'default_result' ? 'default_prefill' : 'user_input',
+    });
   }
 }
