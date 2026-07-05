@@ -37,6 +37,7 @@ export default function WeightedGradeCalculator() {
 
   const [currentGrade, setCurrentGrade] = useState<number>(0);
   const [totalWeight, setTotalWeight] = useState<number>(0);
+  const [gradedWeight, setGradedWeight] = useState<number>(0);
   const [targetGrade, setTargetGrade] = useState<string>('90');
   const [neededGrade, setNeededGrade] = useState<number | null>(null);
   const [calculationStatus, setCalculationStatus] = useState<string>(
@@ -74,7 +75,7 @@ export default function WeightedGradeCalculator() {
     }
 
     if (neededGrade === null) {
-      setCalculationStatus(`Updated: current weighted grade is ${currentGrade.toFixed(2)}% across ${totalWeight.toFixed(0)}% total weight.`);
+      setCalculationStatus(`Updated: completed-work grade is ${currentGrade.toFixed(2)}% across ${gradedWeight.toFixed(0)}% graded weight.`);
       return;
     }
 
@@ -88,6 +89,7 @@ export default function WeightedGradeCalculator() {
   useEffect(() => {
     let weightedSum = 0;
     let totalW = 0;
+    let gradedW = 0;
     let remainingWeight = 0;
 
     items.forEach((item) => {
@@ -102,15 +104,17 @@ export default function WeightedGradeCalculator() {
 
       if (hasGrade && hasPositiveWeight) {
         weightedSum += grade * weight;
+        gradedW += weight;
       } else if (hasPositiveWeight && (item.grade.trim() === '' || !hasGrade)) {
         remainingWeight += weight;
       }
     });
 
     setTotalWeight(totalW);
+    setGradedWeight(gradedW);
 
-    if (totalW > 0) {
-      setCurrentGrade(weightedSum / totalW);
+    if (gradedW > 0) {
+      setCurrentGrade(weightedSum / gradedW);
     } else {
       setCurrentGrade(0);
     }
@@ -192,8 +196,8 @@ export default function WeightedGradeCalculator() {
     if (totalWeight <= 0) return;
 
     const text = neededGrade === null
-      ? `Weighted Grade Calculator: my current weighted grade is ${currentGrade.toFixed(2)}% across ${totalWeight.toFixed(0)}% total weight.`
-      : `Weighted Grade Calculator: current grade ${currentGrade.toFixed(2)}%; needed on remaining items ${neededGrade.toFixed(2)}%.`;
+      ? `Weighted Grade Calculator: my completed-work grade is ${currentGrade.toFixed(2)}% across ${gradedWeight.toFixed(0)}% graded weight.`
+      : `Weighted Grade Calculator: completed-work grade ${currentGrade.toFixed(2)}%; needed on remaining items ${neededGrade.toFixed(2)}%.`;
 
     try {
       await navigator.clipboard.writeText(text);
@@ -326,17 +330,17 @@ export default function WeightedGradeCalculator() {
             <div className="flex items-center gap-3 mb-3">
               <Calculator className="w-6 h-6 text-primary dark:text-primary-light" />
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                Current Grade
+                Completed-Work Grade
               </h3>
             </div>
             <div className="text-4xl font-bold text-primary dark:text-primary-light mb-2">
-              {formatSafePercent(currentGrade)}
+              {gradedWeight > 0 ? formatSafePercent(currentGrade) : '—'}
             </div>
             <div className="text-xl font-semibold text-gray-700 dark:text-gray-300">
-              {percentageToLetter(currentGrade)}
+              {gradedWeight > 0 ? percentageToLetter(currentGrade) : 'Add graded items'}
             </div>
             <div className="mt-3 text-sm text-gray-600 dark:text-gray-400">
-              Total Weight: {totalWeight.toFixed(0)}%
+              Graded Weight: {gradedWeight.toFixed(0)}% · Total Weight: {totalWeight.toFixed(0)}%
               {totalWeight !== 100 && (
                 <span className="ml-2 text-warning">
                   (Should be 100%)

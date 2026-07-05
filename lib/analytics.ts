@@ -5,8 +5,11 @@ declare global {
   interface Window {
     plausible?: (event: string, options?: { props?: Record<string, AnalyticsValue> }) => void;
     gtag?: (command: 'event', eventName: string, parameters?: Record<string, AnalyticsValue>) => void;
+    clarity?: (command: 'event', eventName: string) => void;
   }
 }
+
+const REVIEW_BATCH = 'site-review-20260705-fullcycle';
 
 const UTM_KEYS = [
   'utm_source',
@@ -62,12 +65,21 @@ function dispatchAnalyticsEvent(eventName: string, eventProperties: Record<strin
       // Keep existing Plausible behavior best-effort while preserving GA4 dispatch.
     }
   }
+
+  if (window.clarity) {
+    try {
+      window.clarity('event', eventName);
+    } catch {
+      // Clarity custom events are best-effort and must not affect the calculator.
+    }
+  }
 }
 
 export function trackEvent(eventName: string, properties?: AnalyticsProperties) {
   if (typeof window === 'undefined') return;
 
   const eventProperties = cleanProperties({
+    review_batch: REVIEW_BATCH,
     source_page: getSourcePage(),
     ...getUtmProperties(),
     ...properties,

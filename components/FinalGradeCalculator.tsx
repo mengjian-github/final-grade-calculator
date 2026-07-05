@@ -10,7 +10,7 @@ import {
   isValidPercentage,
   percentageToLetter,
 } from '@/lib/gradeCalculations';
-import { Calculator, TrendingUp, Award, AlertCircle } from 'lucide-react';
+import { Calculator, TrendingUp, Award, AlertCircle, Share2 } from 'lucide-react';
 import dynamic from 'next/dynamic';
 
 const FinalGradeChart = dynamic(() => import('./FinalGradeChart'), { ssr: false });
@@ -355,6 +355,62 @@ https://finalgradecalculator.app`;
     }
   };
 
+  const getShareText = () => {
+    if (result === null) return '';
+
+    return mode === 'needed'
+      ? `I need ${result.toFixed(2)}% on my final exam to finish with ${desiredGrade}%.`
+      : `My projected final course grade is ${result.toFixed(2)}%.`;
+  };
+
+  const shareResult = async () => {
+    if (result === null) return;
+
+    const shareText = getShareText();
+    trackEvent('share_result_click', {
+      calculator_type: 'final_grade',
+      input_mode: mode,
+      result_state: getFinalGradeResultState(mode, result),
+      result_value: Number(result.toFixed(2)),
+      source: getResultEventSource(),
+    });
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'Final Grade Calculator result',
+          text: shareText,
+          url: 'https://finalgradecalculator.app/',
+        });
+        setCalculationStatus('Shared result successfully.');
+        trackEvent('share_result', {
+          calculator_type: 'final_grade',
+          input_mode: mode,
+          result_state: getFinalGradeResultState(mode, result),
+          result_value: Number(result.toFixed(2)),
+          source: 'native_share',
+        });
+        return;
+      } catch {
+        // Fall back to clipboard below when native share is cancelled or unavailable.
+      }
+    }
+
+    try {
+      await navigator.clipboard.writeText(`${shareText} https://finalgradecalculator.app/`);
+      setCalculationStatus('Share text copied to clipboard.');
+      trackEvent('share_result', {
+        calculator_type: 'final_grade',
+        input_mode: mode,
+        result_state: getFinalGradeResultState(mode, result),
+        result_value: Number(result.toFixed(2)),
+        source: 'clipboard_fallback',
+      });
+    } catch {
+      setCalculationStatus('Share failed. You can still copy the result manually.');
+    }
+  };
+
   const applyQuickAction = (action: QuickAction) => {
     setMode('needed');
     setCurrentGrade(action.currentGrade);
@@ -614,6 +670,20 @@ https://finalgradecalculator.app`;
                     </p>
                   )}
 
+                  <div className="mb-4 rounded-xl border border-white/70 bg-white/70 p-3 text-center text-sm text-gray-700 shadow-sm dark:border-gray-700 dark:bg-gray-950/40 dark:text-gray-200">
+                    {mode === 'needed' ? (
+                      <span>
+                        Formula used: ({desiredGrade} − {currentGrade} × (1 − {finalWeight}%)) ÷ {finalWeight}% ={' '}
+                        <strong>{result.toFixed(2)}%</strong>
+                      </span>
+                    ) : (
+                      <span>
+                        Projection used: {currentGrade}% × (100 − {finalWeight}%) + {finalExamGrade || 'final'}% × {finalWeight}% ={' '}
+                        <strong>{result.toFixed(2)}%</strong>
+                      </span>
+                    )}
+                  </div>
+
                   {/* Primary next action */}
                   <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
                     <button
@@ -625,6 +695,17 @@ https://finalgradecalculator.app`;
                       className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 px-5 py-2.5 text-sm font-semibold text-gray-900 dark:text-white shadow-sm transition hover:bg-gray-50 dark:hover:bg-gray-800"
                     >
                       Copy result
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        trackNextAction('share_result', 'share');
+                        shareResult();
+                      }}
+                      className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-primary/40 bg-primary/10 px-5 py-2.5 text-sm font-semibold text-primary shadow-sm transition hover:border-primary hover:bg-primary/15 dark:border-primary-light/40 dark:bg-primary-light/10 dark:text-primary-light"
+                    >
+                      <Share2 className="h-4 w-4" />
+                      Share result
                     </button>
                     {mode === 'needed' && status === 'stretch' && (
                       <Link
