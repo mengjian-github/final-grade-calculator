@@ -63,9 +63,18 @@ export default function Footer() {
             </p>
             <p className="text-sm text-gray-600 dark:text-gray-400 mt-4">
               Questions? Contact us at{' '}
-              <span className="text-primary dark:text-primary-light font-medium">
+              <a
+                href="mailto:support@finalgradecalculator.app"
+                onClick={() => trackEvent('contact_click', {
+                  calculator_type: 'site_navigation',
+                  input_mode: 'footer_email',
+                  result_state: 'contact_intent',
+                  destination: 'mailto:support@finalgradecalculator.app',
+                })}
+                className="text-primary dark:text-primary-light font-medium underline-offset-4 hover:underline"
+              >
                 support [at] finalgradecalculator.app
-              </span>
+              </a>
               .
             </p>
           </div>

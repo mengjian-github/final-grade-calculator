@@ -9,7 +9,16 @@ declare global {
   }
 }
 
-const REVIEW_BATCH = 'site-review-20260705-fullcycle';
+const REVIEW_BATCH = 'site-review-20260706-fullcycle';
+
+const CONVERSION_GOAL_EVENTS: Record<string, string> = {
+  copy_result: 'result_saved',
+  share_result: 'result_shared',
+  contact_click: 'contact_intent',
+  sticky_calculator_cta_click: 'calculator_intent',
+  open_weighted_calculator: 'calculator_deepening',
+  search_intent_click: 'search_intent_routed',
+};
 
 const UTM_KEYS = [
   'utm_source',
@@ -99,6 +108,15 @@ export function trackEvent(eventName: string, properties?: AnalyticsProperties) 
       ...eventProperties,
       canonical_event: eventName,
       result_origin: eventName === 'default_result' ? 'default_prefill' : 'user_input',
+    });
+  }
+
+  const goalType = CONVERSION_GOAL_EVENTS[eventName];
+  if (goalType) {
+    dispatchAnalyticsEvent('conversion_goal', {
+      ...eventProperties,
+      canonical_event: eventName,
+      goal_type: goalType,
     });
   }
 }

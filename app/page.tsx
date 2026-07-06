@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import FinalGradeCalculator from '@/components/FinalGradeCalculator';
 import JsonLd from '@/components/JsonLd';
 import StickyCalculatorCta from '@/components/StickyCalculatorCta';
+import TrackedLink from '@/components/TrackedLink';
 import { generateMetadata } from '@/lib/seo';
 import Link from 'next/link';
 import {
@@ -28,9 +29,9 @@ import {
 } from 'lucide-react';
 
 export const metadata: Metadata = generateMetadata({
-  title: 'Final Grade Calculator | Required Exam Score',
+  title: 'Final Grade Calculator | What Grade Do I Need?',
   description:
-    'Calculate the final exam score you need to reach your target course grade. Enter current grade, desired grade, and final weight for an instant required score.',
+    'Free final grade calculator for “what grade do I need?” Enter current grade, target grade, and final weight to get the exact required exam score.',
   keywords: [
     'final grade calculator',
     'what score do i need on my final',
@@ -233,7 +234,7 @@ export default function Home() {
       <section className="overflow-hidden px-3 py-8 sm:px-6 sm:py-12 lg:px-8">
         <div className="max-w-6xl mx-auto text-center">
           <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-primary dark:text-primary-light">
-            Final Grade Calculator
+            Final Grade Calculator · updated July 6, 2026
           </p>
           <h1 className="mb-4 text-3xl font-bold text-gray-900 dark:text-white sm:text-5xl lg:text-6xl">
             Final Grade Calculator
@@ -244,6 +245,48 @@ export default function Home() {
 
           <div id="calculator" className="mt-6 min-w-0 overflow-hidden rounded-3xl border border-gray-200 bg-white p-2 shadow-xl shadow-primary/10 dark:border-gray-800 dark:bg-gray-900 sm:p-6">
             <FinalGradeCalculator />
+          </div>
+
+          <div className="mt-6 rounded-3xl border border-primary/25 bg-primary/5 p-5 text-left shadow-sm dark:border-primary-light/30 dark:bg-primary/10 sm:p-6">
+            <div className="grid gap-5 lg:grid-cols-[1.2fr_1fr] lg:items-center">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary dark:text-primary-light">
+                  Search intent shortcut
+                </p>
+                <h2 className="mt-2 text-2xl font-bold text-gray-900 dark:text-white">
+                  Pick the path that matches your gradebook
+                </h2>
+                <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
+                  Most visitors either need one final-exam score, a weighted category plan, or a quick letter/GPA conversion. Choose the matching path before you scroll.
+                </p>
+              </div>
+              <div className="grid gap-2 sm:grid-cols-3 lg:grid-cols-1">
+                <TrackedLink
+                  href="#calculator"
+                  eventName="search_intent_click"
+                  eventProps={{ calculator_type: 'final_grade', intent_type: 'single_final_exam', source: 'intent_shortcut' }}
+                  className="rounded-2xl border border-primary/30 bg-white px-4 py-3 text-sm font-bold text-gray-900 transition hover:border-primary hover:bg-primary/10 dark:border-primary-light/30 dark:bg-gray-900 dark:text-white"
+                >
+                  I need one final exam score
+                </TrackedLink>
+                <TrackedLink
+                  href="/weighted-grade-calculator/"
+                  eventName="search_intent_click"
+                  eventProps={{ calculator_type: 'weighted_grade', intent_type: 'weighted_categories', source: 'intent_shortcut' }}
+                  className="rounded-2xl border border-gray-200 bg-white px-4 py-3 text-sm font-bold text-gray-900 transition hover:border-primary hover:bg-primary/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+                >
+                  My class uses weighted categories
+                </TrackedLink>
+                <TrackedLink
+                  href="/grade-converter/"
+                  eventName="search_intent_click"
+                  eventProps={{ calculator_type: 'grade_converter', intent_type: 'convert_grade', source: 'intent_shortcut' }}
+                  className="rounded-2xl border border-gray-200 bg-white px-4 py-3 text-sm font-bold text-gray-900 transition hover:border-primary hover:bg-primary/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+                >
+                  Convert percent, letter, or GPA
+                </TrackedLink>
+              </div>
+            </div>
           </div>
 
           <div className="mt-8 rounded-3xl border border-primary/30 bg-white text-left shadow-xl shadow-primary/10 dark:border-primary-light/30 dark:bg-gray-900">

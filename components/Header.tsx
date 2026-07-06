@@ -45,6 +45,12 @@ export default function Header() {
               <Link
                 key={item.name}
                 href={item.href}
+                onClick={() => trackEvent('nav_click', {
+                  calculator_type: 'site_navigation',
+                  input_mode: 'header_desktop',
+                  result_state: 'navigate',
+                  destination: item.href,
+                })}
                 className="text-sm font-medium text-gray-700 hover:text-primary dark:text-gray-300 dark:hover:text-primary-light transition-colors"
               >
                 {item.name}
