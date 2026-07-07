@@ -9,7 +9,7 @@ declare global {
   }
 }
 
-const REVIEW_BATCH = 'site-review-20260706-fullcycle';
+const REVIEW_BATCH = 'site-review-20260707-fullcycle';
 
 const CONVERSION_GOAL_EVENTS: Record<string, string> = {
   copy_result: 'result_saved',
@@ -18,6 +18,9 @@ const CONVERSION_GOAL_EVENTS: Record<string, string> = {
   sticky_calculator_cta_click: 'calculator_intent',
   open_weighted_calculator: 'calculator_deepening',
   search_intent_click: 'search_intent_routed',
+  primary_calculator_cta_click: 'calculator_intent',
+  converter_type_change: 'calculator_deepening',
+  converter_input_change: 'calculator_deepening',
 };
 
 const UTM_KEYS = [

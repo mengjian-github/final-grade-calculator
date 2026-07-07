@@ -8,6 +8,7 @@ import {
   gpaToPercentage,
 } from '@/lib/gradeCalculations';
 import { ArrowRight } from 'lucide-react';
+import { trackEvent } from '@/lib/analytics';
 
 export default function GradeConverterComponent() {
   const [conversionType, setConversionType] = useState<
@@ -17,6 +18,25 @@ export default function GradeConverterComponent() {
   const [percentInput, setPercentInput] = useState('85');
   const [letterInput, setLetterInput] = useState('B');
   const [gpaInput, setGpaInput] = useState('3.0');
+
+  const trackConverterType = (nextType: typeof conversionType) => {
+    setConversionType(nextType);
+    trackEvent('converter_type_change', {
+      calculator_type: 'grade_converter',
+      input_mode: nextType,
+      result_state: 'type_selected',
+    });
+  };
+
+  const trackConverterInput = (field: string, value: string) => {
+    trackEvent('converter_input_change', {
+      calculator_type: 'grade_converter',
+      input_mode: conversionType,
+      result_state: 'input_updated',
+      field,
+      has_value: value.trim().length > 0,
+    });
+  };
 
   const renderConverter = () => {
     switch (conversionType) {
@@ -30,7 +50,10 @@ export default function GradeConverterComponent() {
               <input
                 type="number"
                 value={percentInput}
-                onChange={(e) => setPercentInput(e.target.value)}
+                onChange={(e) => {
+                  setPercentInput(e.target.value);
+                  trackConverterInput('percentage', e.target.value);
+                }}
                 min="0"
                 max="100"
                 className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 text-lg"
@@ -58,7 +81,10 @@ export default function GradeConverterComponent() {
               <input
                 type="number"
                 value={percentInput}
-                onChange={(e) => setPercentInput(e.target.value)}
+                onChange={(e) => {
+                  setPercentInput(e.target.value);
+                  trackConverterInput('percentage', e.target.value);
+                }}
                 min="0"
                 max="100"
                 className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 text-lg"
@@ -85,7 +111,10 @@ export default function GradeConverterComponent() {
               </label>
               <select
                 value={letterInput}
-                onChange={(e) => setLetterInput(e.target.value)}
+                onChange={(e) => {
+                  setLetterInput(e.target.value);
+                  trackConverterInput('letter', e.target.value);
+                }}
                 className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 text-lg"
               >
                 {['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'D-', 'F'].map(
@@ -119,7 +148,10 @@ export default function GradeConverterComponent() {
               <input
                 type="number"
                 value={gpaInput}
-                onChange={(e) => setGpaInput(e.target.value)}
+                onChange={(e) => {
+                  setGpaInput(e.target.value);
+                  trackConverterInput('gpa', e.target.value);
+                }}
                 min="0"
                 max="4.0"
                 step="0.01"
@@ -146,7 +178,7 @@ export default function GradeConverterComponent() {
         {/* Conversion Type Selector */}
         <div className="grid grid-cols-2 gap-4 mb-8">
           <button
-            onClick={() => setConversionType('percentToLetter')}
+            onClick={() => trackConverterType('percentToLetter')}
             className={`py-3 px-4 rounded-lg font-medium transition-all border ${
               conversionType === 'percentToLetter'
                 ? 'bg-primary text-white border-primary shadow-lg'
@@ -156,7 +188,7 @@ export default function GradeConverterComponent() {
             % → Letter
           </button>
           <button
-            onClick={() => setConversionType('percentToGpa')}
+            onClick={() => trackConverterType('percentToGpa')}
             className={`py-3 px-4 rounded-lg font-medium transition-all border ${
               conversionType === 'percentToGpa'
                 ? 'bg-primary text-white border-primary shadow-lg'
@@ -166,7 +198,7 @@ export default function GradeConverterComponent() {
             % → GPA
           </button>
           <button
-            onClick={() => setConversionType('letterToPercent')}
+            onClick={() => trackConverterType('letterToPercent')}
             className={`py-3 px-4 rounded-lg font-medium transition-all border ${
               conversionType === 'letterToPercent'
                 ? 'bg-primary text-white border-primary shadow-lg'
@@ -176,7 +208,7 @@ export default function GradeConverterComponent() {
             Letter → %
           </button>
           <button
-            onClick={() => setConversionType('gpaToPercent')}
+            onClick={() => trackConverterType('gpaToPercent')}
             className={`py-3 px-4 rounded-lg font-medium transition-all border ${
               conversionType === 'gpaToPercent'
                 ? 'bg-primary text-white border-primary shadow-lg'

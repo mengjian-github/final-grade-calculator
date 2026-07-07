@@ -29,9 +29,9 @@ import {
 } from 'lucide-react';
 
 export const metadata: Metadata = generateMetadata({
-  title: 'Final Grade Calculator | What Grade Do I Need?',
+  title: 'Final Grade Calculator: What Grade Do I Need on My Final?',
   description:
-    'Free final grade calculator for “what grade do I need?” Enter current grade, target grade, and final weight to get the exact required exam score.',
+    'Free final grade calculator for “what grade do I need on my final?” Enter current grade, target grade, and final weight to get the exact required exam score.',
   keywords: [
     'final grade calculator',
     'what score do i need on my final',
@@ -365,20 +365,24 @@ export default function Home() {
           </div>
 
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link
+            <TrackedLink
               href="#calculator"
+              eventName="primary_calculator_cta_click"
+              eventProps={{ calculator_type: 'final_grade', source: 'hero_cta', destination: '#calculator' }}
               className="inline-flex items-center gap-2 rounded-lg bg-primary px-8 py-3 text-base font-semibold text-white shadow-lg shadow-primary/30 transition hover:bg-primary-dark"
             >
               <Zap className="w-5 h-5" />
               Calculate the Score I Need
-            </Link>
-            <Link
+            </TrackedLink>
+            <TrackedLink
               href="/weighted-grade-calculator/"
+              eventName="primary_calculator_cta_click"
+              eventProps={{ calculator_type: 'weighted_grade', source: 'hero_cta', destination: '/weighted-grade-calculator/' }}
               className="inline-flex items-center gap-2 rounded-lg border border-gray-300 dark:border-gray-600 px-8 py-3 text-base font-semibold text-gray-800 dark:text-gray-100 hover:border-primary dark:hover:border-primary-light"
             >
               <Calculator className="w-5 h-5" />
               Use Weighted Grade Calculator
-            </Link>
+            </TrackedLink>
           </div>
 
           <p className="mt-6 text-sm text-gray-500 dark:text-gray-400">
