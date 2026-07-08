@@ -9,11 +9,16 @@ declare global {
   }
 }
 
-const REVIEW_BATCH = 'site-review-20260707-fullcycle';
+const REVIEW_BATCH = 'site-review-20260708-fullcycle';
 
 const CONVERSION_GOAL_EVENTS: Record<string, string> = {
+  calculate_click: 'calculator_confirmed',
+  quick_action_click: 'calculator_prefilled',
   copy_result: 'result_saved',
+  copy_result_click: 'result_copy_intent',
   share_result: 'result_shared',
+  share_result_click: 'result_share_intent',
+  result_next_action_click: 'result_next_step',
   contact_click: 'contact_intent',
   sticky_calculator_cta_click: 'calculator_intent',
   open_weighted_calculator: 'calculator_deepening',

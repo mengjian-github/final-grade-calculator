@@ -1,0 +1,20 @@
+# Final Grade Calculator
+
+> Free student calculator for answering: what score do I need on my final exam?
+
+## Primary pages
+- https://finalgradecalculator.app/ — Final Grade Calculator with live required-score result, formula, examples, copy/share actions, and structured FAQ.
+- https://finalgradecalculator.app/weighted-grade-calculator/ — Weighted category calculator for assignments, quizzes, labs, projects, and final exams.
+- https://finalgradecalculator.app/what-grade-do-i-need/ — Exact-intent guide for the "what grade do I need on my final" query.
+- https://finalgradecalculator.app/how-to-calculate-final-grade/ — Step-by-step final grade formula guide.
+- https://finalgradecalculator.app/grade-converter/ — Percentage, letter grade, and GPA converter.
+- https://finalgradecalculator.app/calculators/ — Index of all grade calculators and guides.
+
+## Current optimization notes
+- Review batch: site-review-20260708-fullcycle.
+- Main conversion events: start_calculator, tool_start, tool_result, copy_result, share_result, result_next_action_click, search_intent_click.
+- Sitemap: https://finalgradecalculator.app/sitemap.xml
+- Robots: https://finalgradecalculator.app/robots.txt
+
+## Contact
+- support@finalgradecalculator.app

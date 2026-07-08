@@ -234,7 +234,7 @@ export default function Home() {
       <section className="overflow-hidden px-3 py-8 sm:px-6 sm:py-12 lg:px-8">
         <div className="max-w-6xl mx-auto text-center">
           <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-primary dark:text-primary-light">
-            Final Grade Calculator · updated July 6, 2026
+            Final Grade Calculator · updated July 8, 2026
           </p>
           <h1 className="mb-4 text-3xl font-bold text-gray-900 dark:text-white sm:text-5xl lg:text-6xl">
             Final Grade Calculator
@@ -388,6 +388,15 @@ export default function Home() {
           <p className="mt-6 text-sm text-gray-500 dark:text-gray-400">
             Free, private, and built around the real student question: “what score do I need on my final?”
           </p>
+
+          <div className="mt-5 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-left text-sm text-emerald-900 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-100">
+            <p className="font-bold">After you get the score, take one clear next step:</p>
+            <ul className="mt-2 grid gap-2 sm:grid-cols-3">
+              <li>Copy the result for your study notes.</li>
+              <li>Share it with a tutor, parent, or classmate.</li>
+              <li>Switch to weighted scenarios if your gradebook has categories.</li>
+            </ul>
+          </div>
 
           <div className="mt-6 grid gap-4 sm:grid-cols-3 text-left">
             {[
