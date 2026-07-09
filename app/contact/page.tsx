@@ -1,13 +1,15 @@
 import Link from 'next/link';
 import { Mail, GraduationCap, ShieldAlert, Clock } from 'lucide-react';
 import { generateMetadata } from '@/lib/seo';
+import JsonLd from '@/components/JsonLd';
 
 export const metadata = generateMetadata({
-  title: 'Contact',
+  title: 'Contact \u2014 Final Grade Calculator Support',
   description:
     'Contact Final Grade Calculator for feedback, corrections, privacy questions, and site safety reports.',
   canonical: '/contact/',
   keywords: ['contact final grade calculator', 'grade calculator feedback', 'site safety contact'],
+  appendSiteName: false,
 });
 
 const contactReasons = [
@@ -29,8 +31,18 @@ const contactReasons = [
 ];
 
 export default function ContactPage() {
+  const breadcrumbStructuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Final Grade Calculator', item: 'https://finalgradecalculator.app/' },
+      { '@type': 'ListItem', position: 2, name: 'Contact', item: 'https://finalgradecalculator.app/contact/' },
+    ],
+  };
+
   return (
     <div className="bg-white dark:bg-gray-950">
+      <JsonLd id="contact-breadcrumb-schema" data={breadcrumbStructuredData} />
       <section className="bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-gray-900 dark:via-gray-950 dark:to-blue-950/20 border-b border-gray-200 dark:border-gray-800">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
           <p className="inline-flex items-center gap-2 rounded-full bg-blue-100 dark:bg-blue-900/40 px-4 py-2 text-sm font-semibold text-blue-700 dark:text-blue-200 mb-6">

@@ -5,7 +5,7 @@ import { generateMetadata } from '@/lib/seo';
 import { Globe2, Calculator, ArrowLeftRight, GraduationCap, ClipboardList, Share2 } from 'lucide-react';
 
 export const metadata: Metadata = generateMetadata({
-  title: 'Grade Converter | Final Grade Calculator',
+  title: 'Grade Converter — Percentage, Letter & GPA (Free)',
   description:
     'Use our grade converter to translate percentages, letters, and GPA scales fast. Understand cutoffs, international conversions, and transcript planning tips.',
   keywords: [
@@ -16,6 +16,7 @@ export const metadata: Metadata = generateMetadata({
     'grade conversion tool',
   ],
   canonical: '/grade-converter/',
+  appendSiteName: false,
 });
 
 export default function GradeConverterPage() {

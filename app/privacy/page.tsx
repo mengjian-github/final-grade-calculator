@@ -1,13 +1,15 @@
 import Link from 'next/link';
 import { ShieldCheck, BarChart3, Cookie, Mail } from 'lucide-react';
 import { generateMetadata } from '@/lib/seo';
+import JsonLd from '@/components/JsonLd';
 
 export const metadata = generateMetadata({
-  title: 'Privacy Policy',
+  title: 'Privacy Policy \u2014 Final Grade Calculator',
   description:
     'Privacy Policy for Final Grade Calculator, including analytics, cookies, data use, and contact information.',
   canonical: '/privacy/',
   keywords: ['privacy policy', 'analytics cookies', 'student grade calculator privacy'],
+  appendSiteName: false,
 });
 
 const analyticsTools = [
@@ -17,8 +19,18 @@ const analyticsTools = [
 ];
 
 export default function PrivacyPage() {
+  const breadcrumbStructuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Final Grade Calculator', item: 'https://finalgradecalculator.app/' },
+      { '@type': 'ListItem', position: 2, name: 'Privacy Policy', item: 'https://finalgradecalculator.app/privacy/' },
+    ],
+  };
+
   return (
     <div className="bg-white dark:bg-gray-950">
+      <JsonLd id="privacy-breadcrumb-schema" data={breadcrumbStructuredData} />
       <section className="bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-gray-900 dark:via-gray-950 dark:to-blue-950/20 border-b border-gray-200 dark:border-gray-800">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
           <p className="inline-flex items-center gap-2 rounded-full bg-blue-100 dark:bg-blue-900/40 px-4 py-2 text-sm font-semibold text-blue-700 dark:text-blue-200 mb-6">

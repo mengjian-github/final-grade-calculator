@@ -11,7 +11,7 @@
 - https://finalgradecalculator.app/calculators/ — Index of all grade calculators and guides.
 
 ## Current optimization notes
-- Review batch: site-review-20260708-fullcycle.
+- Review batch: site-review-20260709-fullcycle.
 - Main conversion events: start_calculator, tool_start, tool_result, copy_result, share_result, result_next_action_click, search_intent_click.
 - Sitemap: https://finalgradecalculator.app/sitemap.xml
 - Robots: https://finalgradecalculator.app/robots.txt

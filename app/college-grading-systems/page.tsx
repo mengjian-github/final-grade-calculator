@@ -1,18 +1,30 @@
 import { Metadata } from 'next';
 import { generateMetadata } from '@/lib/seo';
+import JsonLd from '@/components/JsonLd';
 import Link from 'next/link';
 
 export const metadata: Metadata = generateMetadata({
-  title: 'College Grading Systems | Final Grade Calculator',
+  title: 'College Grading Systems \u2014 US & International GPA Scales',
   description:
     'Explore college grading systems in the US and abroad, decode GPA scales, and learn how to translate credits, percentages, and classifications for applications.',
   keywords: ['college grading', 'grading systems', 'university grades', 'GPA scales'],
   canonical: '/college-grading-systems/',
+  appendSiteName: false,
 });
 
 export default function CollegeGradingSystemsPage() {
+  const breadcrumbStructuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Final Grade Calculator', item: 'https://finalgradecalculator.app/' },
+      { '@type': 'ListItem', position: 2, name: 'College Grading Systems', item: 'https://finalgradecalculator.app/college-grading-systems/' },
+    ],
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 px-4 py-16">
+      <JsonLd id="college-grading-breadcrumb-schema" data={breadcrumbStructuredData} />
       <article className="max-w-4xl mx-auto prose prose-lg dark:prose-invert">
         <h1>College Grading Systems Explained</h1>
         <p className="lead">

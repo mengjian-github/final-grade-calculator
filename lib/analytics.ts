@@ -9,7 +9,7 @@ declare global {
   }
 }
 
-const REVIEW_BATCH = 'site-review-20260708-fullcycle';
+const REVIEW_BATCH = 'site-review-20260709-fullcycle';
 
 const CONVERSION_GOAL_EVENTS: Record<string, string> = {
   calculate_click: 'calculator_confirmed',
@@ -26,6 +26,7 @@ const CONVERSION_GOAL_EVENTS: Record<string, string> = {
   primary_calculator_cta_click: 'calculator_intent',
   converter_type_change: 'calculator_deepening',
   converter_input_change: 'calculator_deepening',
+  weighted_calculate: 'calculator_confirmed',
 };
 
 const UTM_KEYS = [
@@ -35,6 +36,8 @@ const UTM_KEYS = [
   'utm_content',
   'utm_term',
 ] as const;
+
+const ENGAGEMENT_MARKS = [10, 30, 60, 120, 180, 300];
 
 function cleanProperties(properties: AnalyticsProperties = {}) {
   const cleaned: Record<string, AnalyticsValue> = {};
@@ -67,6 +70,8 @@ export function getSourcePage() {
 }
 
 function dispatchAnalyticsEvent(eventName: string, eventProperties: Record<string, AnalyticsValue>) {
+  if (typeof window === 'undefined') return;
+
   if (window.gtag) {
     try {
       window.gtag('event', eventName, eventProperties);
@@ -92,39 +97,71 @@ function dispatchAnalyticsEvent(eventName: string, eventProperties: Record<strin
   }
 }
 
-export function trackEvent(eventName: string, properties?: AnalyticsProperties) {
+function startEngagementTimer() {
   if (typeof window === 'undefined') return;
-
-  const eventProperties = cleanProperties({
-    review_batch: REVIEW_BATCH,
-    source_page: getSourcePage(),
-    ...getUtmProperties(),
-    ...properties,
-  });
-
-  dispatchAnalyticsEvent(eventName, eventProperties);
-
-  if (eventName === 'start_calculator') {
-    dispatchAnalyticsEvent('tool_start', {
-      ...eventProperties,
-      canonical_event: eventName,
+  const marks = new Set<number>();
+  let elapsed = 0;
+  const interval = window.setInterval(() => {
+    elapsed += 1;
+    ENGAGEMENT_MARKS.forEach((mark) => {
+      if (elapsed >= mark && !marks.has(mark)) {
+        marks.add(mark);
+        try {
+          dispatchAnalyticsEvent('engagement_time_seconds', {
+            review_batch: REVIEW_BATCH,
+            source_page: getSourcePage(),
+            seconds: mark,
+          });
+        } catch {
+          // Ignore engagement timer failures.
+        }
+      }
     });
-  }
+  }, 1000);
+  return interval;
+}
 
-  if (eventName === 'user_result' || eventName === 'default_result') {
-    dispatchAnalyticsEvent('tool_result', {
-      ...eventProperties,
-      canonical_event: eventName,
-      result_origin: eventName === 'default_result' ? 'default_prefill' : 'user_input',
-    });
-  }
+export function trackEvent(eventName: string, properties?: AnalyticsProperties) {
+  try {
+    if (typeof window === 'undefined') return;
 
-  const goalType = CONVERSION_GOAL_EVENTS[eventName];
-  if (goalType) {
-    dispatchAnalyticsEvent('conversion_goal', {
-      ...eventProperties,
-      canonical_event: eventName,
-      goal_type: goalType,
+    const eventProperties = cleanProperties({
+      review_batch: REVIEW_BATCH,
+      source_page: getSourcePage(),
+      ...getUtmProperties(),
+      ...properties,
     });
+
+    dispatchAnalyticsEvent(eventName, eventProperties);
+
+    if (eventName === 'start_calculator') {
+      dispatchAnalyticsEvent('tool_start', {
+        ...eventProperties,
+        canonical_event: eventName,
+      });
+    }
+
+    if (eventName === 'user_result' || eventName === 'default_result') {
+      dispatchAnalyticsEvent('tool_result', {
+        ...eventProperties,
+        canonical_event: eventName,
+        result_origin: eventName === 'default_result' ? 'default_prefill' : 'user_input',
+      });
+    }
+
+    const goalType = CONVERSION_GOAL_EVENTS[eventName];
+    if (goalType) {
+      dispatchAnalyticsEvent('conversion_goal', {
+        ...eventProperties,
+        canonical_event: eventName,
+        goal_type: goalType,
+      });
+    }
+  } catch {
+    // Track event failures must never block the calculator UI.
   }
+}
+
+if (typeof window !== 'undefined') {
+  startEngagementTimer();
 }

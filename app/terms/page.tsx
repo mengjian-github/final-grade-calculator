@@ -1,20 +1,32 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { generateMetadata } from '@/lib/seo';
+import JsonLd from '@/components/JsonLd';
 
 export const metadata: Metadata = generateMetadata({
-  title: 'Terms of Use',
+  title: 'Terms of Use \u2014 Final Grade Calculator',
   description:
     'Terms of use for Final Grade Calculator. Educational estimates, no official academic advice, and liability limitations.',
   canonical: '/terms/',
   keywords: ['final grade calculator terms', 'grade calculator terms of use'],
+  appendSiteName: false,
 });
 
 export default function TermsPage() {
   const currentYear = new Date().getFullYear();
 
+  const breadcrumbStructuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Final Grade Calculator', item: 'https://finalgradecalculator.app/' },
+      { '@type': 'ListItem', position: 2, name: 'Terms of Use', item: 'https://finalgradecalculator.app/terms/' },
+    ],
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
+      <JsonLd id="terms-breadcrumb-schema" data={breadcrumbStructuredData} />
       <section className="px-4 py-12 sm:px-6 lg:px-8">
         <div className="max-w-3xl mx-auto">
           <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-6">

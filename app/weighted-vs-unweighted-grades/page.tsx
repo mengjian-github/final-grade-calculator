@@ -1,18 +1,30 @@
 import { Metadata } from 'next';
 import { generateMetadata } from '@/lib/seo';
+import JsonLd from '@/components/JsonLd';
 import Link from 'next/link';
 
 export const metadata: Metadata = generateMetadata({
-  title: 'Weighted vs Unweighted Grades | Final Grade Calculator',
+  title: 'Weighted vs Unweighted Grades \u2014 GPA Differences Explained',
   description:
     'Compare weighted vs unweighted grades, learn how each scale shapes GPA, and follow actionable strategies for course planning and college admissions.',
   keywords: ['weighted grades', 'unweighted grades', 'GPA calculation', 'grade weighting'],
   canonical: '/weighted-vs-unweighted-grades/',
+  appendSiteName: false,
 });
 
 export default function WeightedVsUnweightedPage() {
+  const breadcrumbStructuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Final Grade Calculator', item: 'https://finalgradecalculator.app/' },
+      { '@type': 'ListItem', position: 2, name: 'Weighted vs Unweighted Grades', item: 'https://finalgradecalculator.app/weighted-vs-unweighted-grades/' },
+    ],
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 px-4 py-16">
+      <JsonLd id="weighted-vs-unweighted-breadcrumb-schema" data={breadcrumbStructuredData} />
       <article className="max-w-4xl mx-auto prose prose-lg dark:prose-invert">
         <h1>Weighted vs Unweighted Grades Explained</h1>
         <p className="lead">

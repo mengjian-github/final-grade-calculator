@@ -1,18 +1,30 @@
 import { Metadata } from 'next';
 import { generateMetadata } from '@/lib/seo';
+import JsonLd from '@/components/JsonLd';
 import Link from 'next/link';
 
 export const metadata: Metadata = generateMetadata({
-  title: 'Grade Calculator Guide | Final Grade Calculator',
+  title: 'Grade Calculator Guide \u2014 Formulas, Tips & Examples',
   description:
     'Follow this grade calculator guide to understand formulas, analyze weighted scores, and plan study strategies that keep you on track for every class.',
   keywords: ['grade calculator guide', 'calculate my final grade', 'grade planning', 'academic success'],
   canonical: '/grade-calculator-guide/',
+  appendSiteName: false,
 });
 
 export default function GradeCalculatorGuidePage() {
+  const breadcrumbStructuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Final Grade Calculator', item: 'https://finalgradecalculator.app/' },
+      { '@type': 'ListItem', position: 2, name: 'Grade Calculator Guide', item: 'https://finalgradecalculator.app/grade-calculator-guide/' },
+    ],
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 px-4 py-16">
+      <JsonLd id="guide-breadcrumb-schema" data={breadcrumbStructuredData} />
       <article className="max-w-4xl mx-auto prose prose-lg dark:prose-invert">
         <h1>Complete Grade Calculator Guide</h1>
         <p className="lead">

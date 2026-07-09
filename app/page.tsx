@@ -29,9 +29,9 @@ import {
 } from 'lucide-react';
 
 export const metadata: Metadata = generateMetadata({
-  title: 'Final Grade Calculator: What Grade Do I Need on My Final?',
+  title: 'Final Grade Calculator — What Score Do I Need on My Final? (Free & Instant)',
   description:
-    'Free final grade calculator for “what grade do I need on my final?” Enter current grade, target grade, and final weight to get the exact required exam score.',
+    'Get the exact score you need on your final exam in seconds. Free final grade calculator — no signup, no ads, works on mobile. Enter current grade, target grade, and final weight.',
   keywords: [
     'final grade calculator',
     'what score do i need on my final',
@@ -40,6 +40,7 @@ export const metadata: Metadata = generateMetadata({
     'student grade calculator',
   ],
   canonical: '/',
+  appendSiteName: false,
 });
 
 export default function Home() {
@@ -234,7 +235,7 @@ export default function Home() {
       <section className="overflow-hidden px-3 py-8 sm:px-6 sm:py-12 lg:px-8">
         <div className="max-w-6xl mx-auto text-center">
           <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-primary dark:text-primary-light">
-            Final Grade Calculator · updated July 8, 2026
+            Final Grade Calculator · updated July 9, 2026
           </p>
           <h1 className="mb-4 text-3xl font-bold text-gray-900 dark:text-white sm:text-5xl lg:text-6xl">
             Final Grade Calculator

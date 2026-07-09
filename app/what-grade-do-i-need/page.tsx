@@ -5,9 +5,9 @@ import Link from 'next/link';
 import { HelpCircle, Calculator } from 'lucide-react';
 
 export const metadata: Metadata = generateMetadata({
-  title: 'What Grade Do I Need on My Final? Calculator',
+  title: 'What Grade Do I Need on My Final? — Free Calculator & Guide',
   description:
-    'Enter your current grade and exam weight to find the exact score needed. Visual scenario chart shows achievable vs stretch goals.',
+    'Find the exact score you need on your final exam in seconds. Free “what grade do I need on my final?” calculator with examples, formula, and FAQ.',
   keywords: [
     'what grade do i need',
     'grade questions',

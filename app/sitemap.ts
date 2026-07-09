@@ -3,6 +3,7 @@ import type { MetadataRoute } from 'next';
 export const dynamic = 'force-static';
 
 const BASE_URL = 'https://finalgradecalculator.app';
+const LAST_MODIFIED = '2026-07-09';
 
 const routes = [
   { path: '/', changeFrequency: 'weekly', priority: 1 },
@@ -22,7 +23,7 @@ const routes = [
 export default function sitemap(): MetadataRoute.Sitemap {
   return routes.map((route) => ({
     url: `${BASE_URL}${route.path}`,
-    lastModified: new Date(),
+    lastModified: LAST_MODIFIED,
     changeFrequency: route.changeFrequency as MetadataRoute.Sitemap[number]['changeFrequency'],
     priority: route.priority,
   }));
