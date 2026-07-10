@@ -3,7 +3,7 @@ import type { MetadataRoute } from 'next';
 export const dynamic = 'force-static';
 
 const BASE_URL = 'https://finalgradecalculator.app';
-const LAST_MODIFIED = '2026-07-09';
+const LAST_MODIFIED = '2026-07-10';
 
 const routes = [
   { path: '/', changeFrequency: 'weekly', priority: 1 },

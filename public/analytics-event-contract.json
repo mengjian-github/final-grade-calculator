@@ -1,0 +1,39 @@
+{
+  "schema_version": "analytics_event_contract.v1",
+  "site_slug": "finalgradecalculator",
+  "review_batch": "site-review-20260710-fullcycle",
+  "checked_at": "2026-07-10T02:44:00Z",
+  "source_file": "/root/projects/final-grade-calculator/lib/analytics.ts",
+  "source_url": "https://finalgradecalculator.app/",
+  "required_dimensions": [
+    "route_path",
+    "source_page",
+    "device_type",
+    "traffic_source",
+    "referrer_host",
+    "funnel_stage",
+    "utm_source",
+    "utm_medium",
+    "utm_campaign",
+    "utm_content",
+    "utm_term"
+  ],
+  "canonical_funnel_events": [
+    "start_calculator",
+    "tool_start",
+    "calculate_click",
+    "tool_result",
+    "copy_result",
+    "share_result",
+    "result_next_action_click",
+    "conversion_goal"
+  ],
+  "route_aliases": [
+    {
+      "path": "/privacy-policy/",
+      "canonical": "/privacy/",
+      "status": "static_alias_200"
+    }
+  ],
+  "notes": "20260710 implementation adds route/device/source funnel dimensions for calculate-to-result-to-copy/share-to-next-action review and keeps UTM keys for ops attribution."
+}

@@ -9,7 +9,32 @@ declare global {
   }
 }
 
-const REVIEW_BATCH = 'site-review-20260709-fullcycle';
+const REVIEW_BATCH = 'site-review-20260710-fullcycle';
+
+const FUNNEL_STAGE_BY_EVENT: Record<string, string> = {
+  start_calculator: 'start',
+  tool_start: 'start',
+  calculate_click: 'confirm',
+  weighted_calculate: 'confirm',
+  default_result: 'result',
+  user_result: 'result',
+  default_result_view: 'result',
+  user_result_view: 'result',
+  result_view: 'result',
+  default_weighted_result_view: 'result',
+  user_weighted_result_view: 'result',
+  tool_result: 'result',
+  copy_result_click: 'copy_intent',
+  copy_result: 'copy',
+  share_result_click: 'share_intent',
+  share_result: 'share',
+  result_next_action_click: 'next_action',
+  search_intent_click: 'intent_route',
+  primary_calculator_cta_click: 'intent_route',
+  sticky_calculator_cta_click: 'intent_route',
+  open_weighted_calculator: 'intent_route',
+  contact_click: 'contact',
+};
 
 const CONVERSION_GOAL_EVENTS: Record<string, string> = {
   calculate_click: 'calculator_confirmed',
@@ -64,6 +89,36 @@ function getUtmProperties() {
   }, {});
 }
 
+function getDeviceType() {
+  if (typeof window === 'undefined') return 'unknown';
+  const width = window.innerWidth || document.documentElement.clientWidth || 0;
+  if (width < 640) return 'mobile';
+  if (width < 1024) return 'tablet';
+  return 'desktop';
+}
+
+function getReferrerHost() {
+  if (typeof document === 'undefined' || !document.referrer) return 'direct';
+  try {
+    return new URL(document.referrer).hostname || 'direct';
+  } catch {
+    return 'unknown';
+  }
+}
+
+function getTrafficSource() {
+  if (typeof window === 'undefined') return 'unknown';
+  const params = new URLSearchParams(window.location.search);
+  const utmSource = params.get('utm_source');
+  if (utmSource) return utmSource;
+
+  const referrerHost = getReferrerHost();
+  if (referrerHost === 'direct') return 'direct';
+  if (referrerHost.includes('google.')) return 'google_organic_or_referral';
+  if (referrerHost.includes('bing.')) return 'bing_organic_or_referral';
+  return referrerHost;
+}
+
 export function getSourcePage() {
   if (typeof window === 'undefined') return 'unknown';
   return window.location.pathname || '/';
@@ -110,6 +165,11 @@ function startEngagementTimer() {
           dispatchAnalyticsEvent('engagement_time_seconds', {
             review_batch: REVIEW_BATCH,
             source_page: getSourcePage(),
+            route_path: getSourcePage(),
+            device_type: getDeviceType(),
+            referrer_host: getReferrerHost(),
+            traffic_source: getTrafficSource(),
+            funnel_stage: 'engagement',
             seconds: mark,
           });
         } catch {
@@ -128,6 +188,11 @@ export function trackEvent(eventName: string, properties?: AnalyticsProperties) 
     const eventProperties = cleanProperties({
       review_batch: REVIEW_BATCH,
       source_page: getSourcePage(),
+      route_path: getSourcePage(),
+      device_type: getDeviceType(),
+      referrer_host: getReferrerHost(),
+      traffic_source: getTrafficSource(),
+      funnel_stage: FUNNEL_STAGE_BY_EVENT[eventName] || 'engagement',
       ...getUtmProperties(),
       ...properties,
     });
@@ -138,6 +203,7 @@ export function trackEvent(eventName: string, properties?: AnalyticsProperties) 
       dispatchAnalyticsEvent('tool_start', {
         ...eventProperties,
         canonical_event: eventName,
+        funnel_stage: 'start',
       });
     }
 
@@ -145,6 +211,7 @@ export function trackEvent(eventName: string, properties?: AnalyticsProperties) 
       dispatchAnalyticsEvent('tool_result', {
         ...eventProperties,
         canonical_event: eventName,
+        funnel_stage: 'result',
         result_origin: eventName === 'default_result' ? 'default_prefill' : 'user_input',
       });
     }

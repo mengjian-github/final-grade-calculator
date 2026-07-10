@@ -29,9 +29,9 @@ import {
 } from 'lucide-react';
 
 export const metadata: Metadata = generateMetadata({
-  title: 'Final Grade Calculator — What Score Do I Need on My Final? (Free & Instant)',
+  title: 'Final Grade Calculator: What Score Do I Need on My Final?',
   description:
-    'Get the exact score you need on your final exam in seconds. Free final grade calculator — no signup, no ads, works on mobile. Enter current grade, target grade, and final weight.',
+    'Free final grade calculator: enter current grade, target grade, and final exam weight to see the exact score you need on your final in seconds.',
   keywords: [
     'final grade calculator',
     'what score do i need on my final',
@@ -235,7 +235,7 @@ export default function Home() {
       <section className="overflow-hidden px-3 py-8 sm:px-6 sm:py-12 lg:px-8">
         <div className="max-w-6xl mx-auto text-center">
           <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-primary dark:text-primary-light">
-            Final Grade Calculator · updated July 9, 2026
+            Final Grade Calculator · updated July 10, 2026
           </p>
           <h1 className="mb-4 text-3xl font-bold text-gray-900 dark:text-white sm:text-5xl lg:text-6xl">
             Final Grade Calculator
@@ -243,6 +243,11 @@ export default function Home() {
           <p className="mx-auto max-w-4xl text-base text-gray-600 dark:text-gray-300 sm:text-xl">
             What score do I need on my final? Enter your current course grade, target course grade, and final exam weight. The calculator gives the exact required final exam score first.
           </p>
+
+          <div className="mx-auto mt-5 max-w-3xl rounded-2xl border border-primary/20 bg-white/85 p-4 text-left text-sm text-gray-700 shadow-sm dark:border-primary-light/25 dark:bg-gray-900/70 dark:text-gray-200 sm:text-base">
+            <strong className="text-gray-950 dark:text-white">Short answer:</strong>{' '}
+            final exam score needed = (target grade - current grade × current-work weight) ÷ final exam weight. Example: with an 86% current grade, an 88% target, and a 25% final, you need <strong>94.00%</strong> on the final.
+          </div>
 
           <div id="calculator" className="mt-6 min-w-0 overflow-hidden rounded-3xl border border-gray-200 bg-white p-2 shadow-xl shadow-primary/10 dark:border-gray-800 dark:bg-gray-900 sm:p-6">
             <FinalGradeCalculator />
