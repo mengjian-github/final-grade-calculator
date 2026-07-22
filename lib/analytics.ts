@@ -9,21 +9,27 @@ declare global {
   }
 }
 
-const REVIEW_BATCH = 'site-review-20260710-fullcycle';
+const REVIEW_BATCH = 'site-review-20260722-fullcycle';
+const EVENT_SCHEMA_VERSION = '2';
+const FUNNEL_RUN_STORAGE_KEY = 'fgc_funnel_run_id';
+
+const EVENT_ALIASES: Record<string, string> = {
+  start_calculator: 'tool_start',
+  weighted_calculate: 'calculate_click',
+  user_result: 'tool_result',
+  user_result_view: 'tool_result',
+  user_weighted_result_view: 'tool_result',
+  default_result: 'calculator_default_view',
+  default_result_view: 'calculator_default_view',
+  default_weighted_result_view: 'calculator_default_view',
+  result_view: 'calculator_default_view',
+};
 
 const FUNNEL_STAGE_BY_EVENT: Record<string, string> = {
-  start_calculator: 'start',
   tool_start: 'start',
   calculate_click: 'confirm',
-  weighted_calculate: 'confirm',
-  default_result: 'result',
-  user_result: 'result',
-  default_result_view: 'result',
-  user_result_view: 'result',
-  result_view: 'result',
-  default_weighted_result_view: 'result',
-  user_weighted_result_view: 'result',
   tool_result: 'result',
+  calculator_default_view: 'default_prefill',
   copy_result_click: 'copy_intent',
   copy_result: 'copy',
   share_result_click: 'share_intent',
@@ -36,23 +42,14 @@ const FUNNEL_STAGE_BY_EVENT: Record<string, string> = {
   contact_click: 'contact',
 };
 
-const CONVERSION_GOAL_EVENTS: Record<string, string> = {
-  calculate_click: 'calculator_confirmed',
-  quick_action_click: 'calculator_prefilled',
-  copy_result: 'result_saved',
-  copy_result_click: 'result_copy_intent',
-  share_result: 'result_shared',
-  share_result_click: 'result_share_intent',
-  result_next_action_click: 'result_next_step',
-  contact_click: 'contact_intent',
-  sticky_calculator_cta_click: 'calculator_intent',
-  open_weighted_calculator: 'calculator_deepening',
-  search_intent_click: 'search_intent_routed',
-  primary_calculator_cta_click: 'calculator_intent',
-  converter_type_change: 'calculator_deepening',
-  converter_input_change: 'calculator_deepening',
-  weighted_calculate: 'calculator_confirmed',
-};
+const CANONICAL_FUNNEL_EVENTS = new Set([
+  'tool_start',
+  'calculate_click',
+  'tool_result',
+  'copy_result',
+  'share_result',
+  'result_next_action_click',
+]);
 
 const UTM_KEYS = [
   'utm_source',
@@ -61,8 +58,6 @@ const UTM_KEYS = [
   'utm_content',
   'utm_term',
 ] as const;
-
-const ENGAGEMENT_MARKS = [10, 30, 60, 120, 180, 300];
 
 function cleanProperties(properties: AnalyticsProperties = {}) {
   const cleaned: Record<string, AnalyticsValue> = {};
@@ -74,6 +69,29 @@ function cleanProperties(properties: AnalyticsProperties = {}) {
   });
 
   return cleaned;
+}
+
+function createEventId() {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID();
+  }
+
+  return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
+}
+
+function getFunnelRunId() {
+  if (typeof window === 'undefined') return 'unknown';
+
+  try {
+    const existing = window.sessionStorage.getItem(FUNNEL_RUN_STORAGE_KEY);
+    if (existing) return existing;
+
+    const created = createEventId();
+    window.sessionStorage.setItem(FUNNEL_RUN_STORAGE_KEY, created);
+    return created;
+  } catch {
+    return createEventId();
+  }
 }
 
 function getUtmProperties() {
@@ -152,83 +170,32 @@ function dispatchAnalyticsEvent(eventName: string, eventProperties: Record<strin
   }
 }
 
-function startEngagementTimer() {
-  if (typeof window === 'undefined') return;
-  const marks = new Set<number>();
-  let elapsed = 0;
-  const interval = window.setInterval(() => {
-    elapsed += 1;
-    ENGAGEMENT_MARKS.forEach((mark) => {
-      if (elapsed >= mark && !marks.has(mark)) {
-        marks.add(mark);
-        try {
-          dispatchAnalyticsEvent('engagement_time_seconds', {
-            review_batch: REVIEW_BATCH,
-            source_page: getSourcePage(),
-            route_path: getSourcePage(),
-            device_type: getDeviceType(),
-            referrer_host: getReferrerHost(),
-            traffic_source: getTrafficSource(),
-            funnel_stage: 'engagement',
-            seconds: mark,
-          });
-        } catch {
-          // Ignore engagement timer failures.
-        }
-      }
-    });
-  }, 1000);
-  return interval;
-}
-
 export function trackEvent(eventName: string, properties?: AnalyticsProperties) {
   try {
     if (typeof window === 'undefined') return;
 
+    const canonicalEventName = EVENT_ALIASES[eventName] || eventName;
+    const funnelEligible = CANONICAL_FUNNEL_EVENTS.has(canonicalEventName);
+
     const eventProperties = cleanProperties({
       review_batch: REVIEW_BATCH,
+      event_schema_version: EVENT_SCHEMA_VERSION,
+      event_id: createEventId(),
       source_page: getSourcePage(),
       route_path: getSourcePage(),
       device_type: getDeviceType(),
       referrer_host: getReferrerHost(),
       traffic_source: getTrafficSource(),
-      funnel_stage: FUNNEL_STAGE_BY_EVENT[eventName] || 'engagement',
+      funnel_stage: FUNNEL_STAGE_BY_EVENT[canonicalEventName] || 'engagement',
+      funnel_eligible: funnelEligible,
+      funnel_run_id: funnelEligible ? getFunnelRunId() : undefined,
+      source_event: canonicalEventName === eventName ? undefined : eventName,
       ...getUtmProperties(),
       ...properties,
     });
 
-    dispatchAnalyticsEvent(eventName, eventProperties);
-
-    if (eventName === 'start_calculator') {
-      dispatchAnalyticsEvent('tool_start', {
-        ...eventProperties,
-        canonical_event: eventName,
-        funnel_stage: 'start',
-      });
-    }
-
-    if (eventName === 'user_result' || eventName === 'default_result') {
-      dispatchAnalyticsEvent('tool_result', {
-        ...eventProperties,
-        canonical_event: eventName,
-        funnel_stage: 'result',
-        result_origin: eventName === 'default_result' ? 'default_prefill' : 'user_input',
-      });
-    }
-
-    const goalType = CONVERSION_GOAL_EVENTS[eventName];
-    if (goalType) {
-      dispatchAnalyticsEvent('conversion_goal', {
-        ...eventProperties,
-        canonical_event: eventName,
-        goal_type: goalType,
-      });
-    }
+    dispatchAnalyticsEvent(canonicalEventName, eventProperties);
   } catch {
     // Track event failures must never block the calculator UI.
   }
-}
-
-if (typeof window !== 'undefined') {
-  startEngagementTimer();
 }

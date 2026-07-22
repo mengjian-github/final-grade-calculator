@@ -1,17 +1,24 @@
 {
-  "schema_version": "analytics_event_contract.v1",
+  "schema_version": "analytics_event_contract.v2",
   "site_slug": "finalgradecalculator",
-  "review_batch": "site-review-20260710-fullcycle",
-  "checked_at": "2026-07-10T02:44:00Z",
+  "review_batch": "site-review-20260722-fullcycle",
+  "checked_at": "2026-07-22T02:56:51Z",
   "source_file": "/root/projects/final-grade-calculator/lib/analytics.ts",
-  "source_url": "https://finalgradecalculator.app/",
-  "required_dimensions": [
+  "source_url": "https://finalgradecalculator.app/analytics-event-contract.json",
+  "always_present_dimensions": [
+    "review_batch",
+    "event_schema_version",
+    "event_id",
     "route_path",
     "source_page",
     "device_type",
     "traffic_source",
     "referrer_host",
     "funnel_stage",
+    "funnel_eligible"
+  ],
+  "optional_dimensions": [
+    "funnel_run_id",
     "utm_source",
     "utm_medium",
     "utm_campaign",
@@ -19,15 +26,38 @@
     "utm_term"
   ],
   "canonical_funnel_events": [
-    "start_calculator",
     "tool_start",
     "calculate_click",
     "tool_result",
     "copy_result",
     "share_result",
-    "result_next_action_click",
+    "result_next_action_click"
+  ],
+  "excluded_from_funnel": [
+    "calculator_default_view",
+    "copy_result_click",
+    "share_result_click",
+    "engagement_time_seconds",
     "conversion_goal"
   ],
+  "counting_rules": {
+    "people_or_runs": "Count distinct funnel_run_id within review_batch, route_path, device_type, traffic_source and UTM dimensions.",
+    "events": "Count distinct event_id after filtering funnel_eligible=true.",
+    "default_prefill": "calculator_default_view is diagnostic only and must never count as tool_result.",
+    "copy_and_share": "copy_result and share_result represent completed actions; *_click events are intent diagnostics only.",
+    "aliases": "Legacy names are normalized before dispatch, so one interaction emits one canonical event instead of canonical plus alias copies."
+  },
+  "legacy_alias_map": {
+    "start_calculator": "tool_start",
+    "weighted_calculate": "calculate_click",
+    "user_result": "tool_result",
+    "user_result_view": "tool_result",
+    "user_weighted_result_view": "tool_result",
+    "default_result": "calculator_default_view",
+    "default_result_view": "calculator_default_view",
+    "default_weighted_result_view": "calculator_default_view",
+    "result_view": "calculator_default_view"
+  },
   "route_aliases": [
     {
       "path": "/privacy-policy/",
@@ -35,5 +65,5 @@
       "status": "static_alias_200"
     }
   ],
-  "notes": "20260710 implementation adds route/device/source funnel dimensions for calculate-to-result-to-copy/share-to-next-action review and keeps UTM keys for ops attribution."
+  "notes": "20260722 removes timer and conversion-goal amplification, excludes prefilled results, and adds session-scoped funnel_run_id plus per-event event_id for machine-readable deduplication."
 }

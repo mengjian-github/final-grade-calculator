@@ -91,13 +91,23 @@ export default function FinalGradeCalculatorComponent() {
   const resultRef = useRef<HTMLDivElement>(null);
   const hasTrackedStart = useRef(false);
   const lastResultSignature = useRef<string | null>(null);
+  const lastUserResultSignature = useRef<string | null>(null);
 
   const getResultEventSource = () => (hasTrackedStart.current ? 'user_input' : 'default_auto');
+
+  const buildResultSignature = (resultValue: number) => [
+    mode,
+    currentGrade,
+    desiredGrade,
+    finalWeight,
+    finalExamGrade,
+    resultValue.toFixed(2),
+  ].join('|');
 
   const trackStartCalculator = (inputMode: 'needed' | 'predict' = mode, source = 'input_change') => {
     if (hasTrackedStart.current) return;
     hasTrackedStart.current = true;
-    trackEvent('start_calculator', {
+    trackEvent('tool_start', {
       calculator_type: 'final_grade',
       input_mode: inputMode,
       result_state: result === null ? 'invalid' : getFinalGradeResultState(inputMode, result),
@@ -171,14 +181,7 @@ export default function FinalGradeCalculatorComponent() {
   useEffect(() => {
     if (result === null || !Number.isFinite(result)) return;
 
-    const signature = [
-      mode,
-      currentGrade,
-      desiredGrade,
-      finalWeight,
-      finalExamGrade,
-      result.toFixed(2),
-    ].join('|');
+    const signature = buildResultSignature(result);
 
     const timer = window.setTimeout(() => {
       if (lastResultSignature.current === signature) return;
@@ -193,8 +196,20 @@ export default function FinalGradeCalculatorComponent() {
         source,
       };
 
-      trackEvent(source === 'default_auto' ? 'default_result_view' : 'user_result_view', resultPayload);
-      trackEvent(source === 'default_auto' ? 'default_result' : 'user_result', resultPayload);
+      if (source === 'default_auto') {
+        trackEvent('calculator_default_view', {
+          ...resultPayload,
+          result_origin: 'default_prefill',
+        });
+        return;
+      }
+
+      if (lastUserResultSignature.current === signature) return;
+      lastUserResultSignature.current = signature;
+      trackEvent('tool_result', {
+        ...resultPayload,
+        result_origin: 'user_input',
+      });
     }, 700);
 
     return () => window.clearTimeout(timer);
@@ -273,6 +288,19 @@ export default function FinalGradeCalculatorComponent() {
       result_state: getFinalGradeResultState(mode, result),
       source: 'manual_cta',
     });
+
+    const signature = buildResultSignature(result);
+    if (lastUserResultSignature.current !== signature) {
+      lastUserResultSignature.current = signature;
+      trackEvent('tool_result', {
+        calculator_type: 'final_grade',
+        input_mode: mode,
+        result_state: getFinalGradeResultState(mode, result),
+        result_value: Number(result.toFixed(2)),
+        result_origin: 'manual_confirmation',
+        source: 'manual_cta',
+      });
+    }
 
     setCalculationStatus(
       mode === 'needed'

@@ -45,11 +45,12 @@ export default function WeightedGradeCalculator() {
   );
   const hasTrackedStart = useRef(false);
   const lastResultSignature = useRef<string | null>(null);
+  const lastUserResultSignature = useRef<string | null>(null);
 
   const trackStartCalculator = (source = 'input_change') => {
     if (hasTrackedStart.current) return;
     hasTrackedStart.current = true;
-    trackEvent('start_calculator', {
+    trackEvent('tool_start', {
       calculator_type: 'weighted_grade',
       input_mode: 'weighted_items',
       result_state: getWeightedResultState(neededGrade, totalWeight),
@@ -58,10 +59,40 @@ export default function WeightedGradeCalculator() {
     });
   };
 
+  const buildResultSignature = () => JSON.stringify({
+    items: items.map((item) => [item.grade, item.weight]),
+    targetGrade,
+    totalWeight: totalWeight.toFixed(2),
+    currentGrade: currentGrade.toFixed(2),
+    neededGrade: neededGrade === null ? null : neededGrade.toFixed(2),
+  });
+
+  const trackWeightedResult = (source: 'default_auto' | 'user_input' | 'manual_confirmation') => {
+    if (totalWeight <= 0 || !isFiniteNumber(currentGrade)) return;
+
+    const resultValue = neededGrade !== null && isFiniteNumber(neededGrade) ? neededGrade : currentGrade;
+    const signature = buildResultSignature();
+    if (source !== 'default_auto' && lastUserResultSignature.current === signature) return;
+
+    if (source !== 'default_auto') {
+      lastUserResultSignature.current = signature;
+    }
+
+    trackEvent(source === 'default_auto' ? 'calculator_default_view' : 'tool_result', {
+      calculator_type: 'weighted_grade',
+      input_mode: 'weighted_items',
+      result_state: getWeightedResultState(neededGrade, totalWeight),
+      result_value: Number(resultValue.toFixed(2)),
+      items_count: items.length,
+      result_origin: source === 'default_auto' ? 'default_prefill' : source,
+      source,
+    });
+  };
+
   const trackManualWeightedCalculation = () => {
     trackStartCalculator('manual_cta');
 
-    trackEvent('weighted_calculate', {
+    trackEvent('calculate_click', {
       calculator_type: 'weighted_grade',
       input_mode: 'weighted_items',
       result_state: getWeightedResultState(neededGrade, totalWeight),
@@ -73,6 +104,8 @@ export default function WeightedGradeCalculator() {
       setCalculationStatus('Add at least one positive weight before calculating; invalid weighted results stay hidden.');
       return;
     }
+
+    trackWeightedResult('manual_confirmation');
 
     if (neededGrade === null) {
       setCalculationStatus(`Updated: completed-work grade is ${currentGrade.toFixed(2)}% across ${gradedWeight.toFixed(0)}% graded weight.`);
@@ -132,31 +165,13 @@ export default function WeightedGradeCalculator() {
   useEffect(() => {
     if (totalWeight <= 0 || !isFiniteNumber(currentGrade)) return;
 
-    const resultValue = neededGrade !== null && isFiniteNumber(neededGrade) ? neededGrade : currentGrade;
-    const signature = JSON.stringify({
-      items: items.map((item) => [item.grade, item.weight]),
-      targetGrade,
-      totalWeight: totalWeight.toFixed(2),
-      currentGrade: currentGrade.toFixed(2),
-      neededGrade: neededGrade === null ? null : neededGrade.toFixed(2),
-    });
+    const signature = buildResultSignature();
 
     const timer = window.setTimeout(() => {
       if (lastResultSignature.current === signature) return;
       lastResultSignature.current = signature;
       const source = hasTrackedStart.current ? 'user_input' : 'default_auto';
-      const resultPayload = {
-        calculator_type: 'weighted_grade',
-        input_mode: 'weighted_items',
-        result_state: getWeightedResultState(neededGrade, totalWeight),
-        result_value: Number(resultValue.toFixed(2)),
-        items_count: items.length,
-        source,
-      };
-
-      trackEvent('result_view', resultPayload);
-      trackEvent(source === 'default_auto' ? 'default_weighted_result_view' : 'user_weighted_result_view', resultPayload);
-      trackEvent(source === 'default_auto' ? 'default_result' : 'user_result', resultPayload);
+      trackWeightedResult(source);
     }, 700);
 
     return () => window.clearTimeout(timer);

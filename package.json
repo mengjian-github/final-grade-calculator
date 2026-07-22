@@ -6,6 +6,9 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
+    "verify:analytics": "node scripts/verify-analytics-contract.mjs",
+    "smoke:analytics": "node scripts/smoke-analytics-cdp.mjs",
+    "verify": "npm run verify:analytics && npx tsc --noEmit",
     "build:pages": "next build",
     "deploy:pages": "wrangler pages deployment create out --project-name final-grade-calculator --branch main --commit-dirty=true"
   },

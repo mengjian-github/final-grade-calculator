@@ -235,7 +235,7 @@ export default function Home() {
       <section className="overflow-hidden px-3 py-8 sm:px-6 sm:py-12 lg:px-8">
         <div className="max-w-6xl mx-auto text-center">
           <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-primary dark:text-primary-light">
-            Final Grade Calculator · updated July 10, 2026
+            Final Grade Calculator · updated July 22, 2026
           </p>
           <h1 className="mb-4 text-3xl font-bold text-gray-900 dark:text-white sm:text-5xl lg:text-6xl">
             Final Grade Calculator
