@@ -1,8 +1,8 @@
 {
-  "schema_version": "analytics_event_contract.v2",
+  "schema_version": "analytics_event_contract.v3",
   "site_slug": "finalgradecalculator",
-  "review_batch": "site-review-20260722-fullcycle",
-  "checked_at": "2026-07-22T02:56:51Z",
+  "review_batch": "site-review-20260723-fullcycle",
+  "checked_at": "2026-07-23T02:14:50Z",
   "source_file": "/root/projects/final-grade-calculator/lib/analytics.ts",
   "source_url": "https://finalgradecalculator.app/analytics-event-contract.json",
   "always_present_dimensions": [
@@ -27,14 +27,19 @@
   ],
   "canonical_funnel_events": [
     "tool_start",
-    "calculate_click",
     "tool_result",
     "copy_result",
     "share_result",
     "result_next_action_click"
   ],
+  "primary_funnel_sequence": [
+    "tool_start",
+    "tool_result",
+    "result_next_action_click"
+  ],
   "excluded_from_funnel": [
     "calculator_default_view",
+    "calculate_click",
     "copy_result_click",
     "share_result_click",
     "engagement_time_seconds",
@@ -44,6 +49,7 @@
     "people_or_runs": "Count distinct funnel_run_id within review_batch, route_path, device_type, traffic_source and UTM dimensions.",
     "events": "Count distinct event_id after filtering funnel_eligible=true.",
     "default_prefill": "calculator_default_view is diagnostic only and must never count as tool_result.",
+    "explicit_confirmation": "calculate_click is diagnostic only because live user-origin results can precede explicit confirmation; it carries funnel_run_id but funnel_eligible=false.",
     "copy_and_share": "copy_result and share_result represent completed actions; *_click events are intent diagnostics only.",
     "aliases": "Legacy names are normalized before dispatch, so one interaction emits one canonical event instead of canonical plus alias copies."
   },
@@ -65,5 +71,5 @@
       "status": "static_alias_200"
     }
   ],
-  "notes": "20260722 removes timer and conversion-goal amplification, excludes prefilled results, and adds session-scoped funnel_run_id plus per-event event_id for machine-readable deduplication."
+  "notes": "20260723 aligns the contract with live calculation: tool_start → user-origin tool_result → result_next_action_click. Prefill remains excluded, calculate_click is diagnostic, and run/event IDs support deduplication."
 }

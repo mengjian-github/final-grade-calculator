@@ -9,8 +9,8 @@ declare global {
   }
 }
 
-const REVIEW_BATCH = 'site-review-20260722-fullcycle';
-const EVENT_SCHEMA_VERSION = '2';
+const REVIEW_BATCH = 'site-review-20260723-fullcycle';
+const EVENT_SCHEMA_VERSION = '3';
 const FUNNEL_RUN_STORAGE_KEY = 'fgc_funnel_run_id';
 
 const EVENT_ALIASES: Record<string, string> = {
@@ -44,11 +44,17 @@ const FUNNEL_STAGE_BY_EVENT: Record<string, string> = {
 
 const CANONICAL_FUNNEL_EVENTS = new Set([
   'tool_start',
-  'calculate_click',
   'tool_result',
   'copy_result',
   'share_result',
   'result_next_action_click',
+]);
+
+const FUNNEL_RUN_EVENTS = new Set([
+  ...CANONICAL_FUNNEL_EVENTS,
+  'calculate_click',
+  'copy_result_click',
+  'share_result_click',
 ]);
 
 const UTM_KEYS = [
@@ -176,6 +182,7 @@ export function trackEvent(eventName: string, properties?: AnalyticsProperties) 
 
     const canonicalEventName = EVENT_ALIASES[eventName] || eventName;
     const funnelEligible = CANONICAL_FUNNEL_EVENTS.has(canonicalEventName);
+    const runScoped = FUNNEL_RUN_EVENTS.has(canonicalEventName);
 
     const eventProperties = cleanProperties({
       review_batch: REVIEW_BATCH,
@@ -188,7 +195,7 @@ export function trackEvent(eventName: string, properties?: AnalyticsProperties) 
       traffic_source: getTrafficSource(),
       funnel_stage: FUNNEL_STAGE_BY_EVENT[canonicalEventName] || 'engagement',
       funnel_eligible: funnelEligible,
-      funnel_run_id: funnelEligible ? getFunnelRunId() : undefined,
+      funnel_run_id: runScoped ? getFunnelRunId() : undefined,
       source_event: canonicalEventName === eventName ? undefined : eventName,
       ...getUtmProperties(),
       ...properties,

@@ -31,7 +31,7 @@ import {
 export const metadata: Metadata = generateMetadata({
   title: 'Final Grade Calculator: What Score Do I Need on My Final?',
   description:
-    'Free final grade calculator: enter current grade, target grade, and final exam weight to see the exact score you need on your final in seconds.',
+    'Use this free final grade calculator to enter your current grade, target grade, and final exam weight. Instantly see the exact score you need on your final.',
   keywords: [
     'final grade calculator',
     'what score do i need on my final',
@@ -235,7 +235,7 @@ export default function Home() {
       <section className="overflow-hidden px-3 py-8 sm:px-6 sm:py-12 lg:px-8">
         <div className="max-w-6xl mx-auto text-center">
           <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-primary dark:text-primary-light">
-            Final Grade Calculator · updated July 22, 2026
+            Final Grade Calculator · updated July 23, 2026
           </p>
           <h1 className="mb-4 text-3xl font-bold text-gray-900 dark:text-white sm:text-5xl lg:text-6xl">
             Final Grade Calculator

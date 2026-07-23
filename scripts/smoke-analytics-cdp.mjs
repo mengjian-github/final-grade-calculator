@@ -8,7 +8,6 @@ const target = await fetch(`${base}/json/new?${encodeURIComponent(url)}`, { meth
   assert.equal(response.ok, true, `unable to create Chrome target: ${response.status}`);
   return response.json();
 });
-
 const socket = new WebSocket(target.webSocketDebuggerUrl);
 const pending = new Map();
 let nextId = 0;
@@ -27,7 +26,6 @@ await new Promise((resolve, reject) => {
   socket.addEventListener('open', resolve, { once: true });
   socket.addEventListener('error', reject, { once: true });
 });
-
 const send = (method, params = {}) => new Promise((resolve, reject) => {
   const id = ++nextId;
   pending.set(id, { resolve, reject });
@@ -62,6 +60,11 @@ const expression = `
   calculate.click();
   await new Promise((resolve) => setTimeout(resolve, 300));
 
+  const copyResult = [...document.querySelectorAll('button')].find((button) => button.textContent.trim() === 'Copy result');
+  if (!copyResult) throw new Error('Copy result button not found');
+  copyResult.click();
+  await new Promise((resolve) => setTimeout(resolve, 200));
+
   return window.__analyticsSmokeEvents;
 })()
 `;
@@ -84,6 +87,7 @@ for (const channel of ['ga4', 'plausible']) {
   assert.equal(count('tool_start'), 1, `${channel}: expected one tool_start`);
   assert.equal(count('tool_result'), 1, `${channel}: expected one tool_result`);
   assert.equal(count('calculate_click'), 1, `${channel}: expected one calculate_click`);
+  assert.equal(count('result_next_action_click'), 1, `${channel}: expected one result_next_action_click`);
 
   for (const forbidden of [
     'start_calculator',
@@ -95,16 +99,30 @@ for (const channel of ['ga4', 'plausible']) {
     assert.equal(count(forbidden), 0, `${channel}: legacy/amplified event emitted: ${forbidden}`);
   }
 
-  const funnelEvents = channelEvents.filter((event) => ['tool_start', 'tool_result', 'calculate_click'].includes(event.eventName));
-  const runIds = new Set(funnelEvents.map((event) => event.properties.funnel_run_id));
-  assert.equal(runIds.size, 1, `${channel}: funnel events must share one funnel_run_id`);
+  const runScopedEvents = channelEvents.filter((event) => ['tool_start', 'tool_result', 'calculate_click', 'result_next_action_click'].includes(event.eventName));
+  const runIds = new Set(runScopedEvents.map((event) => event.properties.funnel_run_id));
+  assert.equal(runIds.size, 1, `${channel}: run-scoped events must share one funnel_run_id`);
   assert.equal([...runIds][0].length > 8, true, `${channel}: funnel_run_id missing`);
-  for (const event of funnelEvents) {
-    assert.equal(event.properties.review_batch, 'site-review-20260722-fullcycle');
-    assert.equal(event.properties.funnel_eligible, true);
+  for (const event of runScopedEvents) {
+    assert.equal(event.properties.review_batch, 'site-review-20260723-fullcycle');
     assert.equal(typeof event.properties.event_id, 'string');
   }
+
+  assert.equal(
+    channelEvents.find((event) => event.eventName === 'calculate_click').properties.funnel_eligible,
+    false,
+    `${channel}: calculate_click must remain diagnostic`
+  );
+
+  const canonicalSequence = channelEvents
+    .filter((event) => ['tool_start', 'tool_result', 'result_next_action_click'].includes(event.eventName))
+    .map((event) => event.eventName);
+  assert.deepEqual(
+    canonicalSequence,
+    ['tool_start', 'tool_result', 'result_next_action_click'],
+    `${channel}: canonical funnel order mismatch`
+  );
 }
 
 socket.close();
-console.log(`OK: browser analytics smoke; channels=2; events=${events.length}; tool_start/calculate_click/tool_result deduplicated`);
+console.log(`OK: browser analytics smoke; channels=2; events=${events.length}; canonical sequence tool_start/tool_result/result_next_action_click; calculate_click diagnostic`);
